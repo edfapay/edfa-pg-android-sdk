@@ -1,0 +1,4 @@
+include ':expresspay'
+include ':sample'
+
+rootProject.name = "Expresspay SDK"

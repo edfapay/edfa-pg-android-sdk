@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Property of Expresspay (https://expresspay.sa).
+  -->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.expresspay.sample"
+    tools:ignore="LockedOrientationActivity">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:name=".app.ExpresspayApplication"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.ExpresspayAndroidSDK"
+        tools:ignore="GoogleAppIndexingWarning">
+
+        <!--Expresspay SDK-->
+        <meta-data
+            android:name="com.expresspay.sdk.CLIENT_KEY"
+            android:value="d432a604-18t5-11ed-ad45-04b4443b4sd7" />
+        <meta-data
+            android:name="com.expresspay.sdk.CLIENT_PASS"
+            android:value="5c4f426eas15g5fa8b56c45y09432541" />
+        <meta-data
+            android:name="com.expresspay.sdk.PAYMENT_URL"
+            android:value="https://api.expresspay.sa/post" />
+
+        <activity
+            android:name=".ui.ExpresspayMainAcitivty"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.ExpresspaySaleActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.ExpresspayRecurringSaleActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.ExpresspayCaptureActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.ExpresspayCreditvoidActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.ExpresspayGetTransStatusActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.ExpresspayGetTransDetailsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.ExpresspayRedirect3dsActivity"
+            android:screenOrientation="portrait" />
+    </application>
+</manifest>
