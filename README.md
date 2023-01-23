@@ -22,7 +22,7 @@ The main aspects of the Expresspay Android SDK:
 - Sample Application
 
 To properly set up the SDK, read [Wiki](https://github.com/ExpresspaySa/expresspay-android-sdk/wiki) first.
-To get used to the SDK, download a [sample app](https://github.com/ExpresspaySa/expresspay-android-sdk/tree/main/sample).
+To get used to the SDK, download a [sample app](https://github.com/ExpresspaySa/expresspay-android-sdk/tree/master/sample).
 
 ## Setup
 
