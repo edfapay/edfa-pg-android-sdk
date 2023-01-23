@@ -54,11 +54,11 @@ Also, it is possible to download the latest artifact from the [releases page](ht
 
 | Sale | Recurring Sale | Capture |
 |-|-|-|
-| ![](/media/sales.mp4) | ![](/media/recurring-sale.mp4) | ![](/media/capture.mp4) |
+| ![](/media/sales.gif) | ![](/media/recurring-sale.gif) | ![](/media/capture.gif) |
 
 | Creditvoid | Get Trans Status | Get Trans Details |
 |-|-|-|
-| ![](/media/creditvoid.mp4) | ![](/media/get-trans-status.mp4) | ![](/media/get-trans-details.mp4) |
+| ![](/media/creditvoid.gif) | ![](/media/get-trans-status.gif) | ![](/media/get-trans-details.gif) |
 
 ## Getting help
 
