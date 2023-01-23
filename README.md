@@ -68,7 +68,7 @@ Or write a direct letter to the [support@expresspay.sa](mailto:support@expresspa
 
 ## License
 
-MIT License. See the [LICENSE](https://github.com/ExpresspaySa/expresspay-android-sdk/blob/main/LICENSE) file for more details.
+MIT License. See the [LICENSE](https://github.com/ExpresspaySa/expresspay-android-sdk/blob/master/LICENSE) file for more details.
 
 ## Contacts
 
