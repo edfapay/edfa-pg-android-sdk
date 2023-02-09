@@ -50,6 +50,11 @@ Latest version is: ![](https://jitpack.io/v/ExpresspaySa/expresspay-android-sdk.
 
 Also, it is possible to download the latest artifact from the [releases page](https://github.com/ExpresspaySa/expresspay-android-sdk/releases).
 
+## Quick Payment Implementation
+[**Card Payment**](https://github.com/ExpresspaySa/expresspay-ios-sdk-framework/wiki/Express-Quick-Card-Payment)
+Start the card payment with one click, easy and short line of codes. It will help the developer to easily implement the payment using card in thier application. click the [link](https://github.com/ExpresspaySa/expresspay-android-sdk/wiki/Express-Quick-Card-Payment) for easy steps to start payments.
+
+
 ## Sample
 
 | Sale | Recurring Sale | Capture |
