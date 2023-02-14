@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Expresspay SDK</string>
+    <string name="pay">Pay</string>
+    <string name="title_activity_express_card_pay">ExpressCardPayActivity</string>
+    <string name="title_activity_express_card_redirect">ExpressCardPayActivity</string>
+</resources>
