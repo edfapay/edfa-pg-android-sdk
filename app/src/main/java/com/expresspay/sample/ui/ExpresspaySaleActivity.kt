@@ -137,7 +137,7 @@ class ExpresspaySaleActivity : AppCompatActivity(R.layout.activity_sale) {
         val amount = try {
             binding.etxtOrderAmount.text.toString().toDouble()
         } catch (e: Exception) {
-            0.0
+            0.10
         }
 
         val order = ExpresspaySaleOrder(
@@ -206,6 +206,7 @@ class ExpresspaySaleActivity : AppCompatActivity(R.layout.activity_sale) {
                 }
 
                 override fun onResult(result: ExpresspaySaleResult) {
+
                     transaction.fill(result.result)
                     transaction.isAuth = isAuth
 

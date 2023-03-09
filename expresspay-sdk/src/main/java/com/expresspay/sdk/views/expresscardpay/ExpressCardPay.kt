@@ -1,6 +1,7 @@
 package com.expresspay.sdk.views.expresscardpay
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import androidx.fragment.app.Fragment
 import com.expresspay.sdk.model.request.order.ExpresspaySaleOrder
@@ -43,14 +44,14 @@ class ExpressCardPay {
         return this
     }
 
-    fun initialize(context:Activity, onError:(Any) -> Unit, onPresent:(Activity) -> Unit){
+    fun initialize(context:Context, onError:(Any) -> Unit, onPresent:(Activity) -> Unit){
         _onError = onError
         _onPresent = onPresent
 
         context.startActivity(intent(context, onError, onPresent))
     }
 
-    fun intent(context:Activity, onError:(Any) -> Unit, onPresent:(Activity) -> Unit) : Intent {
+    fun intent(context:Context, onError:(Any) -> Unit, onPresent:(Activity) -> Unit) : Intent {
         _onError = onError
         _onPresent = onPresent
 

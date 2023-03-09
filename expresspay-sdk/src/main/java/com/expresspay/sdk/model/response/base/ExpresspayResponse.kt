@@ -16,7 +16,8 @@ import com.google.gson.JsonObject
  *
  * @param Result the result type for [ExpresspayResponse.Result].
  */
-sealed class ExpresspayResponse<Result> {
+
+open class ExpresspayResponse<Result> {
 
     /**
      * The error response model.

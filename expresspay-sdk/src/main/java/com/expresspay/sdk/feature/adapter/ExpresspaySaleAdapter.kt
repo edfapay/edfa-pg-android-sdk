@@ -24,6 +24,7 @@ import com.expresspay.sdk.toolbox.ExpresspayAmountFormatter
 import com.expresspay.sdk.toolbox.ExpresspayHashUtil
 import com.expresspay.sdk.toolbox.ExpresspayValidation
 import com.google.gson.GsonBuilder
+import java.util.*
 
 /**
  * The API Adapter for the SALE operation.
@@ -88,21 +89,21 @@ object ExpresspaySaleAdapter : ExpresspayBaseAdapter<ExpresspaySaleService>() {
             clientKey = ExpresspayCredential.clientKey(),
             orderId = order.id,
             orderAmount = expresspayAmountFormatter.amountFormat(order.amount),
-            orderCurrency = order.currency,
+            orderCurrency = String.format(Locale.US,"%s", order.currency),
             orderDescription = order.description,
-            cardNumber = card.number,
+            cardNumber = String.format(Locale.US,"%s", card.number),
             cardExpireMonth = expresspayCardFormatter.expireMonthFormat(card),
             cardExpireYear = expresspayCardFormatter.expireYearFormat(card),
-            cardCvv2 = card.cvv,
+            cardCvv2 = String.format(Locale.US,"%s", card.cvv),
             payerFirstName = payer.firstName,
             payerLastName = payer.lastName,
             payerAddress = payer.address,
             payerCountry = payer.country,
             payerCity = payer.city,
-            payerZip = payer.zip,
+            payerZip = String.format(Locale.US,"%s", payer.zip),
             payerEmail = payer.email,
-            payerPhone = payer.phone,
-            payerIp = payer.ip,
+            payerPhone = String.format(Locale.US,"%s", payer.phone),
+            payerIp = String.format(Locale.US,"%s", payer.ip),
             termUrl3ds = termUrl3ds,
             hash = hash,
             auth = ExpresspayOption.map(auth).option,

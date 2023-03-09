@@ -5,15 +5,18 @@ pluginManagement {
         mavenCentral()
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
-        jcenter()
+//        jcenter()
         maven { url 'https://jitpack.io' }
     }
 }
+
 rootProject.name = "ExpressPaySDKSample"
 include ':app'
 include ':expresspay-sdk'
+//project(':expresspay-sdk').projectDir = new File(settingsDir, '../expresspay-sdk')

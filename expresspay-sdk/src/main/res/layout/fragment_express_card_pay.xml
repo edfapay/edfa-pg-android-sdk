@@ -96,7 +96,7 @@
                         android:layout_marginStart="5dp"
                         android:layout_marginEnd="5dp"
                         android:gravity="center"
-                        android:text="SAR"
+                        android:text="@string/sar"
                         android:textColor="#000"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -114,7 +114,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="#00000000"
-                    android:hint="CARD HOLDER"
+                    android:hint="@string/card_holder"
                     android:inputType="textPersonName"
                     android:maxLength="20"
                     android:textSize="13sp"
@@ -132,12 +132,13 @@
                     android:orientation="horizontal">
 
                     <EditText
+                        android:paddingHorizontal="5dp"
                         android:id="@+id/txtNumber"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="3"
                         android:background="#00000000"
-                        android:hint="CARD NUMBER"
+                        android:hint="@string/card_number"
                         android:inputType="number"
                         android:maxLength="19"
                         android:textSize="13sp" />
@@ -154,7 +155,7 @@
                         android:layout_weight="1.2"
                         android:background="#00000000"
                         android:gravity="center"
-                        android:hint="EXPIRY"
+                        android:hint="@string/expiry"
                         android:inputType="number"
                         android:maxLength="5"
                         android:textSize="13sp" />
@@ -171,7 +172,7 @@
                         android:layout_weight="1"
                         android:background="#00000000"
                         android:gravity="center"
-                        android:hint="CVV"
+                        android:hint="@string/cvv"
                         android:inputType="number"
                         android:maxLength="3"
                         android:textSize="13sp" />

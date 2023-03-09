@@ -21,6 +21,7 @@ import com.expresspay.sdk.model.response.base.error.ExpresspayError
 import com.expresspay.sdk.model.response.gettransactiondetails.ExpresspayGetTransactionDetailsSuccess
 import com.expresspay.sdk.toolbox.ExpresspayUtil
 import com.expresspay.sdk.toolbox.serializable
+import com.expresspay.sdk.toolbox.userConfirmation
 import java.net.URLEncoder
 
 class ExpresspaySaleWebRedirectActivity : AppCompatActivity(R.layout.activity_expresspay_web) {
@@ -132,8 +133,12 @@ class ExpresspaySaleWebRedirectActivity : AppCompatActivity(R.layout.activity_ex
                     handler: SslErrorHandler?,
                     error: SslError?
                 ) {
-//                    super.onReceivedSslError(view, handler, error)
-                    handler?.proceed()
+                    handler?.userConfirmation(
+                        this@ExpresspaySaleWebRedirectActivity,
+                        ok = {
+                            handler.cancel()
+                        }
+                    )
                 }
             }
 

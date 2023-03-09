@@ -54,4 +54,10 @@ enum class ExpresspayTransactionType(val transactionType: String) {
      */
     @SerializedName("CHARGEBACK")
     CHARGEBACK("CHARGEBACK"),
+
+    /**
+     * REDIRECT transaction type.
+     */
+    @SerializedName("REDIRECT")
+    REDIRECT("REDIRECT"),
 }

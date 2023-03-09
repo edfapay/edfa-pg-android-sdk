@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Expresspay SDK</string>
     <string name="pay">يدفع</string>
+    <string name="title_activity_express_card_pay">ExpressCardPayActivity</string>
+    <string name="title_activity_express_card_redirect">ExpressCardPayActivity</string>
+
+    <string name="notification_error_ssl_cert_invalid">حدث خطأ أثناء تصفح الموقع بأمان</string>
+
+    <string name="cancel">يلغي</string>
+    <string name="card_holder">الاسم على البطاقة</string>
+    <string name="card_number">رقم البطاقة</string>
+    <string name="expiry">تاريخ الانتهاء</string>
+    <string name="cvv">الرمز</string>
+    <string name="sar">SAR</string>
 </resources>

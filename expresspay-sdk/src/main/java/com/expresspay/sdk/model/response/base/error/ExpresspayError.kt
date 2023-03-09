@@ -29,7 +29,7 @@ data class ExpresspayError(
     val result: ExpresspayResult,
     @NonNull
     @SerializedName("error_code")
-    val code: String,
+    val code: Int,
     @NonNull
     @SerializedName("error_message")
     val message: String,

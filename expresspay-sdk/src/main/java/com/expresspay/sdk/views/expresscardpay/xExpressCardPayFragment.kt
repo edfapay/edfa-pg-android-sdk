@@ -33,13 +33,13 @@ internal fun ExpressCardPayFragment.doSaleTransaction(cardDetail: CreditCard?){
             termUrl3ds = ExpresspayUtil.ProcessCompleteCallbackUrl,
             options = null,
             auth = false,
-            callback = handleTxnDetailsResponse(CardTransactionData(order, payer, card, null))
+            callback = handleSaleResponse(CardTransactionData(order, payer, card, null))
         )
     }
 
 }
 
-internal fun ExpressCardPayFragment.handleTxnDetailsResponse(cardTransactionData:CardTransactionData) : ExpresspaySaleCallback{
+internal fun ExpressCardPayFragment.handleSaleResponse(cardTransactionData:CardTransactionData) : ExpresspaySaleCallback{
     return object : ExpresspaySaleCallback {
         override fun onResponse(response: ExpresspaySaleResponse) {
             saleResponse = response

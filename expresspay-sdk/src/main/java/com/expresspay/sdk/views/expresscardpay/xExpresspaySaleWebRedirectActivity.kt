@@ -12,12 +12,12 @@ internal fun ExpresspaySaleWebRedirectActivity.checkTransactionStatus(transactio
         transactionData.response!!.transactionId,
         transactionData.payer.email,
         transactionData.card.number,
-        callback = handleTxnDetailsResponse()
+        callback = handleSaleResponse()
     )
 
 }
 
-internal fun ExpresspaySaleWebRedirectActivity.handleTxnDetailsResponse() : ExpresspayGetTransactionDetailsCallback{
+internal fun ExpresspaySaleWebRedirectActivity.handleSaleResponse() : ExpresspayGetTransactionDetailsCallback{
     return object : ExpresspayGetTransactionDetailsCallback {
         override fun onResponse(response: ExpresspayGetTransactionDetailsResponse) {
             super.onResponse(response)

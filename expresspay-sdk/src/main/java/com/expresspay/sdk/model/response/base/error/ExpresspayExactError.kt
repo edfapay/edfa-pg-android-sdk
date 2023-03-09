@@ -22,7 +22,7 @@ import java.io.Serializable
 data class ExpresspayExactError(
     @NonNull
     @SerializedName("error_code")
-    val code: String,
+    val code: Int,
     @NonNull
     @SerializedName("error_message")
     val message: String

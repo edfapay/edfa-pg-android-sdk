@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import com.expresspay.sdk.R
 import com.expresspay.sdk.databinding.FragmentExpressCardPayBinding
 import com.expresspay.sdk.model.response.base.error.ExpresspayError
 import com.expresspay.sdk.model.response.gettransactiondetails.ExpresspayGetTransactionDetailsSuccess
@@ -47,6 +48,11 @@ internal class ExpressCardPayFragment : Fragment(), TextWatcher, OnFocusChangeLi
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentExpressCardPayBinding.inflate(inflater, container, false)
+
+        binding.txtName.hint = getString(R.string.card_holder)
+        binding.txtCVV.hint = getString(R.string.cvv)
+        binding.txtExpiry.hint = getString(R.string.expiry)
+        binding.txtNumber.hint = getString(R.string.card_number)
         return binding.root
     }
 
