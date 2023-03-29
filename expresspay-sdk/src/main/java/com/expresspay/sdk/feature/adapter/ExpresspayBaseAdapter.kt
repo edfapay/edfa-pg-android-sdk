@@ -5,6 +5,7 @@
 package com.expresspay.sdk.feature.adapter
 
 import androidx.viewbinding.BuildConfig
+import com.expresspay.sdk.core.ENABLE_DEBUG
 import com.expresspay.sdk.core.ExpresspayCredential
 import com.expresspay.sdk.model.response.base.ExpresspayResponse
 import com.expresspay.sdk.model.response.base.error.ExpresspayError
@@ -50,9 +51,9 @@ abstract class ExpresspayBaseAdapter<Service> {
 
     init {
         val okHttpClientBuilder = OkHttpClient.Builder()
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG || ENABLE_DEBUG) {
             val httpLoggingInterceptor = HttpLoggingInterceptor()
-            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC)
             okHttpClientBuilder.addInterceptor(httpLoggingInterceptor)
         }
         configureOkHttpClient(okHttpClientBuilder)

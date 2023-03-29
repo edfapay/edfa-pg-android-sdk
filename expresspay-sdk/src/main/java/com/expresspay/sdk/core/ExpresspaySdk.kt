@@ -54,6 +54,8 @@ import com.expresspay.sdk.feature.adapter.ExpresspaySaleAdapter
  *
  * To test/simulate the Platon Payment System use [com.expresspay.sdk.model.request.card.ExpresspayTestCard].
  */
+
+var ENABLE_DEBUG = false
 object ExpresspaySdk {
 
     /**
@@ -89,6 +91,14 @@ object ExpresspaySdk {
     ) {
         ExpresspayCredential.init(context, clientKey, clientPass, paymentUrl)
         ExpresspayCredential.requireInit()
+    }
+
+    fun enableDebug(){
+        ENABLE_DEBUG = true
+    }
+
+    fun disableDebug(){
+        ENABLE_DEBUG = false
     }
 
     /**
