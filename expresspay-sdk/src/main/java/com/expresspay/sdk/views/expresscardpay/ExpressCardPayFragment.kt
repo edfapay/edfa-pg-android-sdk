@@ -123,7 +123,7 @@ internal class ExpressCardPayFragment : Fragment(), TextWatcher, OnFocusChangeLi
         binding.btnPay.isEnabled =
             binding.card.cardData.isExpiryValid()
                     && binding.card.cardData.isNumberValid()
-                    && binding.card.cardData.brand != Brand.GENERIC
+//                    && binding.card.cardData.brand != Brand.GENERIC
                     && binding.card.cardData.number.replace(" ", "").trim().length == 16
                     && binding.card.cardData.isCvvValid()
                     && binding.card.holder.length > 3
