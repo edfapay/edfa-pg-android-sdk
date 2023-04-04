@@ -32,17 +32,19 @@ Add to the root build.gradle:
 allprojects {
     repositories {
         ...
-        jcenter()
-        maven { url 'https://jitpack.io' }
+        maven {
+            url "https://jitpack.io"
+            credentials { username "jp_cppv4mkessjq12i4kqihrnjqvo" }
+        }
     }
-}
+ }
 ```
 
 Add to the package build.gradle:
 
 ```groovy
 dependencies {
-    implementation 'com.github.ExpresspaySa:expresspay-android-sdk:{latest-version}'
+    implementation 'com.github.ExpresspaySa:expresspay-android-sdk-code:1.0.4'
 }
 ```
 
