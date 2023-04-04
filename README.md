@@ -48,9 +48,8 @@ dependencies {
 }
 ```
 
-Latest version is: [![Release](https://badgen.net/badge/jitpack/1.0.4/green)]
+Latest version is: ![Release](https://badgen.net/badge/jitpack/1.0.4/green)
 
-Also, it is possible to download the latest artifact from the [releases page](https://github.com/ExpresspaySa/expresspay-android-sdk/releases).
 
 ## Quick Payment Implementation
 [**Card Payment**](https://github.com/ExpresspaySa/expresspay-android-sdk/wiki/Express-Quick-Card-Payment)
