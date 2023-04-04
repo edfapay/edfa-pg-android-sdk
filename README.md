@@ -32,23 +32,24 @@ Add to the root build.gradle:
 allprojects {
     repositories {
         ...
-        jcenter()
-        maven { url 'https://jitpack.io' }
+        maven {
+            url "https://jitpack.io"
+            credentials { username "jp_cppv4mkessjq12i4kqihrnjqvo" }
+        }
     }
-}
+ }
 ```
 
 Add to the package build.gradle:
 
 ```groovy
 dependencies {
-    implementation 'com.github.ExpresspaySa:expresspay-android-sdk:{latest-version}'
+    implementation 'com.github.ExpresspaySa:expresspay-android-sdk-code:1.0.4'
 }
 ```
 
-Latest version is: ![](https://jitpack.io/v/ExpresspaySa/expresspay-android-sdk.svg) 
+Latest version is: ![Release](https://badgen.net/badge/jitpack/1.0.4/green)
 
-Also, it is possible to download the latest artifact from the [releases page](https://github.com/ExpresspaySa/expresspay-android-sdk/releases).
 
 ## Quick Payment Implementation
 [**Card Payment**](https://github.com/ExpresspaySa/expresspay-android-sdk/wiki/Express-Quick-Card-Payment)
