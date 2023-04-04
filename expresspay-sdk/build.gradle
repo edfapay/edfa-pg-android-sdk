@@ -9,7 +9,7 @@ ext {
     mGroupId = "com.expresspay"
     mArtifactId = "sdk"
     mVersionCode = 1
-    mVersionName = "1.0.0"
+    mVersionName = "1.0.4"
 
     mLibraryName = "ExpressPaySDK"
     mLibraryDescription = "$mLibraryName responsable for help to integerate ExpressPay payment system"
@@ -24,7 +24,7 @@ android {
         minSdk 16
         targetSdk 33
         versionCode 1
-        versionName "1.2"
+        versionName "1.3"
 
         aarMetadata {
             minCompileSdk = 16
