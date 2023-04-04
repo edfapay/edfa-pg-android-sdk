@@ -48,7 +48,7 @@ dependencies {
 }
 ```
 
-Latest version is: [![Release](https://jitpack.io/v/ExpresspaySa/expresspay-android-sdk-code.svg)]
+Latest version is: [![Release](https://badgen.net/badge/jitpack/1.0.4/green)]
 
 Also, it is possible to download the latest artifact from the [releases page](https://github.com/ExpresspaySa/expresspay-android-sdk/releases).
 
