@@ -16,7 +16,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ExpressPaySDKSample"
+rootProject.name = "EdfaPayGwSDKSample"
 include ':app'
-include ':expresspay-sdk'
-//project(':expresspay-sdk').projectDir = new File(settingsDir, '../expresspay-sdk')
+include ':edfapaygw-sdk'
+//project(':edfapaygw-sdk').projectDir = new File(settingsDir, '../edfapaygw-sdk')

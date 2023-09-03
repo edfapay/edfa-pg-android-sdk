@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">EdfaPg SDK</string>
+    <string name="pay">Pay</string>
+    <string name="title_activity_edfa_card_pay">EdfaCardPayActivity</string>
+    <string name="title_activity_edfa_card_redirect">There is an error while browsing the website securely</string>
+    <string name="notification_error_ssl_cert_invalid">EdfaCardPayActivity</string>
+    <string name="cancel">Cancel</string>
+    <string name="card_holder">CARD HOLDER</string>
+    <string name="card_number">CARD NUMBER</string>
+    <string name="expiry">EXPIRY</string>
+    <string name="cvv">CVV</string>
+    <string name="sar">SAR</string>
+
+</resources>

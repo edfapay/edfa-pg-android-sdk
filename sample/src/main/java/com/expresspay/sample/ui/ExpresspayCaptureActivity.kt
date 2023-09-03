@@ -1,8 +1,8 @@
 /*
- * Property of Expresspay (https://expresspay.sa).
+ * Property of EdfaPg (https://edfapay.com).
  */
 
-package com.expresspay.sample.ui
+package com.edfapaygw.sample.ui
 
 import android.os.Bundle
 import android.view.View
@@ -11,29 +11,29 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
-import com.expresspay.sample.R
-import com.expresspay.sample.app.ExpresspayTransactionStorage
-import com.expresspay.sample.app.preattyPrint
-import com.expresspay.sample.databinding.ActivityCaptureBinding
-import com.expresspay.sdk.core.ExpresspaySdk
-import com.expresspay.sdk.model.response.base.error.ExpresspayError
-import com.expresspay.sdk.model.response.capture.ExpresspayCaptureCallback
-import com.expresspay.sdk.model.response.capture.ExpresspayCaptureResponse
-import com.expresspay.sdk.model.response.capture.ExpresspayCaptureResult
+import com.edfapaygw.sample.R
+import com.edfapaygw.sample.app.EdfaPgTransactionStorage
+import com.edfapaygw.sample.app.preattyPrint
+import com.edfapaygw.sample.databinding.ActivityCaptureBinding
+import com.edfapaygw.sdk.core.EdfaPgSdk
+import com.edfapaygw.sdk.model.response.base.error.EdfaPgError
+import com.edfapaygw.sdk.model.response.capture.EdfaPgCaptureCallback
+import com.edfapaygw.sdk.model.response.capture.EdfaPgCaptureResponse
+import com.edfapaygw.sdk.model.response.capture.EdfaPgCaptureResult
 import java.util.*
 
-class ExpresspayCaptureActivity : AppCompatActivity(R.layout.activity_capture) {
+class EdfaPgCaptureActivity : AppCompatActivity(R.layout.activity_capture) {
 
     private lateinit var binding: ActivityCaptureBinding
-    private lateinit var expresspayTransactionStorage: ExpresspayTransactionStorage
+    private lateinit var edfapayTransactionStorage: EdfaPgTransactionStorage
 
-    private var selectedTransaction: ExpresspayTransactionStorage.Transaction? = null
-    private var transactions: List<ExpresspayTransactionStorage.Transaction>? = null
+    private var selectedTransaction: EdfaPgTransactionStorage.Transaction? = null
+    private var transactions: List<EdfaPgTransactionStorage.Transaction>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        expresspayTransactionStorage = ExpresspayTransactionStorage(this)
+        edfapayTransactionStorage = EdfaPgTransactionStorage(this)
         binding = ActivityCaptureBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -42,11 +42,11 @@ class ExpresspayCaptureActivity : AppCompatActivity(R.layout.activity_capture) {
 
     private fun configureView() {
         binding.btnLoadCapture.setOnClickListener {
-            transactions = expresspayTransactionStorage.getCaptureTransactions()
+            transactions = edfapayTransactionStorage.getCaptureTransactions()
             invalidateSpinner()
         }
         binding.btnLoadAll.setOnClickListener {
-            transactions = expresspayTransactionStorage.getAllTransactions()
+            transactions = edfapayTransactionStorage.getAllTransactions()
             invalidateSpinner()
         }
         binding.btnCapture.setOnClickListener {
@@ -67,7 +67,7 @@ class ExpresspayCaptureActivity : AppCompatActivity(R.layout.activity_capture) {
                 }
 
             adapter = object : ArrayAdapter<String>(
-                this@ExpresspayCaptureActivity,
+                this@EdfaPgCaptureActivity,
                 android.R.layout.simple_spinner_dropdown_item,
                 prettyTransactions
             ) {
@@ -133,31 +133,31 @@ class ExpresspayCaptureActivity : AppCompatActivity(R.layout.activity_capture) {
                 0.00
             }
 
-            val transaction = ExpresspayTransactionStorage.Transaction(
+            val transaction = EdfaPgTransactionStorage.Transaction(
                 payerEmail = selectedTransaction.payerEmail,
                 cardNumber = selectedTransaction.cardNumber
             )
 
             onRequestStart()
-            ExpresspaySdk.Adapter.CAPTURE.execute(
+            EdfaPgSdk.Adapter.CAPTURE.execute(
                 transactionId = selectedTransaction.id,
                 payerEmail = selectedTransaction.payerEmail,
                 cardNumber = selectedTransaction.cardNumber,
                 amount = amount,
-                callback = object : ExpresspayCaptureCallback {
-                    override fun onResponse(response: ExpresspayCaptureResponse) {
+                callback = object : EdfaPgCaptureCallback {
+                    override fun onResponse(response: EdfaPgCaptureResponse) {
                         super.onResponse(response)
                         onRequestFinish()
                         binding.txtResponse.text = response.preattyPrint()
                     }
 
-                    override fun onResult(result: ExpresspayCaptureResult) {
+                    override fun onResult(result: EdfaPgCaptureResult) {
                         transaction.fill(result.result)
 
-                        expresspayTransactionStorage.addTransaction(transaction)
+                        edfapayTransactionStorage.addTransaction(transaction)
                     }
 
-                    override fun onError(error: ExpresspayError) = Unit
+                    override fun onError(error: EdfaPgError) = Unit
 
                     override fun onFailure(throwable: Throwable) {
                         super.onFailure(throwable)

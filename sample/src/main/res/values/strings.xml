@@ -1,7 +1,7 @@
 <!--
-  ~ Property of Expresspay (https://expresspay.sa).
+  ~ Property of EdfaPg (https://edfapay.com).
   -->
 
 <resources>
-    <string name="app_name">Expresspay SDK</string>
+    <string name="app_name">EdfaPg SDK</string>
 </resources>

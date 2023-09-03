@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.expresspay.sample'
+    namespace 'com.edfapaygw.sample'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.expresspay.sample"
+        applicationId "com.edfapaygw.sample"
         minSdk 19
         targetSdk 33
         versionCode 1
@@ -40,8 +40,7 @@ android {
 
 dependencies {
 
-    implementation project(':expresspay-sdk')
-
+    implementation project(':edfapaygw-sdk')
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'com.google.android.material:material:1.8.0'

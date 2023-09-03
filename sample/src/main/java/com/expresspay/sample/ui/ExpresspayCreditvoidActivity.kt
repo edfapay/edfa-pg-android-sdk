@@ -1,8 +1,8 @@
 /*
- * Property of Expresspay (https://expresspay.sa).
+ * Property of EdfaPg (https://edfapay.com).
  */
 
-package com.expresspay.sample.ui
+package com.edfapaygw.sample.ui
 
 import android.os.Bundle
 import android.view.View
@@ -11,29 +11,29 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
-import com.expresspay.sample.R
-import com.expresspay.sample.app.ExpresspayTransactionStorage
-import com.expresspay.sample.app.preattyPrint
-import com.expresspay.sample.databinding.ActivityCreditvoidBinding
-import com.expresspay.sdk.core.ExpresspaySdk
-import com.expresspay.sdk.model.response.base.error.ExpresspayError
-import com.expresspay.sdk.model.response.creditvoid.ExpresspayCreditvoidCallback
-import com.expresspay.sdk.model.response.creditvoid.ExpresspayCreditvoidResponse
-import com.expresspay.sdk.model.response.creditvoid.ExpresspayCreditvoidResult
+import com.edfapaygw.sample.R
+import com.edfapaygw.sample.app.EdfaPgTransactionStorage
+import com.edfapaygw.sample.app.preattyPrint
+import com.edfapaygw.sample.databinding.ActivityCreditvoidBinding
+import com.edfapaygw.sdk.core.EdfaPgSdk
+import com.edfapaygw.sdk.model.response.base.error.EdfaPgError
+import com.edfapaygw.sdk.model.response.creditvoid.EdfaPgCreditvoidCallback
+import com.edfapaygw.sdk.model.response.creditvoid.EdfaPgCreditvoidResponse
+import com.edfapaygw.sdk.model.response.creditvoid.EdfaPgCreditvoidResult
 import java.util.*
 
-class ExpresspayCreditvoidActivity : AppCompatActivity(R.layout.activity_creditvoid) {
+class EdfaPgCreditvoidActivity : AppCompatActivity(R.layout.activity_creditvoid) {
 
     private lateinit var binding: ActivityCreditvoidBinding
-    private lateinit var expresspayTransactionStorage: ExpresspayTransactionStorage
+    private lateinit var edfapayTransactionStorage: EdfaPgTransactionStorage
 
-    private var selectedTransaction: ExpresspayTransactionStorage.Transaction? = null
-    private var transactions: List<ExpresspayTransactionStorage.Transaction>? = null
+    private var selectedTransaction: EdfaPgTransactionStorage.Transaction? = null
+    private var transactions: List<EdfaPgTransactionStorage.Transaction>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        expresspayTransactionStorage = ExpresspayTransactionStorage(this)
+        edfapayTransactionStorage = EdfaPgTransactionStorage(this)
         binding = ActivityCreditvoidBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -42,11 +42,11 @@ class ExpresspayCreditvoidActivity : AppCompatActivity(R.layout.activity_creditv
 
     private fun configureView() {
         binding.btnLoadCreditvoid.setOnClickListener {
-            transactions = expresspayTransactionStorage.getCreditvoidTransactions()
+            transactions = edfapayTransactionStorage.getCreditvoidTransactions()
             invalidateSpinner()
         }
         binding.btnLoadAll.setOnClickListener {
-            transactions = expresspayTransactionStorage.getAllTransactions()
+            transactions = edfapayTransactionStorage.getAllTransactions()
             invalidateSpinner()
         }
         binding.btnCreditvoid.setOnClickListener {
@@ -67,7 +67,7 @@ class ExpresspayCreditvoidActivity : AppCompatActivity(R.layout.activity_creditv
                 }
 
             adapter = object : ArrayAdapter<String>(
-                this@ExpresspayCreditvoidActivity,
+                this@EdfaPgCreditvoidActivity,
                 android.R.layout.simple_spinner_dropdown_item,
                 prettyTransactions
             ) {
@@ -133,31 +133,31 @@ class ExpresspayCreditvoidActivity : AppCompatActivity(R.layout.activity_creditv
                 0.00
             }
 
-            val transaction = ExpresspayTransactionStorage.Transaction(
+            val transaction = EdfaPgTransactionStorage.Transaction(
                 payerEmail = selectedTransaction.payerEmail,
                 cardNumber = selectedTransaction.cardNumber
             )
 
             onRequestStart()
-            ExpresspaySdk.Adapter.CREDITVOID.execute(
+            EdfaPgSdk.Adapter.CREDITVOID.execute(
                 transactionId = selectedTransaction.id,
                 payerEmail = selectedTransaction.payerEmail,
                 cardNumber = selectedTransaction.cardNumber,
                 amount = amount,
-                callback = object : ExpresspayCreditvoidCallback {
-                    override fun onResponse(response: ExpresspayCreditvoidResponse) {
+                callback = object : EdfaPgCreditvoidCallback {
+                    override fun onResponse(response: EdfaPgCreditvoidResponse) {
                         super.onResponse(response)
                         onRequestFinish()
                         binding.txtResponse.text = response.preattyPrint()
                     }
 
-                    override fun onResult(result: ExpresspayCreditvoidResult) {
+                    override fun onResult(result: EdfaPgCreditvoidResult) {
                         transaction.fill(result.result)
 
-                        expresspayTransactionStorage.addTransaction(transaction)
+                        edfapayTransactionStorage.addTransaction(transaction)
                     }
 
-                    override fun onError(error: ExpresspayError) = Unit
+                    override fun onError(error: EdfaPgError) = Unit
 
                     override fun onFailure(throwable: Throwable) {
                         super.onFailure(throwable)

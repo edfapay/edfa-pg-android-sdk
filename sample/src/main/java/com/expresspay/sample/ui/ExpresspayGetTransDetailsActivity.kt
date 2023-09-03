@@ -1,8 +1,8 @@
 /*
- * Property of Expresspay (https://expresspay.sa).
+ * Property of EdfaPg (https://edfapay.com).
  */
 
-package com.expresspay.sample.ui
+package com.edfapaygw.sample.ui
 
 import android.os.Bundle
 import android.view.View
@@ -11,29 +11,29 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
-import com.expresspay.sample.R
-import com.expresspay.sample.app.ExpresspayTransactionStorage
-import com.expresspay.sample.app.preattyPrint
-import com.expresspay.sample.databinding.ActivityGetTransDetailsBinding
-import com.expresspay.sdk.core.ExpresspaySdk
-import com.expresspay.sdk.model.response.base.error.ExpresspayError
-import com.expresspay.sdk.model.response.gettransactiondetails.ExpresspayGetTransactionDetailsCallback
-import com.expresspay.sdk.model.response.gettransactiondetails.ExpresspayGetTransactionDetailsResponse
-import com.expresspay.sdk.model.response.gettransactiondetails.ExpresspayGetTransactionDetailsResult
+import com.edfapaygw.sample.R
+import com.edfapaygw.sample.app.EdfaPgTransactionStorage
+import com.edfapaygw.sample.app.preattyPrint
+import com.edfapaygw.sample.databinding.ActivityGetTransDetailsBinding
+import com.edfapaygw.sdk.core.EdfaPgSdk
+import com.edfapaygw.sdk.model.response.base.error.EdfaPgError
+import com.edfapaygw.sdk.model.response.gettransactiondetails.EdfaPgGetTransactionDetailsCallback
+import com.edfapaygw.sdk.model.response.gettransactiondetails.EdfaPgGetTransactionDetailsResponse
+import com.edfapaygw.sdk.model.response.gettransactiondetails.EdfaPgGetTransactionDetailsResult
 import java.util.*
 
-class ExpresspayGetTransDetailsActivity : AppCompatActivity(R.layout.activity_get_trans_details) {
+class EdfaPgGetTransDetailsActivity : AppCompatActivity(R.layout.activity_get_trans_details) {
 
     private lateinit var binding: ActivityGetTransDetailsBinding
-    private lateinit var expresspayTransactionStorage: ExpresspayTransactionStorage
+    private lateinit var edfapayTransactionStorage: EdfaPgTransactionStorage
 
-    private var selectedTransaction: ExpresspayTransactionStorage.Transaction? = null
-    private var transactions: List<ExpresspayTransactionStorage.Transaction>? = null
+    private var selectedTransaction: EdfaPgTransactionStorage.Transaction? = null
+    private var transactions: List<EdfaPgTransactionStorage.Transaction>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        expresspayTransactionStorage = ExpresspayTransactionStorage(this)
+        edfapayTransactionStorage = EdfaPgTransactionStorage(this)
         binding = ActivityGetTransDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -45,7 +45,7 @@ class ExpresspayGetTransDetailsActivity : AppCompatActivity(R.layout.activity_ge
             executeRequest()
         }
 
-        transactions = expresspayTransactionStorage.getAllTransactions()
+        transactions = edfapayTransactionStorage.getAllTransactions()
         invalidateSpinner()
     }
 
@@ -60,7 +60,7 @@ class ExpresspayGetTransDetailsActivity : AppCompatActivity(R.layout.activity_ge
                 }
 
             adapter = object : ArrayAdapter<String>(
-                this@ExpresspayGetTransDetailsActivity,
+                this@EdfaPgGetTransDetailsActivity,
                 android.R.layout.simple_spinner_dropdown_item,
                 prettyTransactions
             ) {
@@ -121,20 +121,20 @@ class ExpresspayGetTransDetailsActivity : AppCompatActivity(R.layout.activity_ge
     private fun executeRequest() {
         selectedTransaction?.let { selectedTransaction ->
             onRequestStart()
-            ExpresspaySdk.Adapter.GET_TRANSACTION_DETAILS.execute(
+            EdfaPgSdk.Adapter.GET_TRANSACTION_DETAILS.execute(
                 transactionId = selectedTransaction.id,
                 payerEmail = selectedTransaction.payerEmail,
                 cardNumber = selectedTransaction.cardNumber,
-                callback = object : ExpresspayGetTransactionDetailsCallback {
-                    override fun onResponse(response: ExpresspayGetTransactionDetailsResponse) {
+                callback = object : EdfaPgGetTransactionDetailsCallback {
+                    override fun onResponse(response: EdfaPgGetTransactionDetailsResponse) {
                         super.onResponse(response)
                         onRequestFinish()
                         binding.txtResponse.text = response.preattyPrint()
                     }
 
-                    override fun onResult(result: ExpresspayGetTransactionDetailsResult) = Unit
+                    override fun onResult(result: EdfaPgGetTransactionDetailsResult) = Unit
 
-                    override fun onError(error: ExpresspayError) = Unit
+                    override fun onError(error: EdfaPgError) = Unit
 
                     override fun onFailure(throwable: Throwable) {
                         super.onFailure(throwable)

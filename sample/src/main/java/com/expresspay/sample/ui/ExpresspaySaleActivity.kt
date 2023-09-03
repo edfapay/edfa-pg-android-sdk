@@ -1,8 +1,8 @@
 /*
- * Property of Expresspay (https://expresspay.sa).
+ * Property of EdfaPg (https://edfapay.com).
  */
 
-package com.expresspay.sample.ui
+package com.edfapaygw.sample.ui
 
 import android.app.DatePickerDialog
 import android.content.Intent
@@ -10,28 +10,28 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
-import com.expresspay.sample.R
-import com.expresspay.sample.app.ExpresspayTransactionStorage
-import com.expresspay.sample.app.preattyPrint
-import com.expresspay.sample.databinding.ActivitySaleBinding
-import com.expresspay.sdk.core.ExpresspaySdk
-import com.expresspay.sdk.model.request.card.ExpresspayTestCard
-import com.expresspay.sdk.model.request.options.ExpresspaySaleOptions
-import com.expresspay.sdk.model.request.order.ExpresspaySaleOrder
-import com.expresspay.sdk.model.request.payer.ExpresspayPayer
-import com.expresspay.sdk.model.request.payer.ExpresspayPayerOptions
-import com.expresspay.sdk.model.response.base.error.ExpresspayError
-import com.expresspay.sdk.model.response.sale.ExpresspaySaleCallback
-import com.expresspay.sdk.model.response.sale.ExpresspaySaleResponse
-import com.expresspay.sdk.model.response.sale.ExpresspaySaleResult
+import com.edfapaygw.sample.R
+import com.edfapaygw.sample.app.EdfaPgTransactionStorage
+import com.edfapaygw.sample.app.preattyPrint
+import com.edfapaygw.sample.databinding.ActivitySaleBinding
+import com.edfapaygw.sdk.core.EdfaPgSdk
+import com.edfapaygw.sdk.model.request.card.EdfaPgTestCard
+import com.edfapaygw.sdk.model.request.options.EdfaPgSaleOptions
+import com.edfapaygw.sdk.model.request.order.EdfaPgSaleOrder
+import com.edfapaygw.sdk.model.request.payer.EdfaPgPayer
+import com.edfapaygw.sdk.model.request.payer.EdfaPgPayerOptions
+import com.edfapaygw.sdk.model.response.base.error.EdfaPgError
+import com.edfapaygw.sdk.model.response.sale.EdfaPgSaleCallback
+import com.edfapaygw.sdk.model.response.sale.EdfaPgSaleResponse
+import com.edfapaygw.sdk.model.response.sale.EdfaPgSaleResult
 import io.kimo.lib.faker.Faker
 import java.text.DecimalFormat
 import java.util.*
 
-class ExpresspaySaleActivity : AppCompatActivity(R.layout.activity_sale) {
+class EdfaPgSaleActivity : AppCompatActivity(R.layout.activity_sale) {
 
     private lateinit var binding: ActivitySaleBinding
-    private lateinit var expresspayTransactionStorage: ExpresspayTransactionStorage
+    private lateinit var edfapayTransactionStorage: EdfaPgTransactionStorage
 
     private val random = Random()
 
@@ -40,7 +40,7 @@ class ExpresspaySaleActivity : AppCompatActivity(R.layout.activity_sale) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        expresspayTransactionStorage = ExpresspayTransactionStorage(this)
+        edfapayTransactionStorage = EdfaPgTransactionStorage(this)
         binding = ActivitySaleBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -49,7 +49,7 @@ class ExpresspaySaleActivity : AppCompatActivity(R.layout.activity_sale) {
 
     private fun configureView() {
         binding.btnClearTransactions.setOnClickListener {
-            expresspayTransactionStorage.clearTransactions()
+            edfapayTransactionStorage.clearTransactions()
         }
         binding.btnRandomizeRequired.setOnClickListener {
             randomize(false)
@@ -140,7 +140,7 @@ class ExpresspaySaleActivity : AppCompatActivity(R.layout.activity_sale) {
             0.0
         }
 
-        val order = ExpresspaySaleOrder(
+        val order = EdfaPgSaleOrder(
             id = binding.etxtOrderId.text.toString(),
             amount = amount,
             currency = binding.etxtOrderCurrencyCode.text.toString(),
@@ -148,21 +148,21 @@ class ExpresspaySaleActivity : AppCompatActivity(R.layout.activity_sale) {
         )
 
         val card = when (binding.rgCard.checkedRadioButtonId) {
-            R.id.rb_card_success -> ExpresspayTestCard.SALE_SUCCESS
-            R.id.rb_card_failure -> ExpresspayTestCard.SALE_FAILURE
-            R.id.rb_card_capture_failure -> ExpresspayTestCard.CAPTURE_FAILURE
-            R.id.rb_card_3ds_success -> ExpresspayTestCard.SECURE_3D_SUCCESS
-            R.id.rb_card_3ds_failure -> ExpresspayTestCard.SECURE_3D_FAILURE
-            else -> ExpresspayTestCard.SALE_SUCCESS
+            R.id.rb_card_success -> EdfaPgTestCard.SALE_SUCCESS
+            R.id.rb_card_failure -> EdfaPgTestCard.SALE_FAILURE
+            R.id.rb_card_capture_failure -> EdfaPgTestCard.CAPTURE_FAILURE
+            R.id.rb_card_3ds_success -> EdfaPgTestCard.SECURE_3D_SUCCESS
+            R.id.rb_card_3ds_failure -> EdfaPgTestCard.SECURE_3D_FAILURE
+            else -> EdfaPgTestCard.SALE_SUCCESS
         }
 
-        val payerOptions = ExpresspayPayerOptions(
+        val payerOptions = EdfaPgPayerOptions(
             middleName = binding.etxtPayerMiddleName.text.toString(),
             address2 = binding.etxtPayerAddress2.text.toString(),
             state = binding.etxtPayerState.text.toString(),
             birthdate = payerBirthdate?.time,
         )
-        val payer = ExpresspayPayer(
+        val payer = EdfaPgPayer(
             firstName = binding.etxtPayerFirstName.text.toString(),
             lastName = binding.etxtPayerLastName.text.toString(),
             address = binding.etxtPayerAddress.text.toString(),
@@ -175,42 +175,42 @@ class ExpresspaySaleActivity : AppCompatActivity(R.layout.activity_sale) {
             options = payerOptions
         )
 
-        val saleOptions = ExpresspaySaleOptions(
+        val saleOptions = EdfaPgSaleOptions(
             channelId = binding.etxtChannelId.text.toString(),
             recurringInit = binding.cbRecurringInit.isChecked
         )
 
-        val transaction = ExpresspayTransactionStorage.Transaction(
+        val transaction = EdfaPgTransactionStorage.Transaction(
             payerEmail = payer.email,
             cardNumber = card.number
         )
 
-        val termUrl3ds = "https://pay.expresspay.sa/"
+        val termUrl3ds = "https://pay.edfapay.com/"
 
         onRequestStart()
-        ExpresspaySdk.Adapter.SALE.execute(
+        EdfaPgSdk.Adapter.SALE.execute(
             order = order,
             card = card,
             payer = payer,
             termUrl3ds = termUrl3ds,
             options = saleOptions,
             auth = isAuth,
-            callback = object : ExpresspaySaleCallback {
-                override fun onResponse(response: ExpresspaySaleResponse) {
+            callback = object : EdfaPgSaleCallback {
+                override fun onResponse(response: EdfaPgSaleResponse) {
                     super.onResponse(response)
                     onRequestFinish()
                     binding.txtResponse.text = response.preattyPrint()
                 }
 
-                override fun onResult(result: ExpresspaySaleResult) {
+                override fun onResult(result: EdfaPgSaleResult) {
                     transaction.fill(result.result)
                     transaction.isAuth = isAuth
 
-                    if (result is ExpresspaySaleResult.Recurring) {
+                    if (result is EdfaPgSaleResult.Recurring) {
                         transaction.recurringToken = result.result.recurringToken
-                    } else if (result is ExpresspaySaleResult.Secure3d) {
-                        ExpresspayRedirect3dsActivity.open(
-                            this@ExpresspaySaleActivity,
+                    } else if (result is EdfaPgSaleResult.Secure3d) {
+                        EdfaPgRedirect3dsActivity.open(
+                            this@EdfaPgSaleActivity,
                             result.result.redirectParams.termUrl,
                             result.result.redirectUrl,
                             result.result.redirectParams.paymentRequisites,
@@ -218,10 +218,10 @@ class ExpresspaySaleActivity : AppCompatActivity(R.layout.activity_sale) {
                         )
                     }
 
-                    expresspayTransactionStorage.addTransaction(transaction)
+                    edfapayTransactionStorage.addTransaction(transaction)
                 }
 
-                override fun onError(error: ExpresspayError) = Unit
+                override fun onError(error: EdfaPgError) = Unit
 
                 override fun onFailure(throwable: Throwable) {
                     super.onFailure(throwable)
@@ -234,7 +234,7 @@ class ExpresspaySaleActivity : AppCompatActivity(R.layout.activity_sale) {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (ExpresspayRedirect3dsActivity.isOk(requestCode, resultCode)) {
+        if (EdfaPgRedirect3dsActivity.isOk(requestCode, resultCode)) {
             Toast.makeText(this, "The 3ds operation has been completed.", Toast.LENGTH_SHORT).show()
         }
     }

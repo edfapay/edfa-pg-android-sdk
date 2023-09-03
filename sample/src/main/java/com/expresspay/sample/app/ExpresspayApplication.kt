@@ -1,18 +1,18 @@
 /*
- * Property of Expresspay (https://expresspay.sa).
+ * Property of EdfaPg (https://edfapay.com).
  */
 
-package com.expresspay.sample.app
+package com.edfapaygw.sample.app
 
 import android.app.Application
-import com.expresspay.sdk.core.ExpresspaySdk
+import com.edfapaygw.sdk.core.EdfaPgSdk
 import io.kimo.lib.faker.Faker
 
-class ExpresspayApplication : Application() {
+class EdfaPgApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
         Faker.with(this)
-        ExpresspaySdk.init(this)
+        EdfaPgSdk.init(this)
     }
 }

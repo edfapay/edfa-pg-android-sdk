@@ -1,10 +1,10 @@
 <!--
-  ~ Property of Expresspay (https://expresspay.sa).
+  ~ Property of EdfaPg (https://edfapay.com).
   -->
 
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.ExpresspayAndroidSDK" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="Theme.EdfaPgAndroidSDK" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/orange</item>
         <item name="colorSecondary">@color/orange</item>
         <item name="colorPrimaryDark">@color/orange</item>

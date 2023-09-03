@@ -1,18 +1,18 @@
-![](https://jitpack.io/v/expresspay/expresspay-android-sdk.svg) | [View SDK Wiki](https://github.com/ExpresspaySa/expresspay-android-sdk/wiki) | [Report new issue](https://github.com/ExpresspaySa/expresspay-android-sdk/issues/new)
+![](https://jitpack.io/v/edfapay/edfapay-android-sdk.svg) | [View SDK Wiki](https://github.com/EdfaPgSa/edfapay-android-sdk/wiki) | [Report new issue](https://github.com/EdfaPgSa/edfapay-android-sdk/issues/new)
 
-# Expresspay Android SDK
+# EdfaPg Android SDK
 
-Expresspay is a white-label payment software provider. Thanks to our 15+ years of experience in the payment industry, we’ve developed a state-of-the-art white-label payment system that ensures smooth and uninterrupted payment flow for merchants across industries.
+EdfaPg is a white-label payment software provider. Thanks to our 15+ years of experience in the payment industry, we’ve developed a state-of-the-art white-label payment system that ensures smooth and uninterrupted payment flow for merchants across industries.
 
 <p align="center">
-  <a href="https://expresspay.sa">
-      <img src="/media/header.jpg" alt="Expresspay" width="400px"/>
+  <a href="https://edfapay.com">
+      <img src="/media/header.jpg" alt="EdfaPg" width="400px"/>
   </a>
 </p>
 
-Expresspay Android SDK was developed and designed with one purpose: to help the Android developers easily integrate the Expresspay API Payment Platform for a specific merchant. 
+EdfaPg Android SDK was developed and designed with one purpose: to help the Android developers easily integrate the EdfaPg API Payment Platform for a specific merchant. 
 
-The main aspects of the Expresspay Android SDK:
+The main aspects of the EdfaPg Android SDK:
 
 - [Kotlin](https://developer.android.com/kotlin) is the main language
 - [Retrofit](http://square.github.io/retrofit/) is the API machine 
@@ -21,8 +21,8 @@ The main aspects of the Expresspay Android SDK:
 - Minimum SDK 16+
 - Sample Application
 
-To properly set up the SDK, read [Wiki](https://github.com/ExpresspaySa/expresspay-android-sdk/wiki) first.
-To get used to the SDK, download a [sample app](https://github.com/ExpresspaySa/expresspay-android-sdk/tree/master/sample).
+To properly set up the SDK, read [Wiki](https://github.com/EdfaPgSa/edfapay-android-sdk/wiki) first.
+To get used to the SDK, download a [sample app](https://github.com/EdfaPgSa/edfapay-android-sdk/tree/master/sample).
 
 ## Setup
 
@@ -44,7 +44,7 @@ Add to the package build.gradle:
 
 ```groovy
 dependencies {
-    implementation 'com.github.ExpresspaySa:expresspay-android-sdk-code:1.0.4'
+    implementation 'com.github.EdfaPgSa:edfapay-android-sdk-code:1.0.4'
 }
 ```
 
@@ -52,8 +52,8 @@ Latest version is: ![Release](https://badgen.net/badge/jitpack/1.0.4/green)
 
 
 ## Quick Payment Implementation
-[**Card Payment**](https://github.com/ExpresspaySa/expresspay-android-sdk/wiki/Express-Quick-Card-Payment)
-Start the card payment with one click, easy and short line of codes. It will help the developer to easily implement the payment using card in thier application. click the [link](https://github.com/ExpresspaySa/expresspay-android-sdk/wiki/Express-Quick-Card-Payment) for easy steps to start payments.
+[**Card Payment**](https://github.com/EdfaPgSa/edfapay-android-sdk/wiki/Edfa-Quick-Card-Payment)
+Start the card payment with one click, easy and short line of codes. It will help the developer to easily implement the payment using card in thier application. click the [link](https://github.com/EdfaPgSa/edfapay-android-sdk/wiki/Edfa-Quick-Card-Payment) for easy steps to start payments.
 
 
 ## Sample
@@ -68,21 +68,21 @@ Start the card payment with one click, easy and short line of codes. It will hel
 
 ## Getting help
 
-To report a specific issue or feature request, open a [new issue](https://github.com/ExpresspaySa/expresspay-android-sdk/issues/new).
+To report a specific issue or feature request, open a [new issue](https://github.com/EdfaPgSa/edfapay-android-sdk/issues/new).
 
-Or write a direct letter to the [support@expresspay.sa](mailto:support@expresspay.sa).
+Or write a direct letter to the [support@edfapay.com](mailto:support@edfapay.com).
 
 ## License
 
-MIT License. See the [LICENSE](https://github.com/ExpresspaySa/expresspay-android-sdk/blob/master/LICENSE) file for more details.
+MIT License. See the [LICENSE](https://github.com/EdfaPgSa/edfapay-android-sdk/blob/master/LICENSE) file for more details.
 
 ## Contacts
 
 ![](/media/footer.jpg)
 
-Website: https://expresspay.sa  
+Website: https://edfapay.com  
 Phone: [+966 920033633](tel:+966920033633)  
-Email: [support@expresspay.sa](mailto:support@expresspay.sa)  
-Address: Expresspay, Olaya Street, Riyadh, Saudi Arabia 
+Email: [support@edfapay.com](mailto:support@edfapay.com)  
+Address: EdfaPg, Olaya Street, Riyadh, Saudi Arabia 
 
-© 2022 - 2023 Expresspay. All rights reserved.
+© 2022 - 2023 EdfaPg. All rights reserved.
