@@ -26,11 +26,30 @@ To get used to the SDK, download a [sample app](https://github.com/edfapay/edfa-
 
 ## Setup
 
-Add to the package build.gradle:
+Add it in your project settings.gradle:
+```groovy
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+        maven { url 'https://jitpack.io' }  // Add this Line
+    }
+}
+```
+
+Or
+
+To your project root build.gradle:
+```groovy
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' } // Add this Line
+}
+```
 
 ```groovy
 dependencies {
-    implementation 'com.edfapay.EdfaPgSa:edfa-pg-android-sdk:0.0.1'
+    implementation 'com.edfapay:edfa-pg-android-sdk:<latest version>'
 }
 ```
 
