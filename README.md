@@ -47,9 +47,12 @@ repositories {
 }
 ```
 
+Then
+
+Add dependency to your project module level build.gradle:
 ```groovy
 dependencies {
-    implementation 'com.edfapay:edfa-pg-android-sdk:<latest version>'
+    implementation 'com.edfapay:edfa-pg-android-sdk:<latest version>' // Add this Line with latest version
 }
 ```
 
