@@ -78,8 +78,6 @@ MIT License. See the [LICENSE](https://github.com/edfapay/edfa-pg-android-sdk-sa
 
 ## Contacts
 
-![](/media/footer.jpg)
-
 Website: https://edfapay.com  
 Phone: [+966 920033633](tel:+966920033633)  
 Email: [support@edfapay.com](mailto:support@edfapay.com)  
