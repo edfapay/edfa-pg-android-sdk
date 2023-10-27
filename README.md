@@ -58,13 +58,13 @@ Start the card payment with one click, easy and short line of codes. It will hel
 
 ## Sample
 
-| Sale | Recurring Sale | Capture |
-|-|-|-|
-| ![](/media/sales.gif) | ![](/media/recurring-sale.gif) | ![](/media/capture.gif) |
+| Txn Types | Card Pay | Sale | Recurring Sale |
+|-|-|-|-|
+| ![](/media/txn-types.png) | ![](/media/card-pay.png) | ![](/media/sales.png) | ![](/media/recurring-sale.png) |
 
-| Creditvoid | Get Trans Status | Get Trans Details |
-|-|-|-|
-| ![](/media/creditvoid.gif) | ![](/media/get-trans-status.gif) | ![](/media/get-trans-details.gif) |
+| Capture | Creditvoid | Get Trans Status | Get Trans Details |
+|-|-|-|-|
+| ![](/media/capture.png) | ![](/media/creditvoid.png) | ![](/media/get-trans-status.png) | ![](/media/get-trans-details.png) |
 
 ## Getting help
 
