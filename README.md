@@ -74,7 +74,7 @@ Or write a direct letter to the [support@edfapay.com](mailto:support@edfapay.com
 
 ## License
 
-MIT License. See the [LICENSE](https://github.com/EdfaPgSa/edfapay-android-sdk/blob/master/LICENSE) file for more details.
+MIT License. See the [LICENSE](https://github.com/edfapay/edfa-pg-android-sdk-sample/blob/main/LICENSE) file for more details.
 
 ## Contacts
 
