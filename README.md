@@ -1,4 +1,4 @@
-![](https://badgen.net/badge/jitpack/0.0.1/green) | [View SDK Wiki](https://github.com/edfapay/edfa-pg-android-sdk/wiki) | [Report new issue](https://github.com/edfapay/edfa-pg-android-sdk/issues/new)
+[![](https://jitpack.io/v/edfapay/edfa-pg-android-sdk.svg)](https://jitpack.io/#edfapay/edfa-pg-android-sdk) | [View SDK Wiki](https://github.com/edfapay/edfa-pg-android-sdk/wiki) | [Report new issue](https://github.com/edfapay/edfa-pg-android-sdk/issues/new)
 
 # EdfaPg Android SDK
 
@@ -34,7 +34,7 @@ dependencies {
 }
 ```
 
-Latest version is: ![Release](https://badgen.net/badge/jitpack/0.0.1/green)
+Latest version is: [![](https://jitpack.io/v/edfapay/edfa-pg-android-sdk.svg)](https://jitpack.io/#edfapay/edfa-pg-android-sdk)
 
 
 ## Quick Payment Implementation
