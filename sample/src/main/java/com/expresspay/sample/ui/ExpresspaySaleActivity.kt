@@ -185,7 +185,7 @@ class EdfaPgSaleActivity : AppCompatActivity(R.layout.activity_sale) {
             cardNumber = card.number
         )
 
-        val termUrl3ds = "https://pay.edfapay.com/"
+        val termUrl3ds = "https://pay.expresspay.sa/"
 
         onRequestStart()
         EdfaPgSdk.Adapter.SALE.execute(

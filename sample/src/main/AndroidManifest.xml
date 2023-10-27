@@ -27,7 +27,7 @@
             android:value="5c4f426eas15g5fa8b56c45y09432541" />
         <meta-data
             android:name="com.edfapg.sdk.PAYMENT_URL"
-            android:value="https://api.edfapay.com/post" />
+            android:value="https://api.expresspay.sa/post" />
 
         <activity
             android:name=".ui.EdfaPgMainAcitivty"
