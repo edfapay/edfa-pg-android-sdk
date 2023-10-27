@@ -2,12 +2,12 @@
  * Property of EdfaPg (https://edfapay.com).
  */
 
-package com.edfapaygw.sample.ui
+package com.edfapg.sample.ui
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.edfapaygw.sample.databinding.ActivityMainBinding
+import com.edfapg.sample.databinding.ActivityMainBinding
 
 class EdfaPgMainAcitivty : AppCompatActivity() {
 

@@ -4,7 +4,7 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.edfapaygw.sample"
+    package="com.edfapg.sample"
     tools:ignore="LockedOrientationActivity">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -20,13 +20,13 @@
 
         <!--EdfaPg SDK-->
         <meta-data
-            android:name="com.edfapaygw.sdk.CLIENT_KEY"
+            android:name="com.edfapg.sdk.CLIENT_KEY"
             android:value="d432a604-18t5-11ed-ad45-04b4443b4sd7" />
         <meta-data
-            android:name="com.edfapaygw.sdk.CLIENT_PASS"
+            android:name="com.edfapg.sdk.CLIENT_PASS"
             android:value="5c4f426eas15g5fa8b56c45y09432541" />
         <meta-data
-            android:name="com.edfapaygw.sdk.PAYMENT_URL"
+            android:name="com.edfapg.sdk.PAYMENT_URL"
             android:value="https://api.edfapay.com/post" />
 
         <activity

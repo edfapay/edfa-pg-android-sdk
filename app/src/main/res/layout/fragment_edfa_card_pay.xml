@@ -39,7 +39,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="4">
 
-                    <com.edfapaygw.sdk.views.edfacardpay.creditcardview.CreditCardView
+                    <com.edfapg.sdk.views.edfacardpay.creditcardview.CreditCardView
                         android:id="@+id/card"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"

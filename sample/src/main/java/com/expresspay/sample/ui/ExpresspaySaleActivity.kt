@@ -2,7 +2,7 @@
  * Property of EdfaPg (https://edfapay.com).
  */
 
-package com.edfapaygw.sample.ui
+package com.edfapg.sample.ui
 
 import android.app.DatePickerDialog
 import android.content.Intent
@@ -10,20 +10,20 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
-import com.edfapaygw.sample.R
-import com.edfapaygw.sample.app.EdfaPgTransactionStorage
-import com.edfapaygw.sample.app.preattyPrint
-import com.edfapaygw.sample.databinding.ActivitySaleBinding
-import com.edfapaygw.sdk.core.EdfaPgSdk
-import com.edfapaygw.sdk.model.request.card.EdfaPgTestCard
-import com.edfapaygw.sdk.model.request.options.EdfaPgSaleOptions
-import com.edfapaygw.sdk.model.request.order.EdfaPgSaleOrder
-import com.edfapaygw.sdk.model.request.payer.EdfaPgPayer
-import com.edfapaygw.sdk.model.request.payer.EdfaPgPayerOptions
-import com.edfapaygw.sdk.model.response.base.error.EdfaPgError
-import com.edfapaygw.sdk.model.response.sale.EdfaPgSaleCallback
-import com.edfapaygw.sdk.model.response.sale.EdfaPgSaleResponse
-import com.edfapaygw.sdk.model.response.sale.EdfaPgSaleResult
+import com.edfapg.sample.R
+import com.edfapg.sample.app.EdfaPgTransactionStorage
+import com.edfapg.sample.app.preattyPrint
+import com.edfapg.sample.databinding.ActivitySaleBinding
+import com.edfapg.sdk.core.EdfaPgSdk
+import com.edfapg.sdk.model.request.card.EdfaPgTestCard
+import com.edfapg.sdk.model.request.options.EdfaPgSaleOptions
+import com.edfapg.sdk.model.request.order.EdfaPgSaleOrder
+import com.edfapg.sdk.model.request.payer.EdfaPgPayer
+import com.edfapg.sdk.model.request.payer.EdfaPgPayerOptions
+import com.edfapg.sdk.model.response.base.error.EdfaPgError
+import com.edfapg.sdk.model.response.sale.EdfaPgSaleCallback
+import com.edfapg.sdk.model.response.sale.EdfaPgSaleResponse
+import com.edfapg.sdk.model.response.sale.EdfaPgSaleResult
 import io.kimo.lib.faker.Faker
 import java.text.DecimalFormat
 import java.util.*

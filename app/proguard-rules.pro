@@ -19,12 +19,12 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--keep class com.edfapaygw.databinding.** {public *;}
--keep class com.edfapaygw.sdk.core.* {public *;}
--keep class com.edfapaygw.sdk.model.** {public *;}
--keep class com.edfapaygw.sdk.model.** {public *;}
--keep class com.edfapaygw.sdk.views.** {public *;}
--keep class com.edfapaygw.sdk.feature.adapter.* {public *;}
+-keep class com.edfapg.databinding.** {public *;}
+-keep class com.edfapg.sdk.core.* {public *;}
+-keep class com.edfapg.sdk.model.** {public *;}
+-keep class com.edfapg.sdk.model.** {public *;}
+-keep class com.edfapg.sdk.views.** {public *;}
+-keep class com.edfapg.sdk.feature.adapter.* {public *;}
 
 -dontwarn org.bouncycastle.jsse.BCSSLParameters
 -dontwarn org.bouncycastle.jsse.BCSSLSocket

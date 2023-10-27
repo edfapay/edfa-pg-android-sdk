@@ -2,7 +2,7 @@
  * Property of EdfaPg (https://edfapay.com).
  */
 
-package com.edfapaygw.sample.ui
+package com.edfapg.sample.ui
 
 import android.os.Bundle
 import android.view.View
@@ -11,15 +11,15 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
-import com.edfapaygw.sample.R
-import com.edfapaygw.sample.app.EdfaPgTransactionStorage
-import com.edfapaygw.sample.app.preattyPrint
-import com.edfapaygw.sample.databinding.ActivityGetTransDetailsBinding
-import com.edfapaygw.sdk.core.EdfaPgSdk
-import com.edfapaygw.sdk.model.response.base.error.EdfaPgError
-import com.edfapaygw.sdk.model.response.gettransactiondetails.EdfaPgGetTransactionDetailsCallback
-import com.edfapaygw.sdk.model.response.gettransactiondetails.EdfaPgGetTransactionDetailsResponse
-import com.edfapaygw.sdk.model.response.gettransactiondetails.EdfaPgGetTransactionDetailsResult
+import com.edfapg.sample.R
+import com.edfapg.sample.app.EdfaPgTransactionStorage
+import com.edfapg.sample.app.preattyPrint
+import com.edfapg.sample.databinding.ActivityGetTransDetailsBinding
+import com.edfapg.sdk.core.EdfaPgSdk
+import com.edfapg.sdk.model.response.base.error.EdfaPgError
+import com.edfapg.sdk.model.response.gettransactiondetails.EdfaPgGetTransactionDetailsCallback
+import com.edfapg.sdk.model.response.gettransactiondetails.EdfaPgGetTransactionDetailsResponse
+import com.edfapg.sdk.model.response.gettransactiondetails.EdfaPgGetTransactionDetailsResult
 import java.util.*
 
 class EdfaPgGetTransDetailsActivity : AppCompatActivity(R.layout.activity_get_trans_details) {

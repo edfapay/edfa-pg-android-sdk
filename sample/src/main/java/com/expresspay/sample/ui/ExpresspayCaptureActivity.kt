@@ -2,7 +2,7 @@
  * Property of EdfaPg (https://edfapay.com).
  */
 
-package com.edfapaygw.sample.ui
+package com.edfapg.sample.ui
 
 import android.os.Bundle
 import android.view.View
@@ -11,15 +11,15 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
-import com.edfapaygw.sample.R
-import com.edfapaygw.sample.app.EdfaPgTransactionStorage
-import com.edfapaygw.sample.app.preattyPrint
-import com.edfapaygw.sample.databinding.ActivityCaptureBinding
-import com.edfapaygw.sdk.core.EdfaPgSdk
-import com.edfapaygw.sdk.model.response.base.error.EdfaPgError
-import com.edfapaygw.sdk.model.response.capture.EdfaPgCaptureCallback
-import com.edfapaygw.sdk.model.response.capture.EdfaPgCaptureResponse
-import com.edfapaygw.sdk.model.response.capture.EdfaPgCaptureResult
+import com.edfapg.sample.R
+import com.edfapg.sample.app.EdfaPgTransactionStorage
+import com.edfapg.sample.app.preattyPrint
+import com.edfapg.sample.databinding.ActivityCaptureBinding
+import com.edfapg.sdk.core.EdfaPgSdk
+import com.edfapg.sdk.model.response.base.error.EdfaPgError
+import com.edfapg.sdk.model.response.capture.EdfaPgCaptureCallback
+import com.edfapg.sdk.model.response.capture.EdfaPgCaptureResponse
+import com.edfapg.sdk.model.response.capture.EdfaPgCaptureResult
 import java.util.*
 
 class EdfaPgCaptureActivity : AppCompatActivity(R.layout.activity_capture) {

@@ -2,10 +2,10 @@
  * Property of EdfaPg (https://edfapay.com).
  */
 
-package com.edfapaygw.sample.app
+package com.edfapg.sample.app
 
 import android.app.Application
-import com.edfapaygw.sdk.core.EdfaPgSdk
+import com.edfapg.sdk.core.EdfaPgSdk
 import io.kimo.lib.faker.Faker
 
 class EdfaPgApplication : Application() {

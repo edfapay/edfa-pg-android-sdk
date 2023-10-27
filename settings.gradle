@@ -16,7 +16,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "EdfaPayGwSDKSample"
+rootProject.name = "EdfaPgSDK"
+include ':edfa-pg-sdk'
 include ':app'
-include ':edfapaygw-sdk'
-//project(':edfapaygw-sdk').projectDir = new File(settingsDir, '../edfapaygw-sdk')
