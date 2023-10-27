@@ -60,7 +60,7 @@ Start the card payment with one click, easy and short line of codes. It will hel
 
 | Txn Types | Card Pay | Sale | Recurring Sale |
 |-|-|-|-|
-| ![](/media/txn-types.png) | ![](/media/card-pay.png) | ![](/media/sales.png) | ![](/media/recurring-sale.png) |
+| ![](/media/txn-types.png) | ![](/media/card-pay.png) | ![](/media/sale.png) | ![](/media/recurring-sale.png) |
 
 | Capture | Creditvoid | Get Trans Status | Get Trans Details |
 |-|-|-|-|
