@@ -20,7 +20,8 @@
         <activity
             android:name=".views.edfacardpay.EdfaCardPayActivity"
             android:label="Edfa Card Pay"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat" />
 
         <activity
             android:name=".views.edfacardpay.EdfaPgSaleWebRedirectActivity"
