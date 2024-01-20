@@ -8,7 +8,8 @@
         <activity
             android:name=".EdfaPgHomeActivity_"
             android:exported="true"
-            android:label="SDK Home">
+            android:label="SDK Home"
+            android:theme="@style/Theme.AppCompat">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
