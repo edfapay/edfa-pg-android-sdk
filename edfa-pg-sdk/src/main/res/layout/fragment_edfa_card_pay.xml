@@ -174,9 +174,8 @@
                         android:gravity="center"
                         android:hint="@string/cvv"
                         android:inputType="number"
-                        android:maxLength="3"
+                        android:maxLength="4"
                         android:textSize="13sp" />
-
 
                 </LinearLayout>
 

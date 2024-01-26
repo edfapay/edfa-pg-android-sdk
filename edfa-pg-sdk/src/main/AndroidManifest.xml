@@ -8,8 +8,7 @@
         <activity
             android:name=".EdfaPgHomeActivity_"
             android:exported="true"
-            android:label="SDK Home"
-            android:theme="@style/Theme.AppCompat">
+            android:label="SDK Home">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -21,7 +20,8 @@
             android:name=".views.edfacardpay.EdfaCardPayActivity"
             android:label="Edfa Card Pay"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat" />
+            android:theme="@style/Theme.EdfaPgAndroidSDK" />
+
 
         <activity
             android:name=".views.edfacardpay.EdfaPgSaleWebRedirectActivity"

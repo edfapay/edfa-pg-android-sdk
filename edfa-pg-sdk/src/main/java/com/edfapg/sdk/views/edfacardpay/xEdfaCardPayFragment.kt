@@ -35,6 +35,8 @@ internal fun EdfaCardPayFragment.doSaleTransaction(cardDetail: CreditCard?){
             auth = false,
             callback = handleSaleResponse(CardTransactionData(order, payer, card, null))
         )
+    } else {
+        println("Something was empty")
     }
 
 }
