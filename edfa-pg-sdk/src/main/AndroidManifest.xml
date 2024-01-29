@@ -26,7 +26,9 @@
         <activity
             android:name=".views.edfacardpay.EdfaPgSaleWebRedirectActivity"
             android:label="Bank Verification"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.EdfaPgAndroidSDK" />
+
 
     </application>
 
