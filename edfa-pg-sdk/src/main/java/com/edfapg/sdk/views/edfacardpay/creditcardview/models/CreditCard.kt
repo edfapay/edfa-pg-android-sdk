@@ -92,7 +92,7 @@ open class CreditCard : Cloneable {
      */
     fun isNumberValid(): Boolean {
         val number_ = number.replace(" ", "")
-        return number_.trim().isNumeric() && number_.length == 16
+        return number_.trim().isNumeric() && number_.length >= 15
     }
 
     /**
