@@ -26,3 +26,4 @@
 -keep class com.edfapg.sdk.model.** {public *;}
 -keep class com.edfapg.sdk.views.** {public *;}
 -keep class com.edfapg.sdk.feature.adapter.* {public *;}
+-keep class java.util.Currency.*

@@ -4,7 +4,8 @@ package com.edfapg.sdk.views.edfacardpay.creditcardview.models
 
 import com.edfapg.sdk.views.edfacardpay.creditcardview.extensions.isNumeric
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 /**
  * Object that represents a credit card
@@ -35,16 +36,16 @@ open class CreditCard : Cloneable {
      */
     var expiry: String
 
-    fun expiryMonth():Int?{
-        if(expiry.length >= 2){
-            return  expiry.substring(0,2).toInt()
+    fun expiryMonth(): Int? {
+        if (expiry.length >= 2) {
+            return expiry.substring(0, 2).toInt()
         }
         return null
     }
 
-    fun expiryYear():Int?{
-        if(expiry.length == 4){
-            return  expiry.substring(2,4).toInt() + 2000
+    fun expiryYear(): Int? {
+        if (expiry.length == 4) {
+            return expiry.substring(2, 4).toInt() + 2000
         }
         return null
     }
@@ -91,7 +92,7 @@ open class CreditCard : Cloneable {
      */
     fun isNumberValid(): Boolean {
         val number_ = number.replace(" ", "")
-        return number_.trim().isNumeric() && number_.length == 16
+        return number_.trim().isNumeric() && number_.length >= 15
     }
 
     /**
@@ -103,12 +104,12 @@ open class CreditCard : Cloneable {
             val seperator = this.expiry.length - 4
 
             val month = this.expiry.substring(0, 2).toInt()
-            val year = this.expiry.substring(2+seperator, this.expiry.length).toInt()
+            val year = this.expiry.substring(2 + seperator, this.expiry.length).toInt()
 
             val month_2 = SimpleDateFormat("MM", Locale.getDefault()).format(Date()).toInt()
             val year_2 = SimpleDateFormat("yy", Locale.getDefault()).format(Date()).toInt()
 
-            return year+month >= year_2+month_2
+            return year + month >= year_2 + month_2
         } catch (e: Exception) {
             false
         }
@@ -118,7 +119,7 @@ open class CreditCard : Cloneable {
      * Checks if the CVV is valid, a valid CVV must be 3 digits long and contain numbers only
      */
     fun isCvvValid(): Boolean {
-        return cvv.length == 3 && cvv.isNumeric()
+        return (cvv.length == 4 || cvv.length == 3) && (cvv.isNumeric())
     }
 
     override fun toString(): String {

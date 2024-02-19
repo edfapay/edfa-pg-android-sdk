@@ -6,9 +6,9 @@
         android:supportsRtl="true"
         tools:targetApi="31">
         <activity
-            android:label="SDK Home"
             android:name=".EdfaPgHomeActivity_"
-            android:exported="true">
+            android:exported="true"
+            android:label="SDK Home">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -17,14 +17,18 @@
 
 
         <activity
-            android:label="Edfa Card Pay"
             android:name=".views.edfacardpay.EdfaCardPayActivity"
-            android:screenOrientation="portrait"/>
+            android:label="Edfa Card Pay"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.EdfaPgAndroidSDK" />
+
 
         <activity
-            android:label="Bank Verification"
             android:name=".views.edfacardpay.EdfaPgSaleWebRedirectActivity"
-            android:screenOrientation="portrait" />
+            android:label="Bank Verification"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.EdfaPgAndroidSDK" />
+
 
     </application>
 

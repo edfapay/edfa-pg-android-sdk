@@ -4,14 +4,12 @@
 
 package com.edfapg.sdk.model.request.order
 
-import android.icu.number.NumberFormatter
 import androidx.annotation.FloatRange
 import androidx.annotation.NonNull
 import androidx.annotation.Size
 import com.edfapg.sdk.toolbox.EdfaPgValidation
 import java.io.Serializable
-import java.text.NumberFormat
-import java.util.*
+import java.util.Currency
 
 /**
  * The sale order data holder.
@@ -33,7 +31,7 @@ data class EdfaPgSaleOrder(
     @NonNull
     @Size(max = EdfaPgValidation.Text.LONG)
     override val description: String,
-) : IEdfaPgOrder, Serializable{
+) : IEdfaPgOrder, Serializable {
 
     fun formattedAmount(): String {
         val fractionDigits = Currency.getInstance(currency).defaultFractionDigits

@@ -3,6 +3,7 @@ package com.edfapg.sdk.views.edfacardpay
 import android.app.Activity
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
@@ -20,16 +21,17 @@ import com.edfapg.sdk.toolbox.serializable
 import com.edfapg.sdk.views.edfacardpay.creditcardview.models.CardInput
 import com.edfapg.sdk.views.edfacardpay.creditcardview.util.NumberFormat
 
-internal class EdfaCardPayFragment : Fragment(), TextWatcher, OnFocusChangeListener{
+internal class EdfaCardPayFragment : Fragment(), TextWatcher, OnFocusChangeListener {
     lateinit var binding: FragmentEdfaCardPayBinding
-    var currentView:View? = null
+    var currentView: View? = null
 
     var xpressCardPay: EdfaCardPay? = null
-    var saleResponse:EdfaPgSaleResponse? = null
+    var saleResponse: EdfaPgSaleResponse? = null
 
-    val sale3dsRedirectLauncher =  registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()) {
-        if(it.resultCode == Activity.RESULT_OK){
+    val sale3dsRedirectLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == Activity.RESULT_OK) {
             val result = it.data?.serializable<EdfaPgGetTransactionDetailsSuccess>("result")
             val error = it.data?.serializable<EdfaPgError>("error")
             transactionCompleted(result, error)
@@ -64,8 +66,8 @@ internal class EdfaCardPayFragment : Fragment(), TextWatcher, OnFocusChangeListe
 
         xpressCardPay?._order?.let {
             with(binding) {
-                lblAmount.setText(it.formattedAmount())
-                lblCurrency.setText(it.formattedCurrency())
+                lblAmount.text = it.formattedAmount()
+                lblCurrency.text = it.formattedCurrency()
             }
         }
 
@@ -74,28 +76,31 @@ internal class EdfaCardPayFragment : Fragment(), TextWatcher, OnFocusChangeListe
         }
     }
 
-    private fun bindCardViewWithInputs(){
+    private fun bindCardViewWithInputs() {
         binding.card.pairInput(CardInput.HOLDER, binding.txtName)
         binding.card.pairInput(CardInput.NUMBER, binding.txtNumber)
 //            binding.card.pairInput(CardInput.EXPIRY, binding.txtExpiry)
         binding.card.pairInput(CardInput.CVV, binding.txtCVV)
     }
 
-    private fun makeInputsFocusable(){
+    private fun makeInputsFocusable() {
         binding.txtName.onFocusChangeListener = this
         binding.txtNumber.onFocusChangeListener = this
         binding.txtExpiry.onFocusChangeListener = this
         binding.txtCVV.onFocusChangeListener = this
     }
 
-    private fun addTextWatcher(){
+    private fun addTextWatcher() {
         binding.txtName.addTextChangedListener(this)
         binding.txtNumber.addTextChangedListener(this)
         binding.txtExpiry.addTextChangedListener(this)
+        val maxLength = 4
+        val filters = arrayOf<InputFilter>(InputFilter.LengthFilter(maxLength))
+        binding.txtCVV.filters = filters
         binding.txtCVV.addTextChangedListener(this)
     }
 
-    private fun removeTextWatcher(){
+    private fun removeTextWatcher() {
         binding.txtName.removeTextChangedListener(this)
         binding.txtNumber.removeTextChangedListener(this)
         binding.txtExpiry.removeTextChangedListener(this)
@@ -123,7 +128,7 @@ internal class EdfaCardPayFragment : Fragment(), TextWatcher, OnFocusChangeListe
             binding.card.cardData.isExpiryValid()
                     && binding.card.cardData.isNumberValid()
 //                    && binding.card.cardData.brand != Brand.GENERIC
-                    && binding.card.cardData.number.replace(" ", "").trim().length == 16
+                    && (binding.card.cardData.number.replace(" ", "").trim().length == 15 || binding.card.cardData.number.replace(" ", "").trim().length == 16)
                     && binding.card.cardData.isCvvValid()
                     && binding.card.holder.length > 3
 
@@ -132,61 +137,62 @@ internal class EdfaCardPayFragment : Fragment(), TextWatcher, OnFocusChangeListe
 
     override fun onFocusChange(v: View?, hasFocus: Boolean) {
         currentView = v
-        if(currentView == binding.txtCVV)
+        if (currentView == binding.txtCVV)
             binding.card.flip()
     }
 
-    private fun cardNameChanged(text:String){
+    private fun cardNameChanged(text: String) {
         binding.txtName.setText(text.uppercase())
         binding.txtName.setSelection(text.length)
     }
 
-   private fun cardNumberChanged(text:String){
-        val unformatted = text.replace(" ","")
+    private fun cardNumberChanged(text: String) {
+        val unformatted = text.replace(" ", "")
         val formatted = NumberFormat("%d4 %d4 %d4 %d4").format(unformatted)
         binding.txtNumber.setText(formatted)
         binding.txtNumber.setSelection(formatted.length)
 
-        if(text.isEmpty()){
+        if (text.isEmpty()) {
             binding.txtName.requestFocus()
-        }else if(unformatted.length == 16){
+        } else if (unformatted.length == 16) {
             binding.txtExpiry.requestFocus()
         }
     }
 
-    private fun cardExpiryChanged(text:String){
+    private fun cardExpiryChanged(text: String) {
         // Format the Input in Card Expiry Format (12/22)
-        val unformatted = text.replace("/","")
+        val unformatted = text.replace("/", "")
         var formatted = unformatted
-        if(unformatted.length > 2){
+        if (unformatted.length > 2) {
             formatted = NumberFormat("%d2/%d2").format(unformatted)
             binding.txtExpiry.setText(formatted)
             binding.txtExpiry.setSelection(formatted.length)
-        }else{
+        } else {
             binding.txtExpiry.setText(unformatted)
             binding.txtExpiry.setSelection(unformatted.length)
         }
 
         binding.card.expiry = unformatted
 
-        if(text.isEmpty()){
+        if (text.isEmpty()) {
             binding.txtNumber.requestFocus()
-        }else if(unformatted.length == 4){
+        } else if (unformatted.length == 4) {
             binding.txtCVV.requestFocus()
         }
     }
 
-    private fun cardCvvChanged(text:String){
-        if(text.isEmpty()){
+    private fun cardCvvChanged(text: String) {
+        if (text.isEmpty()) {
             binding.txtExpiry.requestFocus()
-        }else if(text.length == 3){
+        } else if (text.length == 4) {
             binding.txtCVV.clearFocus()
             hideKeyboard()
         }
     }
 
     private fun hideKeyboard() {
-        val imm: InputMethodManager = requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm: InputMethodManager =
+            requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(currentView?.windowToken, 0)
     }
 
