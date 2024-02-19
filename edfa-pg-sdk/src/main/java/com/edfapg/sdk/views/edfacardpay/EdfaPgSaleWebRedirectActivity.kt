@@ -72,8 +72,7 @@ class EdfaPgSaleWebRedirectActivity : AppCompatActivity(R.layout.activity_edfapa
                 }
 
                 private fun handleTermUrl3ds(url: String): Boolean {
-                    val url_ = url.replace("?" , "")
-                    if (!processCompleted && url_ == EdfaPgUtil.ProcessCompleteCallbackUrl) {
+                    if (!processCompleted && url.startsWith(EdfaPgUtil.ProcessCompleteCallbackUrl)) {
                         processCompleted = true
                         checkTransactionStatus(transactionData!!)
                         return true
