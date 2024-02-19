@@ -49,14 +49,23 @@ repositories {
 
 Then
 
-Add dependency to your project module level build.gradle:
+Add version based dependency to your project module level build.gradle:
 ```groovy
 dependencies {
     implementation 'com.github.edfapay:edfa-pg-android-sdk:<latest version>' // Add this Line with latest version
 }
 ```
+**Latest version** [![](https://jitpack.io/v/edfapay/edfa-pg-android-sdk.svg)](https://jitpack.io/#edfapay/edfa-pg-android-sdk)
 
-Latest version is: [![](https://jitpack.io/v/edfapay/edfa-pg-android-sdk.svg)](https://jitpack.io/#edfapay/edfa-pg-android-sdk)
+Or add the latest dependency to your project module level build.gradle:
+```groovy
+dependencies {
+    // Add the Line below it will always fetch the latest dependency from our latest build.
+    // If you want to refresh the dependencies and its versions follow the link: https://splitties.github.io/refreshVersions/update-dependencies
+    implementation 'com.github.edfapay:edfa-pg-android-sdk:latest-SNAPSHOT' 
+}
+```
+
 
 
 ## Quick Payment Implementation
