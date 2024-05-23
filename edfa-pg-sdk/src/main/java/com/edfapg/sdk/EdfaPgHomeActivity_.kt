@@ -43,7 +43,8 @@ class EdfaPgHomeActivity_ : AppCompatActivity() {
             "Zohaib","Kambrani",
             "Riyadh","SA", "Riyadh","123123",
             "a2zzuhaib@gmail.com","966500409598",
-            "171.100.100.123"
+            "171.100.100.123",
+            null
         )
 
         val edfaCardPay = EdfaCardPay()

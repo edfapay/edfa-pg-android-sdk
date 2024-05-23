@@ -28,7 +28,7 @@ import io.kimo.lib.faker.Faker
 import java.text.DecimalFormat
 import java.util.*
 
-class EdfaPgSaleActivity : AppCompatActivity(R.layout.activity_sale) {
+class EdfaPgSaleActivity : BaseActivity(R.layout.activity_sale) {
 
     private lateinit var binding: ActivitySaleBinding
     private lateinit var edfapayTransactionStorage: EdfaPgTransactionStorage

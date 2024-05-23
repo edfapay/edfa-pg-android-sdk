@@ -17,8 +17,10 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.Exception
 
 /**
  * The base EdfaPg API Adapter.
@@ -51,7 +53,7 @@ abstract class EdfaPgBaseAdapter<Service> {
         val okHttpClientBuilder = OkHttpClient.Builder()
         if (BuildConfig.DEBUG || ENABLE_DEBUG) {
             val httpLoggingInterceptor = HttpLoggingInterceptor()
-            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC)
+            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
             okHttpClientBuilder.addInterceptor(httpLoggingInterceptor)
         }
         configureOkHttpClient(okHttpClientBuilder)
@@ -138,6 +140,10 @@ abstract class EdfaPgBaseAdapter<Service> {
                     errorBody != null -> {
                         val json = gson.toJsonTree(errorBody.charStream())
                         val error = gson.fromJson(errorBody.charStream(), EdfaPgError::class.java)
+                        if(error == null){
+                            onFailure(call, Exception(response.code().toString()))
+                            return
+                        }
                         edfapayCallback.onResponse(EdfaPgResponse.Error<Result>(error, json.asJsonObject) as Response)
                         edfapayCallback.onError(error)
                     }

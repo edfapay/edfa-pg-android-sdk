@@ -14,7 +14,7 @@ import com.edfapg.sdk.model.request.payer.*
 import com.edfapg.sdk.views.edfacardpay.*
 import java.util.UUID
 
-class EdfaPgMainAcitivty : AppCompatActivity() {
+class EdfaPgMainAcitivty : BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -56,7 +56,7 @@ class EdfaPgMainAcitivty : AppCompatActivity() {
 
         val order = EdfaPgSaleOrder(
             id = UUID.randomUUID().toString(),
-            amount = 0.10,
+            amount = 1.00,
             currency = "SAR",
             description = "Test Order"
         )

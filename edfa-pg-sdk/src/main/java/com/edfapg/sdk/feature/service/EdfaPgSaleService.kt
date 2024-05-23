@@ -178,6 +178,9 @@ interface EdfaPgSaleService {
         @NonNull
         @Field("hash")
         hash: String,
+        @NonNull
+        @Field("req_token")
+        reqToken: String,
     ): Call<EdfaPgSaleResponse>
 }
 

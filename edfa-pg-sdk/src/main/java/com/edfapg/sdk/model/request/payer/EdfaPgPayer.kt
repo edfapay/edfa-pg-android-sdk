@@ -55,5 +55,5 @@ data class EdfaPgPayer(
     @Size(min = EdfaPgValidation.Text.IP_MIN, max = EdfaPgValidation.Text.IP_MAX)
     val ip: String,
     @Nullable
-    val options: EdfaPgPayerOptions? = null,
+    val options: EdfaPgPayerOptions? = null//= EdfaPgPayerOptions(),
 ) : Serializable
