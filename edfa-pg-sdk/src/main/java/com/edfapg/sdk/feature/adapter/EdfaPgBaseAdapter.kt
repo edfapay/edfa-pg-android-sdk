@@ -20,7 +20,7 @@ import retrofit2.Callback
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.Exception
+import kotlin.Exception
 
 /**
  * The base EdfaPg API Adapter.
@@ -137,16 +137,22 @@ abstract class EdfaPgBaseAdapter<Service> {
                             else -> onFailure(call, IllegalAccessException())
                         }
                     }
+
                     errorBody != null -> {
-                        val json = gson.toJsonTree(errorBody.charStream())
-                        val error = gson.fromJson(errorBody.charStream(), EdfaPgError::class.java)
-                        if(error == null){
+                        try {
+                            val json = gson.toJsonTree(errorBody.charStream())
+                            val error = gson.fromJson(errorBody.charStream(), EdfaPgError::class.java)
+                            if(error == null){
+                                onFailure(call, Exception(response.code().toString()))
+                                return
+                            }
+                            edfapayCallback.onResponse(EdfaPgResponse.Error<Result>(error, json.asJsonObject) as Response)
+                            edfapayCallback.onError(error)
+                        } catch (e:Exception){
                             onFailure(call, Exception(response.code().toString()))
-                            return
                         }
-                        edfapayCallback.onResponse(EdfaPgResponse.Error<Result>(error, json.asJsonObject) as Response)
-                        edfapayCallback.onError(error)
                     }
+
                     else -> {
                         onFailure(call, NullPointerException())
                     }
