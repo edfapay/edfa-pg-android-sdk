@@ -6,6 +6,7 @@ package com.edfapg.sample.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.edfapg.sample.databinding.ActivityMainBinding
@@ -56,7 +57,7 @@ class EdfaPgMainAcitivty : AppCompatActivity() {
 
         val order = EdfaPgSaleOrder(
             id = UUID.randomUUID().toString(),
-            amount = 0.10,
+            amount = 1.00,
             currency = "SAR",
             description = "Test Order"
         )
@@ -73,9 +74,13 @@ class EdfaPgMainAcitivty : AppCompatActivity() {
             .setPayer(payer)
             .onTransactionFailure { res, data ->
                 print("$res $data")
+//                Log.e("Failure Result",res.toString())
+//                Log.e("Failure Data",data.toString())
                 Toast.makeText(this, "Transaction Failure", Toast.LENGTH_LONG).show()
             }.onTransactionSuccess { res, data ->
                 print("$res $data")
+//                Log.e("Success Result",res.toString())
+//                Log.e("Success Data",data.toString())
                 Toast.makeText(this, "Transaction Success", Toast.LENGTH_LONG).show()
             }
 
