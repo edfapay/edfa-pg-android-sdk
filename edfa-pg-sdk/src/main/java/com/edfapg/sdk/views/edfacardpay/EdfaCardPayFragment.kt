@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
@@ -39,6 +40,7 @@ internal class EdfaCardPayFragment : Fragment(), TextWatcher, OnFocusChangeListe
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.e("onCreate","onCreate")
         super.onCreate(savedInstanceState)
         xpressCardPay = EdfaCardPay.shared()
     }
@@ -48,6 +50,7 @@ internal class EdfaCardPayFragment : Fragment(), TextWatcher, OnFocusChangeListe
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.e("onCreateView","onCreateView")
         binding = FragmentEdfaCardPayBinding.inflate(inflater, container, false)
 
         binding.txtName.hint = getString(R.string.card_holder)
@@ -59,6 +62,7 @@ internal class EdfaCardPayFragment : Fragment(), TextWatcher, OnFocusChangeListe
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.e("onViewCreated","onViewCreated")
         addTextWatcher()
         makeInputsFocusable()
         bindCardViewWithInputs()
