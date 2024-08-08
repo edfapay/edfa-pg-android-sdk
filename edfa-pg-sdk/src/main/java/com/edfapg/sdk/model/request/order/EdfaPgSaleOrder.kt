@@ -9,7 +9,6 @@ import androidx.annotation.NonNull
 import androidx.annotation.Size
 import com.edfapg.sdk.toolbox.EdfaPgValidation
 import java.io.Serializable
-import java.util.Currency
 
 /**
  * The sale order data holder.
@@ -34,12 +33,12 @@ data class EdfaPgSaleOrder(
 ) : IEdfaPgOrder, Serializable {
 
     fun formattedAmount(): String {
-        val fractionDigits = Currency.getInstance(currency).defaultFractionDigits
-        return String.format("%.${fractionDigits}f", amount)
+        val threeDecimalCurrency = listOf("TND","BH", "JOD", "IQD", "KWD", "OMR", "LYD")
+        val decimal = if(threeDecimalCurrency.contains(currency)) 3 else 2
+        return String.format("%.${decimal}f", amount)
     }
 
     fun formattedCurrency(): String {
-        val _currency = Currency.getInstance(currency)
-        return _currency.currencyCode
+        return currency
     }
 }

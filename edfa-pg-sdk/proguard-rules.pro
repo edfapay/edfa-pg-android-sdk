@@ -23,8 +23,8 @@
 -keep class com.edfapg.databinding.** {public *;}
 -keep class com.edfapg.sdk.core.* {public *;}
 -keep class com.edfapg.sdk.model.** {public *;}
+-keep class com.edfapg.sdk.model.request.order.EdfaPgSaleOrder.*
 -keep class com.edfapg.sdk.model.** {public *;}
 -keep class com.edfapg.sdk.views.** {public *;}
 -keep class com.edfapg.sdk.feature.adapter.* {public *;}
--keep class java.util.Currency.*
 -keep class com.edfapg.sdk.** { *; }

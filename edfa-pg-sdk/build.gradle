@@ -9,7 +9,7 @@ ext {
     mGroupId = "com.edfapg"
     mArtifactId = "sdk"
     mVersionCode = 1
-    mVersionName = "1.0.4"
+    mVersionName = "1.0.5"
 
     mLibraryName = "EdfaPgSDK"
     mLibraryDescription = "$mLibraryName responsable for help to integerate EdfaPay payment gateway system"
@@ -88,16 +88,10 @@ afterEvaluate {
             }
         }
 
-        /*repositories {
+        repositories {
             maven {
-                name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/sbs-ksa/FinPay-pin-module")
-                credentials {
-                    def githubProp = getProps("$rootDir/github.properties")
-                    username = githubProp['GPR_USER']
-                    password = githubProp['GPR_KEY']
-                }
+                url uri('/Volumes/Data/Projects/local-maven-repo') // Adjust the path as needed
             }
-        }*/
+        }
     }
 }

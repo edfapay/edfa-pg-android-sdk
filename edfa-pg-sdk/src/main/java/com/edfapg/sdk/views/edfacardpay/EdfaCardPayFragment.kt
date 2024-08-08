@@ -28,9 +28,7 @@ internal class EdfaCardPayFragment : Fragment(), TextWatcher, OnFocusChangeListe
     var xpressCardPay: EdfaCardPay? = null
     var saleResponse: EdfaPgSaleResponse? = null
 
-    val sale3dsRedirectLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) {
+    val sale3dsRedirectLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == Activity.RESULT_OK) {
             val result = it.data?.serializable<EdfaPgGetTransactionDetailsSuccess>("result")
             val error = it.data?.serializable<EdfaPgError>("error")
