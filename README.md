@@ -24,52 +24,58 @@ The main aspects of the EdfaPg Android SDK:
 To properly set up the SDK, read [Wiki](https://github.com/edfapay/edfa-pg-android-sdk/wiki) first.
 To get used to the SDK, download a [sample app](https://github.com/edfapay/edfa-pg-android-sdk-sample).
 
-## Setup
 
-Add it in your project settings.gradle:
-```groovy
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        mavenCentral()
-        maven { url 'https://jitpack.io' }  // Add this Line
-    }
-}
-```
-
-Or
-
-To your project build.gradle:
-```groovy
-repositories {
-    mavenCentral()
-    maven { url 'https://jitpack.io' } // Add this Line
-}
-```
-
-Add version based dependency to your project module level build.gradle:
-```groovy
-dependencies {
-    implementation 'com.github.edfapay:edfa-pg-android-sdk:<latest version>' // Add this Line with latest version
-}
-```
-**Latest version** [![](https://jitpack.io/v/edfapay/edfa-pg-android-sdk.svg)](https://jitpack.io/#edfapay/edfa-pg-android-sdk)
-
-Or add the latest dependency to your project module level build.gradle:
-```groovy
-dependencies {
-    // Add the Line below it will always fetch the latest dependency from our latest build.
-    // If you want to refresh the dependencies and its versions follow the link: https://splitties.github.io/refreshVersions/update-dependencies
-    implementation 'com.github.edfapay:edfa-pg-android-sdk:latest-SNAPSHOT' 
-}
-```
-
-If your project is obfuscated with proguard please add the below rule to your project **proguard-rules.pro**
-```
--keep class com.edfapg.sdk.** {
-  public protected private *;
-}
-```
+> [!IMPORTANT]
+> ## Setup
+>
+> ### JitPack Repository Support
+> Add it in your project settings.gradle:
+> ```groovy
+> dependencyResolutionManagement {
+>     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+>     repositories {
+>         mavenCentral()
+>         maven { url 'https://jitpack.io' }  // Add this Line
+>     }
+> }
+> ```
+>
+> Or
+>
+> To your project build.gradle:
+> ```groovy
+> repositories {
+>     mavenCentral()
+>     maven { url 'https://jitpack.io' } // Add this Line
+> }
+> ```
+>
+>
+> ### Gradle Dependency
+> Add version based dependency to your project module level build.gradle: [![](https://jitpack.io/v/edfapay/edfa-pg-android-sdk.svg)](https://jitpack.io/#edfapay/edfa-pg-android-sdk)
+> ```groovy
+> dependencies {
+>     implementation 'com.github.edfapay:edfa-pg-android-sdk:<latest version>' // Add this Line with latest version
+> }
+> ```
+>
+>
+> Or add the latest dependency to your project module level build.gradle:
+> ```groovy
+> dependencies {
+>     // Add the Line below it will always fetch the latest dependency from our latest build.
+>     // If you want to refresh the dependencies and its versions follow the link: https://splitties.github.io/refreshVersions/update-dependencies
+>     implementation 'com.github.edfapay:edfa-pg-android-sdk:latest-SNAPSHOT' 
+> }
+> ```
+>
+> ### Proguard Rules (Obfuscation)
+> If your project is obfuscated with proguard please add the below rule to your project **proguard-rules.pro**
+> ```
+> -keep class com.edfapg.sdk.** {
+>   public protected private *;
+> }
+> ```
 
 
 
