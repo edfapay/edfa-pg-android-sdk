@@ -47,8 +47,6 @@ repositories {
 }
 ```
 
-Then
-
 Add version based dependency to your project module level build.gradle:
 ```groovy
 dependencies {
@@ -63,6 +61,13 @@ dependencies {
     // Add the Line below it will always fetch the latest dependency from our latest build.
     // If you want to refresh the dependencies and its versions follow the link: https://splitties.github.io/refreshVersions/update-dependencies
     implementation 'com.github.edfapay:edfa-pg-android-sdk:latest-SNAPSHOT' 
+}
+```
+
+If your project is obfuscated with proguard please add the below rule to your project **proguard-rules.pro**
+```
+-keep class com.edfapg.sdk.** {
+  public protected private *;
 }
 ```
 
