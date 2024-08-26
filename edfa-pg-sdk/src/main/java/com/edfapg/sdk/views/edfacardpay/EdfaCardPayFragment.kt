@@ -12,14 +12,21 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.test.core.app.ActivityScenario.launch
 import com.edfapg.sdk.R
 import com.edfapg.sdk.databinding.FragmentEdfaCardPayBinding
 import com.edfapg.sdk.model.response.base.error.EdfaPgError
 import com.edfapg.sdk.model.response.gettransactiondetails.EdfaPgGetTransactionDetailsSuccess
 import com.edfapg.sdk.model.response.sale.EdfaPgSaleResponse
+import com.edfapg.sdk.toolbox.delayAtMain
 import com.edfapg.sdk.toolbox.serializable
 import com.edfapg.sdk.views.edfacardpay.creditcardview.models.CardInput
 import com.edfapg.sdk.views.edfacardpay.creditcardview.util.NumberFormat
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 internal class EdfaCardPayFragment : Fragment(), TextWatcher, OnFocusChangeListener {
     lateinit var binding: FragmentEdfaCardPayBinding
@@ -152,8 +159,8 @@ internal class EdfaCardPayFragment : Fragment(), TextWatcher, OnFocusChangeListe
 
         if (text.isEmpty()) {
             binding.txtName.requestFocus()
-        } else if (unformatted.length == 16) {
-            binding.txtExpiry.requestFocus()
+        } else if (unformatted.length >= 16) {
+            delayAtMain(100, binding.txtExpiry::requestFocus)
         }
     }
 
