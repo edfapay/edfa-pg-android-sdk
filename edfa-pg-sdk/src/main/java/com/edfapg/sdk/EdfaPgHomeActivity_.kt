@@ -63,12 +63,8 @@ class EdfaPgHomeActivity_ : AppCompatActivity() {
         * */
         edfaCardPay.initialize(
             this,
-            onError = {
-
-            },
-            onPresent = {
-
-            }
+            onError = {},
+            onPresent = { }
         )
 
 

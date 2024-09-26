@@ -194,7 +194,6 @@ internal class EdfaCardPayFragment : Fragment(), TextWatcher, OnFocusChangeListe
             hideKeyboard()
         }
     }
-
     private fun hideKeyboard() {
         val imm: InputMethodManager =
             requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager

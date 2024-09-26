@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.fragment.app.Fragment
+import com.edfapg.sdk.PaymentActivity
 import com.edfapg.sdk.model.request.order.EdfaPgSaleOrder
 import com.edfapg.sdk.model.request.payer.EdfaPgPayer
 import com.edfapg.sdk.model.response.sale.EdfaPgSaleResponse
@@ -52,7 +53,7 @@ class EdfaCardPay {
         _onError = onError
         _onPresent = onPresent
 
-        val intent = Intent(context, EdfaCardPayActivity::class.java)
+        val intent = Intent(context, PaymentActivity::class.java)
         return  intent
     }
 
