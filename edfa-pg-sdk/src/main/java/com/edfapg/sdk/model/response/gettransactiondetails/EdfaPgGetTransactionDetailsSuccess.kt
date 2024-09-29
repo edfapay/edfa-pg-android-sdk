@@ -31,7 +31,7 @@ data class EdfaPgGetTransactionDetailsSuccess(
     @NonNull
     @SerializedName("result")
     override val result: EdfaPgResult,
-    @Nullable
+    @NonNull
     @SerializedName("decline_reason")
     val declineReason: String,
     @NonNull

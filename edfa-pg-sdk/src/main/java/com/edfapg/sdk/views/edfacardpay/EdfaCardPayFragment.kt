@@ -28,7 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-internal class EdfaCardPayFragment : Fragment(), TextWatcher, OnFocusChangeListener {
+class EdfaCardPayFragment : Fragment(), TextWatcher, OnFocusChangeListener {
     lateinit var binding: FragmentEdfaCardPayBinding
     var currentView: View? = null
 

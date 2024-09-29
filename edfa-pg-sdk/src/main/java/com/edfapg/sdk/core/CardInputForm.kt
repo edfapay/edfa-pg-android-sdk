@@ -1,6 +1,9 @@
 package com.example.paymentgatewaynew.common
 
 import Footer
+import android.app.Activity
+import android.content.Intent
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
@@ -43,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
+import com.edfapg.sdk.PaymentActivity
 import com.edfapg.sdk.R
 import com.edfapg.sdk.core.EdfaPgSdk
 import com.edfapg.sdk.core.handleSaleResponse
@@ -58,6 +62,7 @@ import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
 import com.edfapg.sdk.views.edfacardpay.EdfaCardPayFragment
 import com.edfapg.sdk.views.edfacardpay.EdfaPgSaleWebRedirectActivity
 import com.edfapg.sdk.views.edfacardpay.handleSaleResponse
+import org.junit.runner.manipulation.Ordering.Context
 
 
 @Composable
@@ -70,15 +75,15 @@ fun CardInputForm(
     onCvcChange: (TextFieldValue) -> Unit,
     expiryDate: TextFieldValue,
     onExpiryDateChange: (TextFieldValue) -> Unit,
-    xpressCardPay: EdfaCardPay?
-) {
+    xpressCardPay: EdfaCardPay?,
+    activity: Activity?,
+    sale3dsRedirectLauncher: ActivityResultLauncher<Intent>) {
     // Hoist the state of these variables to preserve their values across recompositions
     var month by remember { mutableStateOf("") }
     var year by remember { mutableStateOf("") }
     var cvv by remember { mutableStateOf("") }
     var unformattedNumber by remember { mutableStateOf("") }
 
-    var saleResponse: EdfaPgSaleResponse? = null
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -223,9 +228,8 @@ fun CardInputForm(
                         println("Month or Year is empty")
                         return@Button
                     }
-                    val card = EdfaPgCard(unformattedNumber, month.toInt(), year.toInt(), cvv)
-
-                    saleResponse = null
+                    val card = EdfaPgCard(unformattedNumber, month.toInt(), year.toInt()+2000, cvv)
+                    PaymentActivity.saleResponse = null
                     EdfaPgSdk.Adapter.SALE.execute(
                         order = order,
                         card = card,
@@ -233,7 +237,9 @@ fun CardInputForm(
                         termUrl3ds = EdfaPgUtil.ProcessCompleteCallbackUrl,
                         options = null,
                         auth = false,
-                        callback = handleSaleResponse(CardTransactionData(order, payer, card, null))
+                        callback = handleSaleResponse(CardTransactionData(order, payer, card, null),
+                            activity = activity!!,
+                            sale3dsRedirectLauncher = sale3dsRedirectLauncher)
                     )
                 } else {
                     println("Something was empty")

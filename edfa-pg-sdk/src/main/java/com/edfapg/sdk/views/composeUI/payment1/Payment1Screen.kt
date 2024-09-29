@@ -1,7 +1,9 @@
 package com.example.paymentgatewaynew.payment1
 import android.app.Activity
+import android.content.Intent
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,7 +24,7 @@ import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Payment1Screen(navController: NavController,xpressCardPay: EdfaCardPay?) {
+fun Payment1Screen(navController: NavController,xpressCardPay: EdfaCardPay?,activity: Activity,sale3dsRedirectLauncher: ActivityResultLauncher<Intent>) {
     val context = LocalContext.current
     var bottomSheetVisible by remember { mutableStateOf(true) }  // Initially visible
 
@@ -77,7 +79,7 @@ fun Payment1Screen(navController: NavController,xpressCardPay: EdfaCardPay?) {
                     ) {
                         TitleAmount(amount = amount, currency = currency)  // Pass data to TitleAmount
                     }
-                    Payment1Form(xpressCardPay = xpressCardPay)
+                    Payment1Form(xpressCardPay = xpressCardPay, activity = activity, sale3dsRedirectLauncher = sale3dsRedirectLauncher)
                 }
             }
 

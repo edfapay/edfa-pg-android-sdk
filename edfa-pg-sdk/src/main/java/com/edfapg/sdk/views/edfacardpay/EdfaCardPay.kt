@@ -54,6 +54,7 @@ class EdfaCardPay {
         _onPresent = onPresent
 
         val intent = Intent(context, PaymentActivity::class.java)
+        intent.putExtra("paymentDesign","3")
         return  intent
     }
 

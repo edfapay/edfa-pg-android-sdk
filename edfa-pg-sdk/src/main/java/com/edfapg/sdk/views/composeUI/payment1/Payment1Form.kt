@@ -1,5 +1,8 @@
 package com.example.paymentgatewaynew.payment1
 
+import android.app.Activity
+import android.content.Intent
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,7 +21,7 @@ import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
 import com.example.paymentgatewaynew.common.CardInputForm
 
 @Composable
-fun Payment1Form(xpressCardPay: EdfaCardPay?) {
+fun Payment1Form(xpressCardPay: EdfaCardPay?,activity: Activity,sale3dsRedirectLauncher: ActivityResultLauncher<Intent>) {
     var cardNumber by remember { mutableStateOf(TextFieldValue("")) }
     var cardHolderName by remember { mutableStateOf(TextFieldValue("")) }
     var expiryDate by remember { mutableStateOf(TextFieldValue("")) }
@@ -42,7 +45,9 @@ fun Payment1Form(xpressCardPay: EdfaCardPay?) {
             onCvcChange = { cvc = it },
             expiryDate = expiryDate,
             onExpiryDateChange = { expiryDate = it },
-            xpressCardPay = xpressCardPay
+            xpressCardPay = xpressCardPay,
+            activity = activity,
+            sale3dsRedirectLauncher = sale3dsRedirectLauncher
         )
     }
 }
