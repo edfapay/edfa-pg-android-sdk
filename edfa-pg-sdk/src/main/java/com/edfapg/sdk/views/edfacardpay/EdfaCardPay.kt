@@ -52,9 +52,9 @@ class EdfaCardPay {
     fun intent(context:Context, onError:(Any) -> Unit, onPresent:(Activity) -> Unit) : Intent {
         _onError = onError
         _onPresent = onPresent
-
+//        val intent = Intent(context, EdfaCardPayActivity::class.java)
         val intent = Intent(context, PaymentActivity::class.java)
-        intent.putExtra("paymentDesign","3")
+        intent.putExtra("paymentDesign","1")
         return  intent
     }
 

@@ -15,11 +15,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.edfapg.sdk.R
 import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -96,7 +98,7 @@ fun Payment1Screen(navController: NavController,xpressCardPay: EdfaCardPay?,acti
 fun TitleAmount(amount: String, currency: String) {
     Column {
         Text(
-            text = "Total Amount",
+            text = stringResource(id = R.string.txt_total),
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .padding(5.dp)

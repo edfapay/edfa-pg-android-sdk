@@ -27,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -34,8 +35,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.edfapg.sdk.R
 import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
 import com.example.paymentgatewaynew.common.CardInputForm
+import com.example.paymentgatewaynew.payment1.Payment1Form
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,7 +62,7 @@ fun Payment2Screen(navController: NavController,xpressCardPay: EdfaCardPay?,acti
     }
 }
 @Composable
-fun TitleAmount() {
+fun TitleAmount(amount:String,currency:String) {
     Column(
         modifier = Modifier
             .padding(16.dp)
@@ -67,14 +70,14 @@ fun TitleAmount() {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Total Amount",
+            text = stringResource(id = R.string.txt_total),
             textAlign = TextAlign.Start,
             modifier = Modifier
                 .padding(5.dp),
             fontSize = 16.sp
         )
         Text(
-            text = "1000,00 \nSAR",
+            text = "$amount $currency",
             textAlign = TextAlign.Start,
             modifier = Modifier
                 .padding(5.dp),
@@ -101,7 +104,11 @@ fun CardEntryForm(navController:NavController,xpressCardPay: EdfaCardPay?,activi
                         navController.popBackStack()
                     }
             ) {
-                TitleAmount()
+                xpressCardPay?._order?.let {
+                    val amount = it.formattedAmount() // Get formatted amount from order
+                    val currency = it.formattedCurrency() // Get formatted currency from order
+                    TitleAmount(amount, currency)
+                }
             }
             Spacer(modifier = Modifier.weight(1f))
             Card2Form(

@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -31,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.edfapg.sdk.R
 
-@Preview
 @Composable
 fun Card1UI(
     cardNumber: String,
@@ -57,8 +57,7 @@ fun Card1UI(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-
-                text = "This card is issued by Swedbank pursuant to licence by Mastercard International.",
+                text = stringResource(id = R.string.txt_desc),
                 style = MaterialTheme.typography.labelSmall,
                 color = Color.White,
                 fontSize = 7.sp,
@@ -98,7 +97,7 @@ fun Card1UI(
                     Spacer(modifier = Modifier.weight(0.5f))
                     Text(
                         modifier = Modifier.align(Alignment.CenterVertically),
-                        text = "VALID \nTHRU",
+                        text = stringResource(id = R.string.txt_validate),
                         style = MaterialTheme.typography.labelSmall,
                         color = Color.White,
                         textAlign = TextAlign.Center,
@@ -107,7 +106,7 @@ fun Card1UI(
                     )
                     Column {
                         Text(
-                            text = "MONTH/YEAR",
+                            text = stringResource(id = R.string.txt_month),
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.White,
                             fontSize = 8.sp
@@ -123,7 +122,7 @@ fun Card1UI(
                     Spacer(modifier = Modifier.weight(0.5f))
                     Column {
                         Text(
-                            text = "CVC",
+                            text = stringResource(id = R.string.cvv),
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.White
                         )
@@ -191,8 +190,8 @@ fun CardForm(
 
     Card1UI(
         cardNumber = cardNumber.text.ifEmpty { "**** **** **** ****" },
-        cardHolderName = cardHolderName.text.ifEmpty { "Card holder Name" },
+        cardHolderName = cardHolderName.text.ifEmpty { stringResource(id = R.string.txt_card_holdername)},
         expiryDate = expiryDate.text.ifEmpty { "00/00" },
-        cvc = cvc.text.ifEmpty { "123" }
+        cvc = cvc.text.ifEmpty { "000" }
     )
 }

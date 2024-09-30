@@ -38,7 +38,6 @@ fun Payment3Screen(navController: NavController,xpressCardPay: EdfaCardPay?,acti
         confirmValueChange = { newState ->
             newState != SheetValue.Hidden
         })
-
     ModalBottomSheet(
         modifier = Modifier.fillMaxHeight(0.9f),
         containerColor = Color.White,
@@ -51,7 +50,8 @@ fun Payment3Screen(navController: NavController,xpressCardPay: EdfaCardPay?,acti
                 cardNumber = cardNumber.text,
                 cardHolderName = cardHolderName.text,
                 expiryDate = expiryDate.text,
-                cvc = cvc.text
+                cvc = cvc.text,
+                xpressCardPay = xpressCardPay,
             )
 
             CardInputForm(

@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -34,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.edfapg.sdk.R
+import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
 
 @Composable
 fun Card3UI(
@@ -41,7 +43,8 @@ fun Card3UI(
     cardNumber: String,
     cardHolderName: String,
     expiryDate: String,
-    cvc: String
+    cvc: String,
+    xpressCardPay: EdfaCardPay?
 ) {
     Box(
         modifier = Modifier
@@ -66,7 +69,11 @@ fun Card3UI(
                         navController.popBackStack()
                     }
             ) {
-                TitleAmount()
+                xpressCardPay?._order?.let {
+                    val amount = it.formattedAmount() // Get formatted amount from order
+                    val currency = it.formattedCurrency() // Get formatted currency from order
+                    TitleAmount(amount = amount, currency = currency)
+                }
             }
 
             Box(
@@ -119,7 +126,7 @@ fun Card3UI(
                     )
                     Column(modifier = Modifier.padding(start = 10.dp)) {
                         Text(
-                            text = cardHolderName.ifEmpty { "Card holder Name" },
+                            text = cardHolderName.ifEmpty {stringResource(id = R.string.txt_card_holdername)},
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.Black
                         )
@@ -164,7 +171,7 @@ fun Card3UI(
                     Spacer(modifier = Modifier.weight(0.5f))
                     Text(
                         modifier = Modifier.align(Alignment.CenterVertically),
-                        text = "VALID \nTHRU",
+                        text = stringResource(id = R.string.txt_validate),
                         style = MaterialTheme.typography.labelSmall,
                         color = Color.White,
                         textAlign = TextAlign.Center,
@@ -173,7 +180,7 @@ fun Card3UI(
                     )
                     Column {
                         Text(
-                            text = "MONTH/YEAR",
+                            text = stringResource(id = R.string.txt_month),
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.White,
                             fontSize = 8.sp
@@ -190,7 +197,7 @@ fun Card3UI(
 
                     Column {
                         Text(
-                            text = "CVC",
+                            text = stringResource(id = R.string.cvv),
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.White
                         )
@@ -250,7 +257,7 @@ fun Card3UI(
 
 
 @Composable
-fun TitleAmount() {
+fun TitleAmount(amount: String,currency:String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -258,8 +265,7 @@ fun TitleAmount() {
     ) {
         Column {
             Text(
-                text = "Total Amount",
-
+                text = stringResource(id = R.string.txt_total),
                 textAlign = TextAlign.Start,
                 color = Color.White,
                 modifier = Modifier
@@ -267,7 +273,7 @@ fun TitleAmount() {
                 fontSize = 14.sp
             )
             Text(
-                text = "1000,00 SAR",
+                text = "$amount $currency",
                 textAlign = TextAlign.Start,
                 color = Color.White,
                 modifier = Modifier

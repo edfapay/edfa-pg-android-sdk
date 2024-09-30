@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -94,7 +95,7 @@ fun CardInputForm(
 
 
         CardInputField(
-            title = "Cardholder Name",
+            title = stringResource(id = R.string.card_holder),
             placeholder = "Name",
             value = cardHolderName,
             inputType = KeyboardType.Text,
@@ -103,31 +104,37 @@ fun CardInputForm(
         )
 
         CardInputField(
-            title = "Card Number",
+            title = stringResource(id = R.string.card_number),
             placeholder = "**** **** **** ****",
             value = cardNumber,
             inputType = KeyboardType.Number,
             action = ImeAction.Next,
-
             onValueChange = { newValue ->
                 if (newValue.text.length <= 19) {
                     val digitsOnly = newValue.text.replace(" ", "")
                     val formattedValue = digitsOnly.chunked(4).joinToString(" ")
 
-                    // Calculate cursor position
-                    val cursorOffset =
-                        if (newValue.selection.start > 0 && (newValue.selection.start % 5 == 0)) 1 else 0
-                    val cursorPosition = newValue.selection.start + cursorOffset
-                    unformattedNumber = digitsOnly
-                    // Update the card number with formatted text and new cursor position
+                    // Get the current cursor position before formatting
+                    val originalCursorPosition = newValue.selection.start
+
+                    // Calculate how many spaces there are before the cursor
+                    val spacesBeforeCursor = newValue.text.take(originalCursorPosition).count { it == ' ' }
+
+                    // Calculate the new cursor position after formatting
+                    val newCursorPosition = originalCursorPosition + formattedValue.take(originalCursorPosition).count { it == ' ' } - spacesBeforeCursor
+
+                    // Ensure the cursor position stays within the bounds of the formatted text
+                    val adjustedCursorPosition = newCursorPosition.coerceIn(0, formattedValue.length)
+
+                    // Update the card number with the formatted text and adjusted cursor position
                     onCardNumberChange(
                         newValue.copy(
                             text = formattedValue,
-                            selection = TextRange(cursorPosition.coerceIn(0, formattedValue.length))
+                            selection = TextRange(adjustedCursorPosition)
                         )
                     )
                 }
-            },
+            }
         )
 
         Row(
@@ -136,7 +143,7 @@ fun CardInputForm(
         ) {
             CardInputField(
                 modifier = Modifier.weight(1f),
-                title = "CVV/CVC",
+                title = stringResource(id = R.string.cvv),
                 placeholder = "000",
                 inputType = KeyboardType.Number,
                 action = ImeAction.Next,
@@ -164,7 +171,7 @@ fun CardInputForm(
             Spacer(modifier = Modifier.width(16.dp))
             CardInputField(
                 modifier = Modifier.weight(1f),
-                title = "Exp. Date",
+                title = stringResource(id = R.string.expiry),
                 placeholder = "MM/YY",
                 inputType = KeyboardType.Number,
                 action = ImeAction.Done,
@@ -252,7 +259,7 @@ fun CardInputForm(
             colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.color_main)),
             shape = RoundedCornerShape(10.dp)
         ) {
-            Text(text = "Pay", color = Color.White)
+            Text(text = stringResource(id = R.string.pay), color = Color.White)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -271,7 +278,7 @@ fun CardInputForm(
 @Composable
 fun CardInputField(
     modifier: Modifier = Modifier,
-    title: String = "Cardholder Name",
+    title: String = stringResource(id = R.string.card_holder),
     placeholder: String = "Name",
     value: TextFieldValue,
     inputType: KeyboardType,
