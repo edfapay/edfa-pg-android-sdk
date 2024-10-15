@@ -7,10 +7,10 @@ package com.edfapg.sample.ui
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import com.edfapg.sample.databinding.ActivityMainBinding
 import com.edfapg.sdk.model.request.order.*
 import com.edfapg.sdk.model.request.payer.*
+import com.edfapg.sdk.toolbox.DesignType
 import com.edfapg.sdk.views.edfacardpay.*
 import java.util.UUID
 
@@ -84,6 +84,7 @@ class EdfaPgMainAcitivty : BaseActivity() {
         * */
         edfaCardPay.initialize(
             this,
+            null,
             onError = {
 
             },
@@ -91,32 +92,5 @@ class EdfaPgMainAcitivty : BaseActivity() {
 
             }
         )
-
-
-        /*
-        * To get intent of card screen activity to present in your own choice (ready to use)
-        * */
-//        startActivity(edfaCardPay.intent(
-//            this,
-//            onError = {
-//
-//            },
-//            onPresent = {
-//
-//            })
-//        )
-
-
-        /*
-        * To get fragment of card screen to present in your own choice (ready to use)
-        * */
-//        edfaCardPay.fragment(
-//            onError = {
-//
-//            },
-//            onPresent = {
-//
-//            }
-//        )
     }
 }

@@ -9,7 +9,7 @@ ext {
     mGroupId = "com.edfapg"
     mArtifactId = "sdk"
     mVersionCode = 1
-    mVersionName = "1.0.5"
+    mVersionName = "1.0.6"
 
     mLibraryName = "EdfaPgSDK"
     mLibraryDescription = "$mLibraryName responsable for help to integerate EdfaPay payment gateway system"
@@ -122,7 +122,7 @@ afterEvaluate {
 
         repositories {
             maven {
-                url uri('/Volumes/Data/Projects/local-maven-repo') // Adjust the path as needed
+                url uri('/Users/kashif/Desktop/AppRack/local-repo') // Adjust the path as needed
             }
         }
     }

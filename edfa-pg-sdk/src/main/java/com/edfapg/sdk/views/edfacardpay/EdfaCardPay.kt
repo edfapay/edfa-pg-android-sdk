@@ -8,65 +8,84 @@ import com.edfapg.sdk.PaymentActivity
 import com.edfapg.sdk.model.request.order.EdfaPgSaleOrder
 import com.edfapg.sdk.model.request.payer.EdfaPgPayer
 import com.edfapg.sdk.model.response.sale.EdfaPgSaleResponse
+import com.edfapg.sdk.toolbox.DesignType
 
-internal var instance:EdfaCardPay? = null
+internal var instance: EdfaCardPay? = null
+
 class EdfaCardPay {
-    constructor(){
+    constructor() {
         instance = this
     }
 
-    var _order:EdfaPgSaleOrder? = null
-    var _payer:EdfaPgPayer? = null
-    var _onTransactionFailure:((EdfaPgSaleResponse?, Any?) -> Unit)? = null
-    var _onTransactionSuccess:((EdfaPgSaleResponse?, Any?) -> Unit)? = null
-    var _onError:((Any) -> Unit)? = null
-    var _onPresent:((Activity) -> Unit)? = null
+    var _order: EdfaPgSaleOrder? = null
+    var _payer: EdfaPgPayer? = null
+    var _onTransactionFailure: ((EdfaPgSaleResponse?, Any?) -> Unit)? = null
+    var _onTransactionSuccess: ((EdfaPgSaleResponse?, Any?) -> Unit)? = null
+    var _onError: ((Any) -> Unit)? = null
+    var _onPresent: ((Activity) -> Unit)? = null
 
-    fun setOrder(order:EdfaPgSaleOrder) : EdfaCardPay{
+    fun setOrder(order: EdfaPgSaleOrder): EdfaCardPay {
         _order = order
         return this
     }
 
-    fun setPayer(payer:EdfaPgPayer) : EdfaCardPay{
+    fun setPayer(payer: EdfaPgPayer): EdfaCardPay {
         _payer = payer
         return this
     }
 
-    fun onTransactionFailure(callback:(EdfaPgSaleResponse?, Any?) -> Unit) : EdfaCardPay{
+    fun onTransactionFailure(callback: (EdfaPgSaleResponse?, Any?) -> Unit): EdfaCardPay {
         _onTransactionFailure = callback
         return this
     }
 
-    fun onTransactionSuccess(callback:(EdfaPgSaleResponse?, Any?) -> Unit) : EdfaCardPay{
+    fun onTransactionSuccess(callback: (EdfaPgSaleResponse?, Any?) -> Unit): EdfaCardPay {
         _onTransactionSuccess = callback
         return this
     }
 
-    fun initialize(context:Context, onError:(Any) -> Unit, onPresent:(Activity) -> Unit){
+    fun initialize(
+        context: Context,
+        designType: DesignType? = DesignType.PAYMENT_DESIGN_1,
+        onError: (Any) -> Unit,
+        onPresent: (Activity) -> Unit
+    ) {
         _onError = onError
         _onPresent = onPresent
-
-        context.startActivity(intent(context, onError, onPresent))
+        context.startActivity(
+            intent(
+                context,
+                designType ?: DesignType.PAYMENT_DESIGN_1,
+                onError,
+                onPresent
+            )
+        )
     }
 
-    fun intent(context:Context, onError:(Any) -> Unit, onPresent:(Activity) -> Unit) : Intent {
+    fun intent(
+        context: Context,
+        designType: DesignType,
+        onError: (Any) -> Unit,
+        onPresent: (Activity) -> Unit
+    ): Intent {
         _onError = onError
         _onPresent = onPresent
+
 //        val intent = Intent(context, EdfaCardPayActivity::class.java)
         val intent = Intent(context, PaymentActivity::class.java)
-        intent.putExtra("paymentDesign","1")
-        return  intent
+        intent.putExtra("paymentDesign", designType.value)
+        return intent
     }
 
-    fun fragment(onError:(Any) -> Unit, onPresent:(Activity) -> Unit) : Fragment {
+    fun fragment(onError: (Any) -> Unit, onPresent: (Activity) -> Unit): Fragment {
         _onError = onError
         _onPresent = onPresent
 
-        return  EdfaCardPayFragment()
+        return EdfaCardPayFragment()
     }
 
-    companion object{
-        internal fun shared() : EdfaCardPay?{
+    companion object {
+        internal fun shared(): EdfaCardPay? {
             return instance
         }
     }

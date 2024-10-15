@@ -7,6 +7,7 @@ import com.edfapg.sdk.core.EdfaPgSdk
 import com.edfapg.sdk.databinding.ActivityEdfaPayHomeBinding
 import com.edfapg.sdk.model.request.order.EdfaPgSaleOrder
 import com.edfapg.sdk.model.request.payer.EdfaPgPayer
+import com.edfapg.sdk.toolbox.DesignType
 import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
 import java.util.*
 
@@ -63,6 +64,7 @@ class EdfaPgHomeActivity_ : AppCompatActivity() {
         * */
         edfaCardPay.initialize(
             this,
+            DesignType.PAYMENT_DESIGN_1,
             onError = {},
             onPresent = { }
         )
