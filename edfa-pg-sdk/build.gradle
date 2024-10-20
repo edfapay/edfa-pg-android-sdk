@@ -9,7 +9,7 @@ ext {
     mGroupId = "com.edfapg"
     mArtifactId = "sdk"
     mVersionCode = 1
-    mVersionName = "1.0.6"
+    mVersionName = "1.0.5"
 
     mLibraryName = "EdfaPgSDK"
     mLibraryDescription = "$mLibraryName responsable for help to integerate EdfaPay payment gateway system"

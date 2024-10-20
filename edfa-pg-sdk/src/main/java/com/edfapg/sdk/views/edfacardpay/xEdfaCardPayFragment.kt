@@ -41,6 +41,7 @@ internal fun EdfaCardPayFragment.doSaleTransaction(cardDetail: CreditCard?){
 
 }
 
+
 internal fun EdfaCardPayFragment.handleSaleResponse(cardTransactionData:CardTransactionData) : EdfaPgSaleCallback{
     return object : EdfaPgSaleCallback {
         override fun onResponse(response: EdfaPgSaleResponse) {

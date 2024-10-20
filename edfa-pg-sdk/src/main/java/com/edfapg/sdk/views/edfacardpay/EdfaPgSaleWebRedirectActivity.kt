@@ -6,6 +6,7 @@ package com.edfapg.sdk.views.edfacardpay
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.http.SslError
@@ -23,6 +24,7 @@ import com.edfapg.sdk.toolbox.EdfaPgUtil
 import com.edfapg.sdk.toolbox.userConfirmation
 import java.net.URLEncoder
 
+private var onEdfaPgSaleWebRedirectActivityResult:((result: EdfaPgGetTransactionDetailsSuccess?, error:EdfaPgError?) ->Unit)? = null
 class EdfaPgSaleWebRedirectActivity : AppCompatActivity(R.layout.activity_edfapay_web) {
 
     private lateinit var binding: ActivityEdfapayWebBinding
@@ -142,7 +144,7 @@ class EdfaPgSaleWebRedirectActivity : AppCompatActivity(R.layout.activity_edfapa
 
             binding.progressBar.show()
 
-            /* Enable Javascript in Webview */
+            /* Enable Javascript in WebView */
             settings.javaScriptEnabled = true
             transactionData?.response?.let {
                 val postData = "body=" + URLEncoder.encode(it.redirectParams.body, "UTF-8")
@@ -158,6 +160,7 @@ class EdfaPgSaleWebRedirectActivity : AppCompatActivity(R.layout.activity_edfapa
     fun operationCompleted(result: EdfaPgGetTransactionDetailsSuccess?, error:EdfaPgError?){
         val intent = Intent().putExtra("result", result).putExtra("error", error)
         setResult(Activity.RESULT_OK, intent)
+        onEdfaPgSaleWebRedirectActivityResult?.let { it(result,error) }
         finish()
     }
 
@@ -166,9 +169,11 @@ class EdfaPgSaleWebRedirectActivity : AppCompatActivity(R.layout.activity_edfapa
         private const val DATA = "DATA"
 
         fun intent(
-            context: Activity,
+            context: Context,
             cardTransactionData: CardTransactionData,
+            onResult: ((result: EdfaPgGetTransactionDetailsSuccess?, error:EdfaPgError?) -> Unit)? = null
         ) : Intent{
+            onEdfaPgSaleWebRedirectActivityResult = onResult
             return Intent(context, EdfaPgSaleWebRedirectActivity::class.java).apply {
                 putExtra(DATA, cardTransactionData)
             }

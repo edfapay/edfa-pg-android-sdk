@@ -9,7 +9,7 @@ import java.io.File
 /**
  * The general [com.edfapg.sdk.core.EdfaPgSdk] utils.
  */
-internal object EdfaPgUtil {
+object EdfaPgUtil {
     val ProcessCompleteCallbackUrl = "https://edfapay.com/process-completed"
 
     /**

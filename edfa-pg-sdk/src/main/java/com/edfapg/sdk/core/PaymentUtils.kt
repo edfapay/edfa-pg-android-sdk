@@ -3,7 +3,6 @@ package com.edfapg.sdk.core
 import android.app.Activity
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
-import com.edfapg.sdk.PaymentActivity
 import com.edfapg.sdk.model.api.EdfaPgResult.*
 import com.edfapg.sdk.model.api.EdfaPgStatus
 import com.edfapg.sdk.model.response.sale.EdfaPgSaleCallback
@@ -15,12 +14,12 @@ import com.edfapg.sdk.views.edfacardpay.CardTransactionData
 import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
 import com.edfapg.sdk.views.edfacardpay.EdfaPgSaleWebRedirectActivity
 
-fun handleSaleResponse(cardTransactionData: CardTransactionData,activity: Activity,sale3dsRedirectLauncher: ActivityResultLauncher<Intent>
-): EdfaPgSaleCallback {
+fun handleSaleResponse(cardTransactionData: CardTransactionData, onRedirect:(EdfaPgSaleResponse?, EdfaPgSaleResult, CardTransactionData) -> Unit): EdfaPgSaleCallback {
+    var saleResponse: EdfaPgSaleResponse? = null
     return object : EdfaPgSaleCallback {
         override fun onResponse(response: EdfaPgSaleResponse) {
             println("Sale response received: $response")
-            PaymentActivity.saleResponse = response
+            saleResponse = response
             super.onResponse(response)
         }
 
@@ -29,11 +28,9 @@ fun handleSaleResponse(cardTransactionData: CardTransactionData,activity: Activi
                 is EdfaPgSaleResult.Recurring -> println("Recurring payment: $result")
                 is EdfaPgSaleResult.Secure3d -> println("3D Secure: $result")
                 is EdfaPgSaleResult.Redirect -> {
-                    println("Redirect: $result")
                     cardTransactionData.response = result.result
-                    val intent = EdfaPgSaleWebRedirectActivity.intent(context = activity, cardTransactionData)
-                    sale3dsRedirectLauncher.launch(intent)
-
+                    println("Redirect: $result")
+                    onRedirect(saleResponse, result, cardTransactionData)
                 }
                 is EdfaPgSaleResult.Decline -> println("Payment declined: $result")
                 is EdfaPgSaleResult.Success -> {

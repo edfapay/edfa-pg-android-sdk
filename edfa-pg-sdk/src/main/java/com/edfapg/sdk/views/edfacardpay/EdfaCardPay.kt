@@ -12,7 +12,17 @@ import com.edfapg.sdk.toolbox.DesignType
 
 internal var instance: EdfaCardPay? = null
 
-class EdfaCardPay {
+interface EdfapayCardDetailsInitializer {
+    fun initialize(
+        onError: (Any) -> Unit,
+        onPresent: (Activity) -> Unit
+    ){
+
+    }
+}
+
+
+open class EdfaCardPay : EdfapayCardDetailsInitializer{
     constructor() {
         instance = this
     }
@@ -71,10 +81,15 @@ class EdfaCardPay {
         _onError = onError
         _onPresent = onPresent
 
-//        val intent = Intent(context, EdfaCardPayActivity::class.java)
+        if (designType.value == "0") {
+            val intent = Intent(context, EdfaCardPayActivity::class.java)
+            return intent
+        }else {
         val intent = Intent(context, PaymentActivity::class.java)
         intent.putExtra("paymentDesign", designType.value)
-        return intent
+            return intent
+        }
+
     }
 
     fun fragment(onError: (Any) -> Unit, onPresent: (Activity) -> Unit): Fragment {
@@ -85,7 +100,7 @@ class EdfaCardPay {
     }
 
     companion object {
-        internal fun shared(): EdfaCardPay? {
+        fun shared(): EdfaCardPay? {
             return instance
         }
     }

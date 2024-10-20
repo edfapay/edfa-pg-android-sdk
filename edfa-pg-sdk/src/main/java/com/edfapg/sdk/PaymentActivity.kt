@@ -22,6 +22,7 @@ class PaymentActivity : ComponentActivity() {
         // This is a static variable
         var saleResponse: EdfaPgSaleResponse? = null
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var xpressCardPay = EdfaCardPay.shared()

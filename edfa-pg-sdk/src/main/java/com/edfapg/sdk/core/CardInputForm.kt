@@ -4,6 +4,7 @@ import Footer
 import android.app.Activity
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
+import androidx.annotation.Size
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
@@ -28,6 +29,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -58,6 +60,7 @@ import com.edfapg.sdk.model.response.sale.EdfaPgSaleCallback
 import com.edfapg.sdk.model.response.sale.EdfaPgSaleResponse
 import com.edfapg.sdk.model.response.sale.EdfaPgSaleResult
 import com.edfapg.sdk.toolbox.EdfaPgUtil
+import com.edfapg.sdk.toolbox.EdfaPgValidation.Card
 import com.edfapg.sdk.views.edfacardpay.CardTransactionData
 import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
 import com.edfapg.sdk.views.edfacardpay.EdfaCardPayFragment
@@ -78,12 +81,29 @@ fun CardInputForm(
     onExpiryDateChange: (TextFieldValue) -> Unit,
     xpressCardPay: EdfaCardPay?,
     activity: Activity?,
-    sale3dsRedirectLauncher: ActivityResultLauncher<Intent>) {
+    sale3dsRedirectLauncher: ActivityResultLauncher<Intent>
+) {
     // Hoist the state of these variables to preserve their values across recompositions
     var month by remember { mutableStateOf("") }
     var year by remember { mutableStateOf("") }
     var cvv by remember { mutableStateOf("") }
     var unformattedNumber by remember { mutableStateOf("") }
+
+    // Track validity of each field
+    var isCardNumberValid by remember { mutableStateOf(false) }
+    val isCvvValid = cvv.length  in Card.CVV_MIN.toInt() .. Card.CVV_MAX.toInt()
+    val isMonthValid = month.toIntOrNull()?.let {
+        it in Card.MONTH_MIN.toInt()..Card.MONTH_MAX.toInt()
+    } ?: false
+    val isYearValid = year.length == 2 // Simplified year validation
+
+    var isFormValid by remember {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(isCardNumberValid, isCvvValid, isMonthValid, isYearValid) {
+        isFormValid = isCardNumberValid && isCvvValid && isMonthValid && isYearValid
+    }
 
     Column(
         modifier = Modifier
@@ -92,7 +112,6 @@ fun CardInputForm(
             .padding(16.dp)
             .imePadding()
     ) {
-
 
         CardInputField(
             title = stringResource(id = R.string.card_holder),
@@ -110,32 +129,41 @@ fun CardInputForm(
             inputType = KeyboardType.Number,
             action = ImeAction.Next,
             onValueChange = { newValue ->
-                if (newValue.text.length <= 19) {
+                if (newValue.text.length <= Card.CARD_NUMBER_MAX.toInt()) {
+
                     val digitsOnly = newValue.text.replace(" ", "")
                     val formattedValue = digitsOnly.chunked(4).joinToString(" ")
 
-                    // Get the current cursor position before formatting
+                    unformattedNumber = digitsOnly
+
+                    // Validate card number based on length
+                    isCardNumberValid =
+                        digitsOnly.length in Card.CARD_NUMBER_MIN.toInt()..Card.CARD_NUMBER_MAX.toInt()
+
+                    // Adjust cursor position for formatted text
                     val originalCursorPosition = newValue.selection.start
+                    val spacesBeforeCursor =
+                        newValue.text.take(originalCursorPosition).count { it == ' ' }
+                    val newCursorPosition =
+                        originalCursorPosition + formattedValue.take(originalCursorPosition)
+                            .count { it == ' ' } - spacesBeforeCursor
 
-                    // Calculate how many spaces there are before the cursor
-                    val spacesBeforeCursor = newValue.text.take(originalCursorPosition).count { it == ' ' }
+                    val adjustedCursorPosition =
+                        newCursorPosition.coerceIn(0, formattedValue.length)
 
-                    // Calculate the new cursor position after formatting
-                    val newCursorPosition = originalCursorPosition + formattedValue.take(originalCursorPosition).count { it == ' ' } - spacesBeforeCursor
-
-                    // Ensure the cursor position stays within the bounds of the formatted text
-                    val adjustedCursorPosition = newCursorPosition.coerceIn(0, formattedValue.length)
-
-                    // Update the card number with the formatted text and adjusted cursor position
                     onCardNumberChange(
                         newValue.copy(
                             text = formattedValue,
                             selection = TextRange(adjustedCursorPosition)
                         )
                     )
+
+                    // Recalculate form validity on every card number change
+                    isFormValid = isCardNumberValid && isCvvValid && isMonthValid && isYearValid
                 }
             }
         )
+
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -149,12 +177,10 @@ fun CardInputForm(
                 action = ImeAction.Next,
                 value = cvc,
                 onValueChange = { newValue ->
-                    if (newValue.text.length <= 3) {
-                        // Preserve the current cursor position
+                    if (newValue.text.length < Card.CVV_MAX.toInt()) {
                         val newText = newValue.text.replace(" ", "")
                         val selection = newValue.selection
 
-                        // Update only the text, ensuring you keep the cursor position
                         onCvcChange(
                             TextFieldValue(
                                 text = newText,
@@ -162,11 +188,13 @@ fun CardInputForm(
                             )
                         )
 
-                        // Store CVV value if necessary
                         cvv = newText
                     }
                 },
             )
+//            if (!isCvvValid) {
+//                Text("Invalid CVV", color = Color.Red)
+//            }
 
             Spacer(modifier = Modifier.width(16.dp))
             CardInputField(
@@ -177,30 +205,24 @@ fun CardInputForm(
                 action = ImeAction.Done,
                 value = expiryDate,
                 onValueChange = { newValue ->
-                    // Remove any existing slashes and limit input to 4 digits (MMYY)
                     val digitsOnly = newValue.text.replace("/", "").take(4)
 
-                    // Split the digits into month and year
-                     month = digitsOnly.take(2)
-                     year = digitsOnly.drop(2)
+                    month = digitsOnly.take(2)
+                    year = digitsOnly.drop(2)
 
-                    // Ensure the month is valid (01-12)
+                    // Ensure valid formatting
                     val validatedMonth = when {
                         month.isEmpty() -> ""
-                        month.toIntOrNull() == null || month.toInt() > 12 -> "${month.first()}"
-                        //                                month.first()>'1' -> "0$month"
+                        !isMonthValid -> month.first().toString()
                         else -> month
                     }
 
-                    // Format as MM/YY
                     val formattedValue =
                         listOf(validatedMonth, year).filter { it.isNotEmpty() }
                             .joinToString("/")
 
                     val cursorShift = formattedValue.length - newValue.text.length
 
-
-                    // Determine the cursor position
                     val originalCursorPosition = newValue.selection.start
                     val adjustedCursorPosition = when {
                         originalCursorPosition <= 2 -> originalCursorPosition
@@ -208,7 +230,6 @@ fun CardInputForm(
                         else -> formattedValue.length
                     }
 
-                    // Update the expiry date with formatted text and new cursor position
                     onExpiryDateChange(
                         newValue.copy(
                             text = formattedValue,
@@ -222,7 +243,9 @@ fun CardInputForm(
                     )
                 },
             )
-
+//            if (!isMonthValid) {
+//                Text("Invalid month", color = Color.Red)
+//            }
         }
 
         Spacer(modifier = Modifier.height(26.dp))
@@ -230,12 +253,9 @@ fun CardInputForm(
             onClick = {
                 val order = xpressCardPay?._order
                 val payer = xpressCardPay?._payer
-                if(order != null && payer != null){
-                    if (month.isEmpty() || year.isEmpty()) {
-                        println("Month or Year is empty")
-                        return@Button
-                    }
-                    val card = EdfaPgCard(unformattedNumber, month.toInt(), year.toInt()+2000, cvv)
+                if (order != null && payer != null) {
+                    val card =
+                        EdfaPgCard(unformattedNumber, month.toInt(), year.toInt() + 2000, cvv)
                     PaymentActivity.saleResponse = null
                     EdfaPgSdk.Adapter.SALE.execute(
                         order = order,
@@ -244,35 +264,36 @@ fun CardInputForm(
                         termUrl3ds = EdfaPgUtil.ProcessCompleteCallbackUrl,
                         options = null,
                         auth = false,
-                        callback = handleSaleResponse(CardTransactionData(order, payer, card, null),
-                            activity = activity!!,
-                            sale3dsRedirectLauncher = sale3dsRedirectLauncher)
+                        callback = handleSaleResponse(CardTransactionData(order, payer, card, null)){ response, result , cardData->
+                            PaymentActivity.saleResponse = response
+                            val intent = EdfaPgSaleWebRedirectActivity.intent(context = activity!!, cardData)
+                            sale3dsRedirectLauncher.launch(intent)
+                        }
                     )
-                } else {
-                    println("Something was empty")
                 }
             },
             modifier = Modifier
                 .height(50.dp)
-
                 .fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.color_main)),
-            shape = RoundedCornerShape(10.dp)
+            shape = RoundedCornerShape(10.dp),
+            enabled = isFormValid // Enable/Disable button based on form validity
         ) {
             Text(text = stringResource(id = R.string.pay), color = Color.White)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
         Box(
-            modifier = Modifier
-                .clickable {
-//                    navController.popBackStack()
-                }
+            modifier = Modifier.clickable {
+                // navController.popBackStack()
+            }
         ) {
             Footer()
         }
     }
 }
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -341,13 +362,6 @@ fun CardInputField(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.CenterStart
                         ) {
-//                            if (value.text.isEmpty()) {
-//                                Text(
-//                                    text = placeholder,
-//                                    fontSize = 15.sp,
-//                                    color = Color.Black, // Placeholder color
-//                                )
-//                            }
                             innerTextField()
                         }
                     }
