@@ -208,6 +208,7 @@ fun CardInputForm(
                 onValueChange = { newValue ->
                     val digitsOnly = newValue.text.replace("/", "").take(4)
 
+                    // Extract month and year from the digitsOnly
                     month = digitsOnly.take(2)
                     year = digitsOnly.drop(2)
 
@@ -215,57 +216,71 @@ fun CardInputForm(
                     val currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1 // Calendar.MONTH is 0-indexed
                     val currentYear = Calendar.getInstance().get(Calendar.YEAR) % 100 // Last two digits of the year
 
+                    // Validate month input
+                    val isMonthInputValid = month.toIntOrNull()?.let { enteredMonth ->
+                        enteredMonth in 1..12 // Only allow months from 01 to 12
+                    } ?: false
+
                     // Validate year
                     isYearValid = year.length == 2 && year.toIntOrNull()?.let { enteredYear ->
                         enteredYear >= currentYear // Year should be current or in the future
                     } ?: false
 
-                    // Validate month and date
-                    val isDateValid = month.toIntOrNull()?.let { enteredMonth ->
-                        when {
-                            // If the year is less than the current year, date is invalid
-                            year.toIntOrNull() ?: 0 < currentYear -> false
-                            // If the entered year is the same as the current year, check the month
-                            year.toIntOrNull() == currentYear -> enteredMonth >= currentMonth
-                            // If the entered year is in the future, date is valid
-                            else -> true
-                        }
-                    } ?: false
+                    // Validate month and date only if month is valid
+                    val isDateValid = if (isMonthInputValid) {
+                        month.toIntOrNull()?.let { enteredMonth ->
+                            when {
+                                // If the year is less than the current year, date is invalid
+                                year.toIntOrNull() ?: 0 < currentYear -> false
+                                // If the entered year is the same as the current year, check the month
+                                year.toIntOrNull() == currentYear -> enteredMonth >= currentMonth
+                                // If the entered year is in the future, date is valid
+                                else -> true
+                            }
+                        } ?: false
+                    } else {
+                        false // If the month input is invalid, date valid is false
+                    }
 
                     // Update isMonthValid based on the corrected date validation
-                    isMonthValid = month.toIntOrNull() in 1..12 && isDateValid // Ensure month is valid
+                    isMonthValid = isMonthInputValid && isDateValid // Ensure month is valid
 
                     // Update the overall form validation
                     isFormValid = isCardNumberValid && isCvvValid && isMonthValid && isYearValid
-                    println("isFormValid insideMonthYear:: $isCardNumberValid, $isCvvValid, $isMonthValid, $isYearValid, $isFormValid")
 
-                    // Ensure correct formatting
+                    // Ensure correct formatting and pre-append 0 if necessary
                     val validatedMonth = when {
                         month.isEmpty() -> ""
+                        month.toIntOrNull() == null || month.toInt() > 12 -> "${month.first()}"
+                        month.first() > '1' -> "0$month" // Prepend 0 if the month starts with 2 or greater
                         else -> month
                     }
-
                     val formattedValue = listOf(validatedMonth, year).filter { it.isNotEmpty() }
                         .joinToString("/")
 
                     // Ensure correct cursor position
-                    val cursorShift = formattedValue.length - newValue.text.length
                     val originalCursorPosition = newValue.selection.start
-                    val adjustedCursorPosition = when {
-                        originalCursorPosition <= 2 -> originalCursorPosition
-                        originalCursorPosition <= 4 -> originalCursorPosition + 1
-                        else -> formattedValue.length
+                    val newCursorPosition = if (validatedMonth.length == 2 && originalCursorPosition <= 2) {
+                        2 // If the month is two digits, place cursor at the end of the month
+                    } else if (originalCursorPosition > 2) {
+                        // If the cursor is after the month, adjust for the "/" character
+                        originalCursorPosition + 1
+                    } else {
+                        originalCursorPosition // Keep the original cursor position if in the valid range
                     }
 
-                    onExpiryDateChange(
-                        newValue.copy(
-                            text = formattedValue,
-                            selection = TextRange(
-                                adjustedCursorPosition.coerceIn(0, formattedValue.length)
+                    // Check if the input value is valid before updating
+                    if (isMonthInputValid || year.isEmpty()) { // Allow updating only if month is valid or year is empty
+                        onExpiryDateChange(
+                            newValue.copy(
+                                text = formattedValue,
+                                selection = TextRange(newCursorPosition.coerceIn(0, formattedValue.length))
                             )
                         )
-                    )
+                    }
                 }
+
+
             )
         }
 
