@@ -67,6 +67,7 @@ import com.edfapg.sdk.views.edfacardpay.EdfaCardPayFragment
 import com.edfapg.sdk.views.edfacardpay.EdfaPgSaleWebRedirectActivity
 import com.edfapg.sdk.views.edfacardpay.handleSaleResponse
 import org.junit.runner.manipulation.Ordering.Context
+import java.util.Calendar
 
 
 @Composable
@@ -91,11 +92,11 @@ fun CardInputForm(
 
     // Track validity of each field
     var isCardNumberValid by remember { mutableStateOf(false) }
-    val isCvvValid = cvv.length  in Card.CVV_MIN.toInt() .. Card.CVV_MAX.toInt()
-    val isMonthValid = month.toIntOrNull()?.let {
+    var isCvvValid = cvv.length in Card.CVV_MIN.toInt()..Card.CVV_MAX.toInt()
+    var isMonthValid = month.toIntOrNull()?.let {
         it in Card.MONTH_MIN.toInt()..Card.MONTH_MAX.toInt()
     } ?: false
-    val isYearValid = year.length == 2 // Simplified year validation
+    var isYearValid = false
 
     var isFormValid by remember {
         mutableStateOf(false)
@@ -210,19 +211,45 @@ fun CardInputForm(
                     month = digitsOnly.take(2)
                     year = digitsOnly.drop(2)
 
-                    // Ensure valid formatting
+                    // Get current month and year
+                    val currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1 // Calendar.MONTH is 0-indexed
+                    val currentYear = Calendar.getInstance().get(Calendar.YEAR) % 100 // Last two digits of the year
+
+                    // Validate year
+                    isYearValid = year.length == 2 && year.toIntOrNull()?.let { enteredYear ->
+                        enteredYear >= currentYear // Year should be current or in the future
+                    } ?: false
+
+                    // Validate month and date
+                    val isDateValid = month.toIntOrNull()?.let { enteredMonth ->
+                        when {
+                            // If the year is less than the current year, date is invalid
+                            year.toIntOrNull() ?: 0 < currentYear -> false
+                            // If the entered year is the same as the current year, check the month
+                            year.toIntOrNull() == currentYear -> enteredMonth >= currentMonth
+                            // If the entered year is in the future, date is valid
+                            else -> true
+                        }
+                    } ?: false
+
+                    // Update isMonthValid based on the corrected date validation
+                    isMonthValid = month.toIntOrNull() in 1..12 && isDateValid // Ensure month is valid
+
+                    // Update the overall form validation
+                    isFormValid = isCardNumberValid && isCvvValid && isMonthValid && isYearValid
+                    println("isFormValid insideMonthYear:: $isCardNumberValid, $isCvvValid, $isMonthValid, $isYearValid, $isFormValid")
+
+                    // Ensure correct formatting
                     val validatedMonth = when {
                         month.isEmpty() -> ""
-                        !isMonthValid -> month.first().toString()
                         else -> month
                     }
 
-                    val formattedValue =
-                        listOf(validatedMonth, year).filter { it.isNotEmpty() }
-                            .joinToString("/")
+                    val formattedValue = listOf(validatedMonth, year).filter { it.isNotEmpty() }
+                        .joinToString("/")
 
+                    // Ensure correct cursor position
                     val cursorShift = formattedValue.length - newValue.text.length
-
                     val originalCursorPosition = newValue.selection.start
                     val adjustedCursorPosition = when {
                         originalCursorPosition <= 2 -> originalCursorPosition
@@ -234,19 +261,14 @@ fun CardInputForm(
                         newValue.copy(
                             text = formattedValue,
                             selection = TextRange(
-                                adjustedCursorPosition.coerceIn(
-                                    0,
-                                    formattedValue.length
-                                )
+                                adjustedCursorPosition.coerceIn(0, formattedValue.length)
                             )
                         )
                     )
-                },
+                }
             )
-//            if (!isMonthValid) {
-//                Text("Invalid month", color = Color.Red)
-//            }
         }
+
 
         Spacer(modifier = Modifier.height(26.dp))
         Button(
@@ -264,9 +286,17 @@ fun CardInputForm(
                         termUrl3ds = EdfaPgUtil.ProcessCompleteCallbackUrl,
                         options = null,
                         auth = false,
-                        callback = handleSaleResponse(CardTransactionData(order, payer, card, null)){ response, result , cardData->
+                        callback = handleSaleResponse(
+                            CardTransactionData(
+                                order,
+                                payer,
+                                card,
+                                null
+                            )
+                        ) { response, result, cardData ->
                             PaymentActivity.saleResponse = response
-                            val intent = EdfaPgSaleWebRedirectActivity.intent(context = activity!!, cardData)
+                            val intent =
+                                EdfaPgSaleWebRedirectActivity.intent(context = activity!!, cardData)
                             sale3dsRedirectLauncher.launch(intent)
                         }
                     )
@@ -292,7 +322,6 @@ fun CardInputForm(
         }
     }
 }
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)

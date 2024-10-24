@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EdfaPg SDK</string>
+    <string name="pay">ادائیگی کریں</string>
+    <string name="title_activity_edfa_card_pay">ایڈفا کارڈ پے ایکٹیویٹی</string>
+    <string name="title_activity_edfa_card_redirect">ویب سائٹ کو محفوظ طریقے سے براؤز کرتے وقت کوئی خرابی ہوئی ہے</string>
+    <string name="notification_error_ssl_cert_invalid">ایڈفا کارڈ پے ایکٹیویٹی</string>
+    <string name="cancel">منسوخ کریں</string>
+    <string name="card_holder">کارڈ ہولڈر</string>
+    <string name="card_number">کارڈ نمبر</string>
+    <string name="expiry">میعاد</string>
+    <string name="cvv">سی وی وی</string>
+    <string name="sar">ایس اے آر</string>
+    <string name="txt_card_holdername">کارڈ ہولڈر کا نام</string>
+    <string name="txt_desc">"یہ کارڈ سویڈ بینک کے ذریعہ ماسٹر کارڈ انٹرنیشنل کے لائسنس کے تحت جاری کیا گیا ہے۔"</string>
+    <string name="txt_validate">"درست \nتک"</string>
+    <string name="txt_month">"مہینہ/سال"</string>
+    <string name="txt_total">"کل رقم"</string>
+</resources>

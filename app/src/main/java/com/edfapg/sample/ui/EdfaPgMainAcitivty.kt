@@ -16,6 +16,7 @@ import com.edfapg.sdk.model.request.payer.EdfaPgPayer
 import com.edfapg.sdk.model.response.base.error.EdfaPgError
 import com.edfapg.sdk.model.response.gettransactiondetails.EdfaPgGetTransactionDetailsSuccess
 import com.edfapg.sdk.toolbox.DesignType
+import com.edfapg.sdk.toolbox.EdfaLocale
 import com.edfapg.sdk.toolbox.serializable
 import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
 import com.edfapg.sdk.views.edfacardpay.EdfaPayWithCardDetails
@@ -55,8 +56,8 @@ class EdfaPgMainAcitivty : BaseActivity() {
         }
 
         binding.btnSaleWithCardUi.setOnClickListener {
-//            payWithCard()
-            payWithCardDetails()
+            payWithCard()
+//            payWithCardDetails()
         }
     }
 
@@ -92,7 +93,8 @@ class EdfaPgMainAcitivty : BaseActivity() {
         * */
         edfaCardPay.initialize(
             this,
-            DesignType.PAYMENT_DESIGN_3,//change to the desired Ui variant here
+            DesignType.PAYMENT_DESIGN_1,//change to the desired Ui variant here
+            EdfaLocale.EN, //change to desired locale here
             onError = {
                 Toast.makeText(this, "onError $it", Toast.LENGTH_LONG).show()
             },

@@ -9,6 +9,7 @@ import com.edfapg.sdk.model.request.order.EdfaPgSaleOrder
 import com.edfapg.sdk.model.request.payer.EdfaPgPayer
 import com.edfapg.sdk.model.response.sale.EdfaPgSaleResponse
 import com.edfapg.sdk.toolbox.DesignType
+import com.edfapg.sdk.toolbox.EdfaLocale
 
 internal var instance: EdfaCardPay? = null
 
@@ -57,6 +58,7 @@ open class EdfaCardPay : EdfapayCardDetailsInitializer{
     fun initialize(
         context: Context,
         designType: DesignType? = DesignType.PAYMENT_DESIGN_1,
+        locale: EdfaLocale? = EdfaLocale.EN,
         onError: (Any) -> Unit,
         onPresent: (Activity) -> Unit
     ) {
@@ -66,6 +68,7 @@ open class EdfaCardPay : EdfapayCardDetailsInitializer{
             intent(
                 context,
                 designType ?: DesignType.PAYMENT_DESIGN_1,
+                locale ?: EdfaLocale.EN,
                 onError,
                 onPresent
             )
@@ -75,6 +78,7 @@ open class EdfaCardPay : EdfapayCardDetailsInitializer{
     fun intent(
         context: Context,
         designType: DesignType,
+        locale: EdfaLocale,
         onError: (Any) -> Unit,
         onPresent: (Activity) -> Unit
     ): Intent {
@@ -87,6 +91,7 @@ open class EdfaCardPay : EdfapayCardDetailsInitializer{
         }else {
         val intent = Intent(context, PaymentActivity::class.java)
         intent.putExtra("paymentDesign", designType.value)
+            intent.putExtra("locale", locale.value)
             return intent
         }
 

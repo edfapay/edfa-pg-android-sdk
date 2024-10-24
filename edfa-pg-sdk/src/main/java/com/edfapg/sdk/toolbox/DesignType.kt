@@ -6,3 +6,11 @@ enum class DesignType(val value: String) {
     PAYMENT_DESIGN_2("2"),
     PAYMENT_DESIGN_3("3")
 }
+
+enum class EdfaLocale(val value: String) {
+    AR("ar"),
+    EN("en"),
+    ES("es"),
+    UR("ur")
+
+}

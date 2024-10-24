@@ -49,7 +49,6 @@ fun Card1UI(
                 Color(0xFF00A86B),
                 shape = RoundedCornerShape(16.dp)
             )
-
     ) {
 
         Column(
@@ -174,8 +173,6 @@ fun Card1UI(
 
                 }
             }
-
-
         }
     }
 }

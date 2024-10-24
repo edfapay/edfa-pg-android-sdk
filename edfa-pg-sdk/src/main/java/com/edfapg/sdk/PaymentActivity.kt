@@ -1,7 +1,9 @@
 package com.edfapg.sdk
 
 import android.app.Activity
+import android.content.res.Configuration
 import android.os.Bundle
+import android.view.ContextThemeWrapper
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
@@ -16,47 +18,58 @@ import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
 import com.example.paymentgatewaynew.payment1.Payment1Screen
 import com.example.paymentgatewaynew.payment2.Payment2Screen
 import com.example.paymentgatewaynew.payment3.Payment3Screen
+import java.util.Locale
 
 class PaymentActivity : ComponentActivity() {
     companion object {
-        // This is a static variable
         var saleResponse: EdfaPgSaleResponse? = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var xpressCardPay = EdfaCardPay.shared()
-        // Companion object to hold static variables
-        val intentData = intent.getStringExtra("paymentDesign")
 
-        // Add the back press callback
+        val xpressCardPay = EdfaCardPay.shared()
+
+        val intentData = intent.getStringExtra("paymentDesign")
+        val locale = intent.getStringExtra("locale")
+
+        locale?.let { updateLocale(it) }
+
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                // Define what happens when the back button is pressed
-                finish()  // Close the activity and go back to the previous one
+                finish()
             }
         })
+
         val sale3dsRedirectLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
                 val result = it.data?.serializable<EdfaPgGetTransactionDetailsSuccess>("result")
                 val error = it.data?.serializable<EdfaPgError>("error")
-                transactionCompleted(result, error,this,saleResponse)
+                transactionCompleted(result, error, this, saleResponse)
             }
         }
 
+        // Set the content for the activity
         setContent {
             val navController = rememberNavController()
             if (intentData != null) {
-                // Call your composable here
-                if(intentData.equals("1",ignoreCase = true)){
-                    Payment1Screen(navController,xpressCardPay,this,sale3dsRedirectLauncher)  // Call your composable here
-                }else if(intentData.equals("2",ignoreCase = true)){
-                    Payment2Screen(navController,xpressCardPay,this,sale3dsRedirectLauncher)  // Call your composable here
-                }else if(intentData.equals("3",ignoreCase = true)){
-                    Payment3Screen(navController,xpressCardPay,this, sale3dsRedirectLauncher)
+                when (intentData.toLowerCase()) {
+                    "1" -> Payment1Screen(navController, xpressCardPay, this, sale3dsRedirectLauncher)
+                    "2" -> Payment2Screen(navController, xpressCardPay, this, sale3dsRedirectLauncher)
+                    "3" -> Payment3Screen(navController, xpressCardPay, this, sale3dsRedirectLauncher)
                 }
             }
         }
     }
 
+    private fun updateLocale(code: String) {
+        val dLocale = Locale(code)
+
+        Locale.setDefault(dLocale)
+
+        val configuration = Configuration()
+        configuration.setLocale(dLocale)
+
+        resources.updateConfiguration(configuration, resources.displayMetrics)
+    }
 }
