@@ -14,7 +14,10 @@ import com.edfapg.sdk.views.edfacardpay.CardTransactionData
 import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
 import com.edfapg.sdk.views.edfacardpay.EdfaPgSaleWebRedirectActivity
 
-fun handleSaleResponse(cardTransactionData: CardTransactionData, onRedirect:(EdfaPgSaleResponse?, EdfaPgSaleResult, CardTransactionData) -> Unit): EdfaPgSaleCallback {
+fun handleSaleResponse(
+    cardTransactionData: CardTransactionData,
+    onRedirect: (EdfaPgSaleResponse?, EdfaPgSaleResult, CardTransactionData) -> Unit
+): EdfaPgSaleCallback {
     var saleResponse: EdfaPgSaleResponse? = null
     return object : EdfaPgSaleCallback {
         override fun onResponse(response: EdfaPgSaleResponse) {
@@ -32,6 +35,7 @@ fun handleSaleResponse(cardTransactionData: CardTransactionData, onRedirect:(Edf
                     println("Redirect: $result")
                     onRedirect(saleResponse, result, cardTransactionData)
                 }
+
                 is EdfaPgSaleResult.Decline -> println("Payment declined: $result")
                 is EdfaPgSaleResult.Success -> {
                     val successResult = result.result
@@ -58,25 +62,44 @@ fun handleSaleResponse(cardTransactionData: CardTransactionData, onRedirect:(Edf
     }
 }
 
- fun transactionCompleted(
-     data: EdfaPgGetTransactionDetailsSuccess?,
-     error: EdfaPgError?,
-     activity: Activity,
-     saleResponse: EdfaPgSaleResponse?
- ) {
+fun transactionCompleted(
+    data: EdfaPgGetTransactionDetailsSuccess?,
+    error: EdfaPgError?,
+    activity: Activity,
+    saleResponse: EdfaPgSaleResponse?
+) {
 
-     activity.finish()
-    if(error != null)
-        EdfaCardPay.shared()!!._onTransactionFailure?.let { failure -> failure(saleResponse, error) }
-
-    else if(data == null)
-        EdfaCardPay.shared()!!._onTransactionFailure?.let { failure -> failure(saleResponse, error) }
-
+    activity.finish()
+    if (error != null)
+        EdfaCardPay.shared()!!._onTransactionFailure?.let { failure ->
+            failure(
+                saleResponse,
+                error
+            )
+        }
+    else if (data == null)
+        EdfaCardPay.shared()!!._onTransactionFailure?.let { failure ->
+            failure(
+                saleResponse,
+                error
+            )
+        }
     else
         with(data) {
             when (status) {
-                EdfaPgStatus.SETTLED -> EdfaCardPay.shared()!!._onTransactionSuccess?.let { success -> success(saleResponse, data) }
-                else -> EdfaCardPay.shared()!!._onTransactionFailure?.let { failure -> failure(saleResponse, data) }
+                EdfaPgStatus.SETTLED -> EdfaCardPay.shared()!!._onTransactionSuccess?.let { success ->
+                    success(
+                        saleResponse,
+                        data
+                    )
+                }
+
+                else -> EdfaCardPay.shared()!!._onTransactionFailure?.let { failure ->
+                    failure(
+                        saleResponse,
+                        data
+                    )
+                }
 //                EdfaPgStatus.SECURE_3D -> TODO()
 //                EdfaPgStatus.REDIRECT -> TODO()
 //                EdfaPgStatus.PENDING -> TODO()

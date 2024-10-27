@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -35,9 +36,21 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
@@ -89,6 +102,9 @@ fun CardInputForm(
     var year by remember { mutableStateOf("") }
     var cvv by remember { mutableStateOf("") }
     var unformattedNumber by remember { mutableStateOf("") }
+
+    var isButtonClicked by remember { mutableStateOf(false) }
+    var isResponseReceived by remember { mutableStateOf(false) }
 
     // Track validity of each field
     var isCardNumberValid by remember { mutableStateOf(false) }
@@ -290,6 +306,7 @@ fun CardInputForm(
             onClick = {
                 val order = xpressCardPay?._order
                 val payer = xpressCardPay?._payer
+                isButtonClicked = true
                 if (order != null && payer != null) {
                     val card =
                         EdfaPgCard(unformattedNumber, month.toInt(), year.toInt() + 2000, cvv)
@@ -310,10 +327,13 @@ fun CardInputForm(
                             )
                         ) { response, result, cardData ->
                             PaymentActivity.saleResponse = response
+                            isResponseReceived = true
                             val intent =
                                 EdfaPgSaleWebRedirectActivity.intent(context = activity!!, cardData)
                             sale3dsRedirectLauncher.launch(intent)
                         }
+
+
                     )
                 }
             },
@@ -322,7 +342,7 @@ fun CardInputForm(
                 .fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.color_main)),
             shape = RoundedCornerShape(10.dp),
-            enabled = isFormValid // Enable/Disable button based on form validity
+            enabled = isFormValid  // Enable button based on form validity and response state
         ) {
             Text(text = stringResource(id = R.string.pay), color = Color.White)
         }
@@ -339,7 +359,7 @@ fun CardInputForm(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun CardInputField(
     modifier: Modifier = Modifier,
@@ -383,6 +403,9 @@ fun CardInputField(
                     .fillMaxWidth()
                     .background(Color.White, shape = RoundedCornerShape(16.dp))
             ) {
+                val localFocusManager = LocalFocusManager.current
+                val localSoftwareKeyboardController = LocalSoftwareKeyboardController.current
+                val focusRequester = remember { FocusRequester() }
                 BasicTextField(
                     value = value,
                     onValueChange = onValueChange,
@@ -395,11 +418,15 @@ fun CardInputField(
                         .fillMaxWidth()
                         .background(Color(0xFFF1F4F8)) // Background color
                         .padding(horizontal = 8.dp) // Padding inside the text field
-                        .focusable(true),
+                        .focusable(true)
+                        .focusRequester(focusRequester)
+                        .onFocusChanged { if(it.isFocused) localSoftwareKeyboardController?.hide() }
+                        .focusable(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = inputType,
                         imeAction = action
                     ),
+                    keyboardActions = KeyboardActions(onDone = { localFocusManager.clearFocus() }),
                     cursorBrush = SolidColor(Color(0xFF2C3246)), // Cursor color
                     decorationBox = { innerTextField ->
                         Box(
