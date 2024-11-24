@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">EdfaPg SDK</string>
+    <string name="pay">Pagar</string>
+    <string name="title_activity_edfa_card_pay">Actividad EdfaCardPay</string>
+    <string name="title_activity_edfa_card_redirect">Se ha producido un error al navegar de forma segura por el sitio web</string>
+    <string name="notification_error_ssl_cert_invalid">Actividad EdfaCardPay</string>
+    <string name="cancel">Cancelar</string>
+    <string name="card_holder">TITULAR DE LA TARJETA</string>
+    <string name="card_number">NÚMERO DE TARJETA</string>
+    <string name="expiry">EXPIRACIÓN</string>
+    <string name="cvv">CVV</string>
+    <string name="sar">SAR</string>
+    <string name="txt_card_holdername">Nombre del titular de la tarjeta</string>
+    <string name="txt_desc">"Esta tarjeta es emitida por Swedbank bajo licencia de Mastercard International."</string>
+    <string name="txt_validate">"VÁLIDO \nHASTA"</string>
+    <string name="txt_month">"MES/AÑO"</string>
+    <string name="txt_total">"Monto Total"</string>
+
+</resources>

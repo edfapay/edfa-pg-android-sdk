@@ -20,7 +20,7 @@ internal fun EdfaCardPayFragment.doSaleTransaction(cardDetail: CreditCard?){
 
         val month = cardDetail.expiryMonth()
         val year = cardDetail.expiryYear()
-        if(month == null || year == null)
+        if (month == null || year == null)
             return
 
         val card = EdfaPgCard(cardDetail.unformattedNumber, month, year, cardDetail.cvv)
@@ -40,6 +40,7 @@ internal fun EdfaCardPayFragment.doSaleTransaction(cardDetail: CreditCard?){
     }
 
 }
+
 
 internal fun EdfaCardPayFragment.handleSaleResponse(cardTransactionData:CardTransactionData) : EdfaPgSaleCallback{
     return object : EdfaPgSaleCallback {

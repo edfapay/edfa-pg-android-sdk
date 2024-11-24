@@ -20,7 +20,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.edfapg.sample.R
 import com.edfapg.sample.databinding.ActivityRedirect3dsBinding
 
-class EdfaPgRedirect3dsActivity : AppCompatActivity(R.layout.activity_redirect_3ds) {
+class EdfaPgRedirect3dsActivity : BaseActivity(R.layout.activity_redirect_3ds) {
 
     private lateinit var binding: ActivityRedirect3dsBinding
 

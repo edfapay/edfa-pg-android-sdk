@@ -26,7 +26,7 @@ import io.kimo.lib.faker.Faker
 import java.text.DecimalFormat
 import java.util.*
 
-class EdfaPgRecurringSaleActivity : AppCompatActivity(R.layout.activity_recurring_sale) {
+class EdfaPgRecurringSaleActivity : BaseActivity(R.layout.activity_recurring_sale) {
 
     private lateinit var binding: ActivityRecurringSaleBinding
     private lateinit var edfapayTransactionStorage: EdfaPgTransactionStorage

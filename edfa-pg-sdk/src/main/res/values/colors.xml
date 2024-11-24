@@ -13,4 +13,7 @@
     <color name="backgroundUnionpay">#00BCD4</color>
     <color name="backgroundGeneric">#1976D2</color>
     <color name="backgroundVisa">#FBC02D</color>
+    <color name="color_main">#FF00A86B</color>
+
+
 </resources>

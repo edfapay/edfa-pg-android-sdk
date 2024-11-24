@@ -23,13 +23,13 @@ import java.util.*
 data class EdfaPgPayerOptions(
     @Nullable
     @Size(max = EdfaPgValidation.Text.SHORT)
-    val middleName: String? = null,
+    val middleName: String? = "undefined",
     @Nullable
     val birthdate: Date? = null,
     @Nullable
     @Size(max = EdfaPgValidation.Text.REGULAR)
-    val address2: String? = null,
+    val address2: String? = "undefined",
     @Nullable
     @Size(max = EdfaPgValidation.Text.SHORT)
-    val state: String? = null,
+    val state: String? = "undefined",
 ) : Serializable

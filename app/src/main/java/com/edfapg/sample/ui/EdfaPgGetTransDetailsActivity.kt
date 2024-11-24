@@ -21,7 +21,7 @@ import com.edfapg.sdk.model.response.gettransactiondetails.EdfaPgGetTransactionD
 import com.edfapg.sdk.model.response.gettransactiondetails.EdfaPgGetTransactionDetailsResponse
 import com.edfapg.sdk.model.response.gettransactiondetails.EdfaPgGetTransactionDetailsResult
 
-class EdfaPgGetTransDetailsActivity : AppCompatActivity(R.layout.activity_get_trans_details) {
+class EdfaPgGetTransDetailsActivity : BaseActivity(R.layout.activity_get_trans_details) {
 
     private lateinit var binding: ActivityGetTransDetailsBinding
     private lateinit var edfapayTransactionStorage: EdfaPgTransactionStorage

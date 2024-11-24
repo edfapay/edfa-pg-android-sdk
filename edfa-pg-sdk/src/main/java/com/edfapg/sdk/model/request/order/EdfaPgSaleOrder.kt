@@ -42,4 +42,33 @@ data class EdfaPgSaleOrder(
         val _currency = Currency.getInstance(currency)
         return _currency.currencyCode
     }
+
+    // Runtime validation method
+    fun validate(): List<String> {
+        val errors = mutableListOf<String>()
+
+        if (id.isBlank()) {
+            errors.add("id is empty")
+        }
+
+        if (amount <= 0) {
+            errors.add("amount must be greater than ${EdfaPgValidation.Amount.VALUE_MIN}")
+        }
+
+        if (currency.isBlank() || currency.length != 3) {
+            errors.add("currency is invalid (must be a 3-character currency code)")
+        } else {
+            try {
+                Currency.getInstance(currency)
+            } catch (e: IllegalArgumentException) {
+                errors.add("currency code is not recognized")
+            }
+        }
+
+        if (description.isBlank()) {
+            errors.add("description is empty")
+        }
+
+        return errors
+    }
 }

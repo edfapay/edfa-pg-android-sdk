@@ -12,5 +12,10 @@
     <string name="expiry">EXPIRY</string>
     <string name="cvv">CVV</string>
     <string name="sar">SAR</string>
+    <string name="txt_card_holdername">Card holder Name</string>
+    <string name="txt_desc">"This card is issued by Swedbank pursuant to licence by Mastercard International."</string>
+    <string name="txt_validate">"VALID \nTHRU"</string>
+    <string name="txt_month">"MONTH/YEAR"</string>
+    <string name="txt_total">"Total Amount"</string>
 
 </resources>
