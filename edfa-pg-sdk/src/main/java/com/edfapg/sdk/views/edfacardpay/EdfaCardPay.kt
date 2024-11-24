@@ -17,13 +17,13 @@ interface EdfapayCardDetailsInitializer {
     fun initialize(
         onError: (Any) -> Unit,
         onPresent: (Activity) -> Unit
-    ){
+    ) {
 
     }
 }
 
 
-open class EdfaCardPay : EdfapayCardDetailsInitializer{
+open class EdfaCardPay : EdfapayCardDetailsInitializer {
     constructor() {
         instance = this
     }
@@ -64,6 +64,25 @@ open class EdfaCardPay : EdfapayCardDetailsInitializer{
     ) {
         _onError = onError
         _onPresent = onPresent
+        val validationErrors = _payer?.validate()
+        if (validationErrors != null) {
+            if (validationErrors.isNotEmpty()) {
+                _onError?.invoke(
+                    validationErrors.toString()
+                        .removeSurrounding("[", "]")
+                )
+                return
+            }
+        }
+
+        val orderValidationErrors = _order?.validate()
+        if (orderValidationErrors != null) {
+            if (orderValidationErrors.isNotEmpty()) {
+                _onError?.invoke(orderValidationErrors.toString().removeSurrounding("[", "]"))
+                return
+
+            }
+        }
         context.startActivity(
             intent(
                 context,
@@ -88,9 +107,9 @@ open class EdfaCardPay : EdfapayCardDetailsInitializer{
         if (designType.value == "0") {
             val intent = Intent(context, EdfaCardPayActivity::class.java)
             return intent
-        }else {
-        val intent = Intent(context, PaymentActivity::class.java)
-        intent.putExtra("paymentDesign", designType.value)
+        } else {
+            val intent = Intent(context, PaymentActivity::class.java)
+            intent.putExtra("paymentDesign", designType.value)
             intent.putExtra("locale", locale.value)
             return intent
         }

@@ -55,5 +55,27 @@ data class EdfaPgPayer(
     @Size(min = EdfaPgValidation.Text.IP_MIN, max = EdfaPgValidation.Text.IP_MAX)
     val ip: String,
     @Nullable
-    val options: EdfaPgPayerOptions? = null//= EdfaPgPayerOptions(),
-) : Serializable
+    val options: EdfaPgPayerOptions? = null
+) : Serializable {
+
+
+    fun validate(): List<String> {
+        val errors = mutableListOf<String>()
+
+        if (firstName.isBlank()) errors.add("firstName is empty")
+        if (lastName.isBlank()) errors.add("lastName is empty")
+        if (address.isBlank()) errors.add("address is empty")
+        if (country.isBlank()) errors.add("country is empty")
+        if (city.isBlank()) errors.add("city is empty")
+        if (zip.isBlank()) errors.add("zip is empty")
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            errors.add("email is invalid")
+        }
+        if (phone.isBlank()) errors.add("phone is empty")
+        if (!Regex("^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$").matches(ip)) {
+            errors.add("IP address is invalid")
+        }
+
+        return errors
+    }
+}

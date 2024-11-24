@@ -16,7 +16,8 @@ import com.edfapg.sdk.views.edfacardpay.EdfaPgSaleWebRedirectActivity
 
 fun handleSaleResponse(
     cardTransactionData: CardTransactionData,
-    onRedirect: (EdfaPgSaleResponse?, EdfaPgSaleResult, CardTransactionData) -> Unit
+    onSuccess: (EdfaPgSaleResponse?, CardTransactionData) -> Unit, // Success callback
+    onFailure: (EdfaPgError?) -> Unit // Failure callback
 ): EdfaPgSaleCallback {
     var saleResponse: EdfaPgSaleResponse? = null
     return object : EdfaPgSaleCallback {
@@ -33,17 +34,25 @@ fun handleSaleResponse(
                 is EdfaPgSaleResult.Redirect -> {
                     cardTransactionData.response = result.result
                     println("Redirect: $result")
-                    onRedirect(saleResponse, result, cardTransactionData)
+                    onSuccess(saleResponse, cardTransactionData)
                 }
 
-                is EdfaPgSaleResult.Decline -> println("Payment declined: $result")
+                is EdfaPgSaleResult.Decline -> {
+                    println("Payment declined: $result")
+                    onFailure(null)
+                }
                 is EdfaPgSaleResult.Success -> {
                     val successResult = result.result
                     when (successResult.result) {
                         SUCCESS -> println("Payment success: $successResult")
                         ACCEPTED -> println("Payment accepted: $successResult")
-                        DECLINED -> println("Payment declined: $successResult")
-                        ERROR -> println("Payment error: $successResult")
+                        DECLINED -> {
+                            println("Payment declined: $successResult")
+                            onFailure(null)
+                        }
+                        ERROR -> {
+                            println("Payment error: $successResult")
+                        }
                         REDIRECT -> TODO()
                     }
                 }
@@ -53,11 +62,14 @@ fun handleSaleResponse(
         override fun onError(error: EdfaPgError) {
             println("Error during sale: ${error.message}")
             EdfaCardPay.shared()?._onTransactionFailure?.invoke(null, error)
+            onFailure(error)
         }
 
         override fun onFailure(throwable: Throwable) {
             println("Failure during sale: ${throwable.message}")
             EdfaCardPay.shared()?._onTransactionFailure?.invoke(null, throwable)
+            onFailure(null)
+
         }
     }
 }

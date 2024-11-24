@@ -9,6 +9,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import com.edfapg.sample.app.SaleOrderValidator
 import com.edfapg.sample.databinding.ActivityMainBinding
 import com.edfapg.sdk.model.request.card.EdfaPgCard
 import com.edfapg.sdk.model.request.order.EdfaPgSaleOrder
@@ -70,12 +71,14 @@ class EdfaPgMainAcitivty : BaseActivity() {
             description = "Test Order"
         )
 
+
         val payer = EdfaPgPayer(
             "Zohaib", "Kambrani",
             "Riyadh", "SA", "Riyadh", "123123",
             "a2zzuhaib@gmail.com", "966500409598",
             "171.100.100.123"
         )
+
 
         val edfaCardPay = EdfaCardPay()
             .setOrder(order)
@@ -96,7 +99,7 @@ class EdfaPgMainAcitivty : BaseActivity() {
             DesignType.PAYMENT_DESIGN_1,//change to the desired Ui variant here
             EdfaLocale.EN, //change to desired locale here
             onError = {
-                Toast.makeText(this, "onError $it", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "$it", Toast.LENGTH_LONG).show()
             },
             onPresent = {
             }
