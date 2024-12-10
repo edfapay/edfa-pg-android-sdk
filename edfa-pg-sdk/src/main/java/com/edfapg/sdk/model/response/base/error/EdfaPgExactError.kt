@@ -19,6 +19,7 @@ import java.io.Serializable
  * @property code error code.
  * @property message error message.
  */
+
 data class EdfaPgExactError(
     @NonNull
     @SerializedName("error_code")

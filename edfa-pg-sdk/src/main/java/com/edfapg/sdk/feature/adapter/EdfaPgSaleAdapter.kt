@@ -23,6 +23,7 @@ import com.edfapg.sdk.model.response.sale.EdfaPgSaleResponse
 import com.edfapg.sdk.toolbox.EdfaPgAmountFormatter
 import com.edfapg.sdk.toolbox.EdfaPgHashUtil
 import com.edfapg.sdk.toolbox.EdfaPgValidation
+import com.edfapg.sdk.toolbox.fillIfEmpty
 import com.google.gson.GsonBuilder
 import java.util.*
 
@@ -96,12 +97,12 @@ object EdfaPgSaleAdapter : EdfaPgBaseAdapter<EdfaPgSaleService>() {
             cardExpireMonth = edfapayCardFormatter.expireMonthFormat(card),
             cardExpireYear = edfapayCardFormatter.expireYearFormat(card),
             cardCvv2 = String.format(Locale.US,"%s", card.cvv),
-            payerFirstName = payer.firstName,
-            payerLastName = payer.lastName,
-            payerAddress = payer.address,
-            payerCountry = payer.country,
-            payerCity = payer.city,
-            payerZip = String.format(Locale.US,"%s", payer.zip),
+            payerFirstName = payer.firstName.fillIfEmpty(),
+            payerLastName = payer.lastName.fillIfEmpty(),
+            payerAddress = payer.address.fillIfEmpty(),
+            payerCountry = payer.country.fillIfEmpty("SA"),
+            payerCity = payer.city.fillIfEmpty(),
+            payerZip = String.format(Locale.US,"%s", payer.zip.fillIfEmpty()),
             payerEmail = payer.email,
             payerPhone = String.format(Locale.US,"%s", payer.phone),
             payerIp = String.format(Locale.US,"%s", payer.ip),
@@ -110,9 +111,9 @@ object EdfaPgSaleAdapter : EdfaPgBaseAdapter<EdfaPgSaleService>() {
             auth = EdfaPgOption.map(auth).option,
             channelId = if (options?.channelId.isNullOrEmpty()) null else options?.channelId,
             recurringInit = options?.recurringInit?.let { EdfaPgOption.map(it).option },
-            payerMiddleName = if (payerOptions?.middleName.isNullOrEmpty()) null else payerOptions?.middleName,
-            payerAddress2 = if (payerOptions?.address2.isNullOrEmpty()) null else payerOptions?.address2,
-            payerState = if (payerOptions?.state.isNullOrEmpty()) null else payerOptions?.state,
+            payerMiddleName = payerOptions?.middleName?.fillIfEmpty(),
+            payerAddress2 = payerOptions?.address2?.fillIfEmpty(),
+            payerState = payerOptions?.state?.fillIfEmpty(),
             payerBirthDate = edfapayPayerOptionsFormatter.birthdateFormat(payerOptions),
             reqToken = if(reqToken) "Y" else "N"
         ).edfapayEnqueue(callback)

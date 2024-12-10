@@ -18,3 +18,9 @@ fun delayAtIO(millis:Long, callback: () -> Unit){
         callback()
     }
 }
+
+fun String?.fillIfEmpty(with:String = "undefined") : String = when (this?.trim()?.isEmpty()) {
+    true -> with
+    false -> this
+    else -> "undefined"
+}
