@@ -97,7 +97,6 @@ fun CardInputForm(
     activity: Activity?,
     sale3dsRedirectLauncher: ActivityResultLauncher<Intent>
 ) {
-    // Hoist the state of these variables to preserve their values across recompositions
     var month by remember { mutableStateOf("") }
     var year by remember { mutableStateOf("") }
     var cvv by remember { mutableStateOf("") }
@@ -119,7 +118,8 @@ fun CardInputForm(
     }
 
     LaunchedEffect(isCardNumberValid, isCvvValid, isMonthValid, isYearValid) {
-        isFormValid = isCardNumberValid && isCvvValid && isMonthValid && isYearValid
+        isFormValid = isCardNumberValid && isCvvValid && isMonthValid
+        println("isFormValid: $isFormValid isCardNumberValid: $isCardNumberValid isCvvValid: $isCvvValid isMonthValid: $isMonthValid isYearValid: $isYearValid")
     }
 
     Column(
@@ -176,7 +176,7 @@ fun CardInputForm(
                     )
 
                     // Recalculate form validity on every card number change
-                    isFormValid = isCardNumberValid && isCvvValid && isMonthValid && isYearValid
+                    isFormValid = isCardNumberValid && isCvvValid && isMonthValid
                 }
             }
         )
@@ -242,6 +242,8 @@ fun CardInputForm(
                         enteredYear >= currentYear // Year should be current or in the future
                     } ?: false
 
+                    println("isFormValid isYearValid: $isYearValid ${year.length} ${year.toIntOrNull()}")
+
                     // Validate month and date only if month is valid
                     val isDateValid = if (isMonthInputValid) {
                         month.toIntOrNull()?.let { enteredMonth ->
@@ -261,8 +263,12 @@ fun CardInputForm(
                     // Update isMonthValid based on the corrected date validation
                     isMonthValid = isMonthInputValid && isDateValid // Ensure month is valid
 
+                    println("isMonthValid: $isMonthInputValid $isDateValid")
+
                     // Update the overall form validation
-                    isFormValid = isCardNumberValid && isCvvValid && isMonthValid && isYearValid
+                    isFormValid = isCardNumberValid && isCvvValid && isMonthValid
+
+
 
                     // Ensure correct formatting and pre-append 0 if necessary
                     val validatedMonth = when {
