@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.startActivity
 import com.edfapg.sdk.PaymentActivity
 import com.edfapg.sdk.core.EdfaPgSdk
 import com.edfapg.sdk.core.handleSaleResponse
@@ -15,7 +16,7 @@ import com.edfapg.sdk.model.response.sale.EdfaPgSaleResponse
 import com.edfapg.sdk.toolbox.EdfaPgUtil
 
 
-class EdfaPayWithCardDetails(private val context: Context, val card: EdfaPgCard) : EdfaCardPay() {
+class EdfaPayWithCardDetails(private val context: Context) : EdfaCardPay() {
     private var saleResponse: EdfaPgSaleResponse? = null
 
     override fun initialize(
@@ -26,14 +27,15 @@ class EdfaPayWithCardDetails(private val context: Context, val card: EdfaPgCard)
         doSaleTransaction()
     }
 
-    fun doSaleTransaction() {
+    private fun doSaleTransaction() {
         val order = _order
         val payer = _payer
+        val card = _card
         if (order != null && payer != null && card != null) {
             saleResponse = null
             EdfaPgSdk.Adapter.SALE.execute(
                 order = order,
-                card = card!!,
+                card = card,
                 payer = payer,
                 termUrl3ds = EdfaPgUtil.ProcessCompleteCallbackUrl,
                 options = null,
@@ -50,6 +52,7 @@ class EdfaPayWithCardDetails(private val context: Context, val card: EdfaPgCard)
                         val intent = EdfaPgSaleWebRedirectActivity.intent(context = context, cardData){ result, error ->
                         transactionCompleted(result, error)
                     }
+                        context.startActivity(intent)
                     },
                     { error -> // Failure callback
                         // Handle the error, e.g., show a message to the user
@@ -62,13 +65,6 @@ class EdfaPayWithCardDetails(private val context: Context, val card: EdfaPgCard)
                         }
                     }
                 )
-//                callback = handleSaleResponse(CardTransactionData(order, payer, card!!, null)) { response, result, cardData ->
-//                    val intent = EdfaPgSaleWebRedirectActivity.intent(context = context, cardData){ result, error ->
-//                        transactionCompleted(result, error)
-//
-//                    }
-//                    context.startActivity(intent)
-//                }
             )
         } else {
             println("Something was empty")

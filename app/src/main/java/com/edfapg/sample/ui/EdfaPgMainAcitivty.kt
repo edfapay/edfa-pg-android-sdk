@@ -57,8 +57,8 @@ class EdfaPgMainAcitivty : BaseActivity() {
         }
 
         binding.btnSaleWithCardUi.setOnClickListener {
-            payWithCard()
-//            payWithCardDetails()
+//            payWithCard()
+            payWithCardDetails()
         }
     }
 
@@ -125,9 +125,10 @@ class EdfaPgMainAcitivty : BaseActivity() {
 //        val card = EdfaPgCard("4458271329748293", 7, 2029, "331")
 //        val card = EdfaPgCard("5452057473989962", 3, 2026, "386")
         val card = EdfaPgCard("4890222013171587", 9, 2029, "826")
-        EdfaPayWithCardDetails(this, card = card)
+        EdfaPayWithCardDetails(this)
             .setOrder(order)
             .setPayer(payer)
+            .setCard(card)
             .onTransactionFailure { res, data ->
                 print("$res $data")
                 Toast.makeText(this, "Transaction Failure", Toast.LENGTH_LONG).show()
