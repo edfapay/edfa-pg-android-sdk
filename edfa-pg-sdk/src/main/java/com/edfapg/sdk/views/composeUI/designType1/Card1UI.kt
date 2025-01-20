@@ -189,6 +189,6 @@ fun CardForm(
         cardNumber = cardNumber.text.ifEmpty { "**** **** **** ****" },
         cardHolderName = cardHolderName.text.ifEmpty { stringResource(id = R.string.txt_card_holdername)},
         expiryDate = expiryDate.text.ifEmpty { "00/00" },
-        cvc = cvc.text.ifEmpty { "000" }
+        cvc = cvc.text.ifEmpty { "0000" }
     )
 }

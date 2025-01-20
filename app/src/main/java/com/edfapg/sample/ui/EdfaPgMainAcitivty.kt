@@ -96,7 +96,7 @@ class EdfaPgMainAcitivty : BaseActivity() {
         * */
         edfaCardPay.initialize(
             this,
-            DesignType.PAYMENT_DESIGN_1,//change to the desired Ui variant here
+            DesignType.PAYMENT_DESIGN_2,//change to the desired Ui variant here
             EdfaLocale.EN, //change to desired locale here
             onError = {
                 Toast.makeText(this, "$it", Toast.LENGTH_LONG).show()
@@ -124,8 +124,7 @@ class EdfaPgMainAcitivty : BaseActivity() {
 
 //        val card = EdfaPgCard("4458271329748293", 7, 2029, "331")
 //        val card = EdfaPgCard("5452057473989962", 3, 2026, "386")
-//        val card = EdfaPgCard("4890222013171587", 9, 2029, "826")
-        val card = EdfaPgCard("4847831061066194", 3, 2029, "374")
+        val card = EdfaPgCard("4890222013171587", 9, 2029, "826")
         EdfaPayWithCardDetails(this, card = card)
             .setOrder(order)
             .setPayer(payer)
@@ -133,6 +132,7 @@ class EdfaPgMainAcitivty : BaseActivity() {
                 print("$res $data")
                 Toast.makeText(this, "Transaction Failure", Toast.LENGTH_LONG).show()
             }.onTransactionSuccess { res, data ->
+
                 print("$res $data")
                 Toast.makeText(this, "Transaction Success", Toast.LENGTH_LONG).show()
             }

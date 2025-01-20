@@ -194,7 +194,7 @@ fun CardInputForm(
                 action = ImeAction.Next,
                 value = cvc,
                 onValueChange = { newValue ->
-                    if (newValue.text.length < Card.CVV_MAX.toInt()) {
+                    if (newValue.text.length <= Card.CVV_MAX.toInt()) {
                         val newText = newValue.text.replace(" ", "")
                         val selection = newValue.selection
 
