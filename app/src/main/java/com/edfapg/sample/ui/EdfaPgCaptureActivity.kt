@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import com.edfapg.sample.app.EdfaPgTransactionStorage
 import com.edfapg.sample.app.preattyPrint
@@ -20,7 +19,7 @@ import com.edfapg.sdk.model.response.capture.EdfaPgCaptureCallback
 import com.edfapg.sdk.model.response.capture.EdfaPgCaptureResponse
 import com.edfapg.sdk.model.response.capture.EdfaPgCaptureResult
 
-class EdfaPgCaptureActivity : AppCompatActivity() {
+class EdfaPgCaptureActivity : BaseActivity() {
 
     private lateinit var binding: ActivityCaptureBinding
     private lateinit var edfapayTransactionStorage: EdfaPgTransactionStorage

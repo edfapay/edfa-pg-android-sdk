@@ -13,4 +13,8 @@
 .externalNativeBuild
 .cxx
 local.properties
+<<<<<<< HEAD
 deploymentTargetSelector.xml
+=======
+app/src/main/java/com/edfapg/sample/app/Credentials.kt
+>>>>>>> f2216b0ef509adebe44444404e0c273ca2b24818

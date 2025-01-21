@@ -101,15 +101,20 @@ open class CreditCard : Cloneable {
     fun isExpiryValid(): Boolean {
 
         return try {
-            val seperator = this.expiry.length - 4
+            val formatter =  SimpleDateFormat("MMyy", Locale.ENGLISH)
+            if(expiry.length == 4){
+                val eMonth = expiry.substring(0,2).toInt()
+                val eYear = expiry.substring(2,4).toInt()
+                val cDate = formatter.format(Date())
+                val cMonth = cDate.substring(0,2).toInt()
+                val cYear = cDate.substring(2,4).toInt()
+                if(eYear > cYear)
+                    return true
+                if(eYear == cYear && eMonth >= cMonth)
+                    return true
+            }
 
-            val month = this.expiry.substring(0, 2).toInt()
-            val year = this.expiry.substring(2 + seperator, this.expiry.length).toInt()
-
-            val month_2 = SimpleDateFormat("MM", Locale.getDefault()).format(Date()).toInt()
-            val year_2 = SimpleDateFormat("yy", Locale.getDefault()).format(Date()).toInt()
-
-            return year + month >= year_2 + month_2
+            false
         } catch (e: Exception) {
             false
         }

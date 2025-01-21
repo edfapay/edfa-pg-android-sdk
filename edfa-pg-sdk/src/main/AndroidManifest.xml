@@ -25,6 +25,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.EdfaPgAndroidSDK" />
 
+        <activity android:name=".PaymentActivity"
+            android:theme="@style/TransparentActivityTheme" />
 
     </application>
 

@@ -74,6 +74,7 @@ object EdfaPgSaleAdapter : EdfaPgBaseAdapter<EdfaPgSaleService>() {
         options: EdfaPgSaleOptions? = null,
         @NonNull
         auth: Boolean,
+        reqToken: Boolean = false,
         @NonNull
         callback: EdfaPgSaleCallback
     ) {
@@ -112,7 +113,8 @@ object EdfaPgSaleAdapter : EdfaPgBaseAdapter<EdfaPgSaleService>() {
             payerMiddleName = if (payerOptions?.middleName.isNullOrEmpty()) null else payerOptions?.middleName,
             payerAddress2 = if (payerOptions?.address2.isNullOrEmpty()) null else payerOptions?.address2,
             payerState = if (payerOptions?.state.isNullOrEmpty()) null else payerOptions?.state,
-            payerBirthDate = edfapayPayerOptionsFormatter.birthdateFormat(payerOptions)
+            payerBirthDate = edfapayPayerOptionsFormatter.birthdateFormat(payerOptions),
+            reqToken = if(reqToken) "Y" else "N"
         ).edfapayEnqueue(callback)
     }
 }

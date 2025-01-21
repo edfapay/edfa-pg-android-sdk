@@ -4,17 +4,26 @@
 
 package com.edfapg.sample.ui
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.result.contract.ActivityResultContracts
+import com.edfapg.sample.app.SaleOrderValidator
 import com.edfapg.sample.databinding.ActivityMainBinding
-import com.edfapg.sdk.model.request.order.*
-import com.edfapg.sdk.model.request.payer.*
-import com.edfapg.sdk.views.edfacardpay.*
+import com.edfapg.sdk.model.request.card.EdfaPgCard
+import com.edfapg.sdk.model.request.order.EdfaPgSaleOrder
+import com.edfapg.sdk.model.request.payer.EdfaPgPayer
+import com.edfapg.sdk.model.response.base.error.EdfaPgError
+import com.edfapg.sdk.model.response.gettransactiondetails.EdfaPgGetTransactionDetailsSuccess
+import com.edfapg.sdk.toolbox.DesignType
+import com.edfapg.sdk.toolbox.EdfaLocale
+import com.edfapg.sdk.toolbox.serializable
+import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
+import com.edfapg.sdk.views.edfacardpay.EdfaPayWithCardDetails
 import java.util.UUID
 
-class EdfaPgMainAcitivty : AppCompatActivity() {
+class EdfaPgMainAcitivty : BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -49,24 +58,27 @@ class EdfaPgMainAcitivty : AppCompatActivity() {
 
         binding.btnSaleWithCardUi.setOnClickListener {
             payWithCard()
+//            payWithCardDetails()
         }
     }
 
-    fun payWithCard(){
+    fun payWithCard() {
 
         val order = EdfaPgSaleOrder(
             id = UUID.randomUUID().toString(),
-            amount = 0.10,
+            amount = 0.12,
             currency = "SAR",
             description = "Test Order"
         )
 
+
         val payer = EdfaPgPayer(
-            "Zohaib","Kambrani",
-            "Riyadh","SA", "Riyadh","123123",
-            "a2zzuhaib@gmail.com","966500409598",
+            "Zohaib", "Kambrani",
+            "Riyadh", "SA", "Riyadh", "123123",
+            "a2zzuhaib@gmail.com", "966500409598",
             "171.100.100.123"
         )
+
 
         val edfaCardPay = EdfaCardPay()
             .setOrder(order)
@@ -84,39 +96,68 @@ class EdfaPgMainAcitivty : AppCompatActivity() {
         * */
         edfaCardPay.initialize(
             this,
+            DesignType.PAYMENT_DESIGN_1,//change to the desired Ui variant here
+            EdfaLocale.EN, //change to desired locale here
             onError = {
-
+                Toast.makeText(this, "$it", Toast.LENGTH_LONG).show()
             },
             onPresent = {
-
             }
         )
-
-
-        /*
-        * To get intent of card screen activity to present in your own choice (ready to use)
-        * */
-//        startActivity(edfaCardPay.intent(
-//            this,
-//            onError = {
-//
-//            },
-//            onPresent = {
-//
-//            })
-//        )
-
-
-        /*
-        * To get fragment of card screen to present in your own choice (ready to use)
-        * */
-//        edfaCardPay.fragment(
-//            onError = {
-//
-//            },
-//            onPresent = {
-//
-//            }
-//        )
     }
+
+    fun payWithCardDetails() {
+
+        val order = EdfaPgSaleOrder(
+            id = UUID.randomUUID().toString(),
+            amount = 0.12,
+            currency = "SAR",
+            description = "Test Order"
+        )
+
+        val payer = EdfaPgPayer(
+            "Zohaib", "Kambrani",
+            "Riyadh", "SA", "Riyadh", "123123",
+            "kashifuop99@gmail.com", "966500409598",
+            "171.100.100.123"
+        )
+
+//        val card = EdfaPgCard("4458271329748293", 7, 2029, "331")
+//        val card = EdfaPgCard("5452057473989962", 3, 2026, "386")
+        val card = EdfaPgCard("4890222013171587", 9, 2029, "826")
+        EdfaPayWithCardDetails(this)
+            .setOrder(order)
+            .setPayer(payer)
+            .setCard(card)
+            .onTransactionFailure { res, data ->
+                print("$res $data")
+                Toast.makeText(this, "Transaction Failure", Toast.LENGTH_LONG).show()
+            }.onTransactionSuccess { res, data ->
+
+                print("$res $data")
+                Toast.makeText(this, "Transaction Success", Toast.LENGTH_LONG).show()
+            }
+            .initialize(
+                onError = {
+                    Toast.makeText(this, "onError $it", Toast.LENGTH_LONG).show()
+                },
+                onPresent = {
+
+                }
+            )
+
+
+    }
+
+    val sale3dsRedirectLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                val result = it.data?.serializable<EdfaPgGetTransactionDetailsSuccess>("result")
+                val error = it.data?.serializable<EdfaPgError>("error")
+//            transactionCompleted(result, error)
+            }
+        }
+
+
 }
+
