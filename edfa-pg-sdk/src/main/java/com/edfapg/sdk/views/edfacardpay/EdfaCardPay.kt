@@ -64,8 +64,8 @@ open class EdfaCardPay : EdfapayCardDetailsInitializer {
 
     fun initialize(
         context: Context,
-        designType: DesignType? = DesignType.PAYMENT_DESIGN_1,
-        locale: EdfaLocale? = EdfaLocale.EN,
+        setDesignType: DesignType? = DesignType.PAYMENT_DESIGN_1,
+        setLanguage: EdfaLocale? = EdfaLocale.EN,
         onError: (Any) -> Unit,
         onPresent: (Activity) -> Unit
     ) {
@@ -93,8 +93,8 @@ open class EdfaCardPay : EdfapayCardDetailsInitializer {
         context.startActivity(
             intent(
                 context,
-                designType ?: DesignType.PAYMENT_DESIGN_1,
-                locale ?: EdfaLocale.EN,
+                setDesignType ?: DesignType.PAYMENT_DESIGN_1,
+                setLanguage ?: EdfaLocale.EN,
                 onError,
                 onPresent
             )
