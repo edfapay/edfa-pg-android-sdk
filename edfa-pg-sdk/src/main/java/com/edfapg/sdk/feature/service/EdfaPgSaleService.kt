@@ -214,7 +214,7 @@ The hash above was calculated for CLIENT_PASS equal to 13a4822c5907ed235f3a068c7
 
 /* Sample curl request:
 curl –d "action=SALE&client_key=c2b8fb04-110f-11ea-bcd3-0242c0a85004 &order_id=ORDER12345&order_amount=1.99
-&order_currency=USD&order_description=Prod uct&card_number=4111111111111111&card_exp_month=01&card_exp_year=2025
+&order_currency=USD&order_description=Product&card_number=4111111111111111&card_exp_month=01&card_exp_year=2025
 &card_cvv2= 000&payer_first_name=John&payer_last_name=Doe&payer_address=BigStreet&payer_coun try=US&payer_state=CA
 &payer_city=City&payer_zip=123456&payer_email=doe@example.c om&payer_phone=199999999&payer_ip=123.123.123.123
 &hash="a1a6de416405ada72bb47a49 176471dc" https://test.apiurl.com -k

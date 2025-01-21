@@ -23,6 +23,8 @@ import java.io.Serializable
  * @property message error message.
  * @property exactErrors list of the [EdfaPgExactError].
  */
+
+
 data class EdfaPgError(
     @NonNull
     @SerializedName("result")
