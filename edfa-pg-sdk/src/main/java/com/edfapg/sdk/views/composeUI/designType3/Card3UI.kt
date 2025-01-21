@@ -63,12 +63,7 @@ fun Card3UI(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
 
-            Box(
-                modifier = Modifier
-                    .clickable {
-                        navController.popBackStack()
-                    }
-            ) {
+            Box {
                 xpressCardPay?._order?.let {
                     val amount = it.formattedAmount() // Get formatted amount from order
                     val currency = it.formattedCurrency() // Get formatted currency from order

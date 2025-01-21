@@ -34,7 +34,7 @@ fun Payment1Screen(navController: NavController,xpressCardPay: EdfaCardPay?,acti
     val bottomSheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
         confirmValueChange = { newState ->
-            newState != SheetValue.Hidden
+            newState != SheetValue.Expanded
         }
     )
 
@@ -61,35 +61,28 @@ fun Payment1Screen(navController: NavController,xpressCardPay: EdfaCardPay?,acti
         }
     }
 
-    // Only show the ModalBottomSheet if it's marked as visible
+    // Show the ModalBottomSheet when visible
     if (bottomSheetVisible) {
         ModalBottomSheet(
             modifier = Modifier.fillMaxHeight(0.9f),
             sheetState = bottomSheetState,
             containerColor = Color.White,
-            onDismissRequest = { bottomSheetVisible = false }
+            onDismissRequest = { bottomSheetVisible = false } // Hide the sheet when dismissed
         ) {
             xpressCardPay?._order?.let {
                 val amount = it.formattedAmount() // Get formatted amount from order
                 val currency = it.formattedCurrency() // Get formatted currency from order
                 Column {
-                    Box(
-                        modifier = Modifier
-                            .clickable {
-                                navController.popBackStack()
-                            }
-                    ) {
+                    Box {
                         TitleAmount(amount = amount, currency = currency)  // Pass data to TitleAmount
                     }
-                    Payment1Form(xpressCardPay = xpressCardPay, activity = activity, sale3dsRedirectLauncher = sale3dsRedirectLauncher)
+                    Payment1Form(
+                        xpressCardPay = xpressCardPay,
+                        activity = activity,
+                        sale3dsRedirectLauncher = sale3dsRedirectLauncher
+                    )
                 }
             }
-
-        }
-    } else {
-        // If the bottom sheet is not visible, immediately finish the activity
-        LaunchedEffect(Unit) {
-            (context as? Activity)?.finish()
         }
     }
 }

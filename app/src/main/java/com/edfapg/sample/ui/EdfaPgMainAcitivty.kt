@@ -57,8 +57,8 @@ class EdfaPgMainAcitivty : BaseActivity() {
         }
 
         binding.btnSaleWithCardUi.setOnClickListener {
-//            payWithCard()
-            payWithCardDetails()
+            payWithCard()
+//            payWithCardDetails()
         }
     }
 

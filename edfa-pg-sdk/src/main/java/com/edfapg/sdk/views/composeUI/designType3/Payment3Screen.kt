@@ -26,7 +26,7 @@ import com.example.paymentgatewaynew.common.CardInputForm
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Payment3Screen(navController: NavController,xpressCardPay: EdfaCardPay?,activity: Activity,sale3dsRedirectLauncher: ActivityResultLauncher<Intent>) {
-    var bottomSheetVisible by remember { mutableStateOf(false) }
+    var bottomSheetVisible by remember { mutableStateOf(true) }
     var cardNumber by remember { mutableStateOf(TextFieldValue("")) }
     var cardHolderName by remember { mutableStateOf(TextFieldValue("")) }
     var expiryDate by remember { mutableStateOf(TextFieldValue("")) }
@@ -36,7 +36,7 @@ fun Payment3Screen(navController: NavController,xpressCardPay: EdfaCardPay?,acti
     val bottomSheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
         confirmValueChange = { newState ->
-            newState != SheetValue.Hidden
+            newState != SheetValue.Expanded
         })
     ModalBottomSheet(
         modifier = Modifier.fillMaxHeight(0.9f),

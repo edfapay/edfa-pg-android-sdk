@@ -44,12 +44,12 @@ import com.example.paymentgatewaynew.payment1.Payment1Form
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Payment2Screen(navController: NavController,xpressCardPay: EdfaCardPay?,activity: Activity,sale3dsRedirectLauncher: ActivityResultLauncher<Intent>) {
-    var bottomSheetVisible by remember { mutableStateOf(false) }
+    var bottomSheetVisible by remember { mutableStateOf(true) }
 
     val bottomSheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
         confirmValueChange = { newState ->
-            newState != SheetValue.Hidden
+            newState != SheetValue.Expanded
         })
 
     ModalBottomSheet(
@@ -98,12 +98,7 @@ fun CardEntryForm(navController:NavController,xpressCardPay: EdfaCardPay?,activi
     Column(modifier = Modifier.verticalScroll(scrollState)) {
         Row(horizontalArrangement = Arrangement.SpaceBetween) {
             Spacer(modifier = Modifier.width(16.dp))
-            Box(
-                modifier = Modifier
-                    .clickable {
-                        navController.popBackStack()
-                    }
-            ) {
+            Box{
                 xpressCardPay?._order?.let {
                     val amount = it.formattedAmount() // Get formatted amount from order
                     val currency = it.formattedCurrency() // Get formatted currency from order
