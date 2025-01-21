@@ -96,7 +96,7 @@ class EdfaPgMainAcitivty : BaseActivity() {
         * */
         edfaCardPay.initialize(
             this,
-            DesignType.PAYMENT_DESIGN_2,//change to the desired Ui variant here
+            DesignType.PAYMENT_DESIGN_3,//change to the desired Ui variant here
             EdfaLocale.EN, //change to desired locale here
             onError = {
                 Toast.makeText(this, "$it", Toast.LENGTH_LONG).show()

@@ -2,6 +2,8 @@ package com.example.paymentgatewaynew.payment2
 
 import android.app.Activity
 import android.content.Intent
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,12 +23,15 @@ import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -44,21 +49,56 @@ import com.example.paymentgatewaynew.payment1.Payment1Form
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Payment2Screen(navController: NavController,xpressCardPay: EdfaCardPay?,activity: Activity,sale3dsRedirectLauncher: ActivityResultLauncher<Intent>) {
+    val context = LocalContext.current
+
     var bottomSheetVisible by remember { mutableStateOf(true) }
 
     val bottomSheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
         confirmValueChange = { newState ->
             newState != SheetValue.Expanded
-        })
+        }
+    )
 
-    ModalBottomSheet(
-        sheetState = bottomSheetState,
-        modifier = Modifier.fillMaxHeight(0.9f),
-        containerColor = Color.White,
-        onDismissRequest = { bottomSheetVisible = false }
-    ) {
-        CardEntryForm(navController,xpressCardPay,activity,sale3dsRedirectLauncher)
+    // Handle back press logic using LocalOnBackPressedDispatcherOwner
+    val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+
+    DisposableEffect(key1 = backPressedDispatcher, key2 = bottomSheetState) {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (bottomSheetVisible) {
+                    // First press: Close the bottom sheet
+                    bottomSheetVisible = false
+                } else {
+                    // If the bottom sheet is already closed, finish the activity
+                    (context as? Activity)?.finish()
+                }
+            }
+        }
+
+        backPressedDispatcher?.addCallback(callback)
+
+        onDispose {
+            callback.remove()
+        }
+    }
+
+    LaunchedEffect(bottomSheetVisible) {
+        if (bottomSheetVisible) {
+            bottomSheetState.show()
+        } else {
+            bottomSheetState.hide()
+        }
+    }
+    if (bottomSheetVisible) {
+        ModalBottomSheet(
+            sheetState = bottomSheetState,
+            modifier = Modifier.fillMaxHeight(0.9f),
+            containerColor = Color.White,
+            onDismissRequest = { bottomSheetVisible = false }
+        ) {
+            CardEntryForm(navController, xpressCardPay, activity, sale3dsRedirectLauncher)
+        }
     }
 }
 @Composable

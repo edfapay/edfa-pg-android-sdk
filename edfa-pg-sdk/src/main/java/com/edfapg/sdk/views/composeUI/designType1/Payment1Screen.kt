@@ -61,6 +61,14 @@ fun Payment1Screen(navController: NavController,xpressCardPay: EdfaCardPay?,acti
         }
     }
 
+    LaunchedEffect(bottomSheetVisible) {
+        if (bottomSheetVisible) {
+            bottomSheetState.show()
+        } else {
+            bottomSheetState.hide()
+        }
+    }
+
     // Show the ModalBottomSheet when visible
     if (bottomSheetVisible) {
         ModalBottomSheet(
