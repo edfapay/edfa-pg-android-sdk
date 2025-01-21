@@ -5,12 +5,6 @@
     <application
         android:supportsRtl="true"
         tools:targetApi="31">
-        <activity
-            android:name=".EdfaPgHomeActivity_"
-            android:exported="true"
-            android:label="SDK Home">
-        </activity>
-
 
         <activity
             android:name=".views.edfacardpay.EdfaCardPayActivity"
