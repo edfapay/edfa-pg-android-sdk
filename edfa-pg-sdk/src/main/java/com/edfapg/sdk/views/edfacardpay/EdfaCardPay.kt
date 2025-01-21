@@ -9,8 +9,8 @@ import com.edfapg.sdk.model.request.card.EdfaPgCard
 import com.edfapg.sdk.model.request.order.EdfaPgSaleOrder
 import com.edfapg.sdk.model.request.payer.EdfaPgPayer
 import com.edfapg.sdk.model.response.sale.EdfaPgSaleResponse
-import com.edfapg.sdk.toolbox.DesignType
-import com.edfapg.sdk.toolbox.EdfaLocale
+import com.edfapg.sdk.toolbox.EdfaPayDesignType
+import com.edfapg.sdk.toolbox.EdfaPayLanguage
 
 internal var instance: EdfaCardPay? = null
 
@@ -32,6 +32,9 @@ open class EdfaCardPay : EdfapayCardDetailsInitializer {
     var _order: EdfaPgSaleOrder? = null
     var _payer: EdfaPgPayer? = null
     var _card: EdfaPgCard? = null
+    var _design: EdfaPayDesignType = EdfaPayDesignType.one
+    var _language: EdfaPayLanguage = EdfaPayLanguage.en
+
     var _onTransactionFailure: ((EdfaPgSaleResponse?, Any?) -> Unit)? = null
     var _onTransactionSuccess: ((EdfaPgSaleResponse?, Any?) -> Unit)? = null
     var _onError: ((Any) -> Unit)? = null
@@ -52,6 +55,16 @@ open class EdfaCardPay : EdfapayCardDetailsInitializer {
         return this
     }
 
+    fun setDesignType(designType: EdfaPayDesignType): EdfaCardPay {
+        _design = designType
+        return this
+    }
+
+    fun setLanguage(language: EdfaPayLanguage): EdfaCardPay {
+        _language = language
+        return this
+    }
+
     fun onTransactionFailure(callback: (EdfaPgSaleResponse?, Any?) -> Unit): EdfaCardPay {
         _onTransactionFailure = callback
         return this
@@ -64,8 +77,6 @@ open class EdfaCardPay : EdfapayCardDetailsInitializer {
 
     fun initialize(
         context: Context,
-        setDesignType: DesignType? = DesignType.PAYMENT_DESIGN_1,
-        setLanguage: EdfaLocale? = EdfaLocale.EN,
         onError: (Any) -> Unit,
         onPresent: (Activity) -> Unit
     ) {
@@ -93,8 +104,6 @@ open class EdfaCardPay : EdfapayCardDetailsInitializer {
         context.startActivity(
             intent(
                 context,
-                setDesignType ?: DesignType.PAYMENT_DESIGN_1,
-                setLanguage ?: EdfaLocale.EN,
                 onError,
                 onPresent
             )
@@ -103,23 +112,16 @@ open class EdfaCardPay : EdfapayCardDetailsInitializer {
 
     fun intent(
         context: Context,
-        designType: DesignType,
-        locale: EdfaLocale,
         onError: (Any) -> Unit,
         onPresent: (Activity) -> Unit
     ): Intent {
         _onError = onError
         _onPresent = onPresent
 
-        if (designType.value == "0") {
-            val intent = Intent(context, EdfaCardPayActivity::class.java)
-            return intent
-        } else {
-            val intent = Intent(context, PaymentActivity::class.java)
-            intent.putExtra("paymentDesign", designType.value)
-            intent.putExtra("locale", locale.value)
-            return intent
-        }
+        val intent = Intent(context, PaymentActivity::class.java)
+        intent.putExtra("design", _design.value)
+        intent.putExtra("locale", _language.value)
+        return intent
 
     }
 

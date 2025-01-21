@@ -3,7 +3,6 @@ package com.edfapg.sdk
 import android.app.Activity
 import android.content.res.Configuration
 import android.os.Bundle
-import android.view.ContextThemeWrapper
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
@@ -13,6 +12,7 @@ import com.edfapg.sdk.core.transactionCompleted
 import com.edfapg.sdk.model.response.base.error.EdfaPgError
 import com.edfapg.sdk.model.response.gettransactiondetails.EdfaPgGetTransactionDetailsSuccess
 import com.edfapg.sdk.model.response.sale.EdfaPgSaleResponse
+import com.edfapg.sdk.toolbox.EdfaPayDesignType
 import com.edfapg.sdk.toolbox.serializable
 import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
 import com.example.paymentgatewaynew.payment1.Payment1Screen
@@ -28,9 +28,9 @@ class PaymentActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val xpressCardPay = EdfaCardPay.shared()
+        val edfaCardPay = EdfaCardPay.shared()
 
-        val intentData = intent.getStringExtra("paymentDesign")
+        val design = intent.getStringExtra("design")
         val locale = intent.getStringExtra("locale")
 
         locale?.let { updateLocale(it) }
@@ -52,11 +52,11 @@ class PaymentActivity : ComponentActivity() {
         // Set the content for the activity
         setContent {
             val navController = rememberNavController()
-            if (intentData != null) {
-                when (intentData.toLowerCase()) {
-                    "1" -> Payment1Screen(navController, xpressCardPay, this, sale3dsRedirectLauncher)
-                    "2" -> Payment2Screen(navController, xpressCardPay, this, sale3dsRedirectLauncher)
-                    "3" -> Payment3Screen(navController, xpressCardPay, this, sale3dsRedirectLauncher)
+            if (design != null) {
+                when (design.toLowerCase()) {
+                    EdfaPayDesignType.one.value -> Payment1Screen(navController, edfaCardPay, this, sale3dsRedirectLauncher)
+                    EdfaPayDesignType.two.value -> Payment2Screen(navController, edfaCardPay, this, sale3dsRedirectLauncher)
+                    EdfaPayDesignType.three.value -> Payment3Screen(navController, edfaCardPay, this, sale3dsRedirectLauncher)
                 }
             }
         }
