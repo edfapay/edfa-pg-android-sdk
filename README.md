@@ -122,12 +122,13 @@ easily integrate the EdfaPay API Payment Platform for a specific merchant.
 > > ```
 > 
 > > **Payment with Card**
-> EdfaPay offers three design options: `EdfaPayDesignType.one`, `EdfaPayDesignType.two`, and 
->  `EdfaPayDesignType.three`. Select the desired design and language (`EdfaPayLanguage.en` or ? `EdfaPayLanguage.ar`).
+> > 
+> > EdfaPay offers three design options: `EdfaPayDesignType.one`, `EdfaPayDesignType.two`, and 
+> > `EdfaPayDesignType.three`. Select the desired design and language (`EdfaPayLanguage.en` or ? `EdfaPayLanguage.ar`).
 > > ```kotlin
 > > import com.edfapg.sdk.toolbox.EdfaPayDesignType  
-> >import com.edfapg.sdk.toolbox.EdfaPayLanguage
-> >
+> > import com.edfapg.sdk.toolbox.EdfaPayLanguage
+> > 
 > >    EdfaCardPay()
 > >        .setOrder(order)
 > >        .setPayer(payer)
