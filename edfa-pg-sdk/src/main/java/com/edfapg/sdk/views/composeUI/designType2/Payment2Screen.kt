@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.edfapg.sdk.R
+import com.edfapg.sdk.utils.MyAppTheme
 import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
 import com.example.paymentgatewaynew.common.CardInputForm
 import com.example.paymentgatewaynew.payment1.Payment1Form
@@ -135,6 +136,7 @@ fun CardEntryForm(navController:NavController,xpressCardPay: EdfaCardPay?,activi
     var cvc by remember { mutableStateOf(TextFieldValue("")) }
     val scrollState = rememberScrollState()
 
+    MyAppTheme {
     Column(modifier = Modifier.verticalScroll(scrollState)) {
         Row(horizontalArrangement = Arrangement.SpaceBetween) {
             Spacer(modifier = Modifier.width(16.dp))
@@ -167,5 +169,6 @@ fun CardEntryForm(navController:NavController,xpressCardPay: EdfaCardPay?,activi
             activity = activity,
             sale3dsRedirectLauncher = sale3dsRedirectLauncher
         )
+    }
     }
 }

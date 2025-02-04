@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.navigation.NavController
+import com.edfapg.sdk.utils.MyAppTheme
 import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
 import com.example.paymentgatewaynew.common.CardInputForm
 
@@ -89,29 +90,31 @@ fun Payment3Screen(
             sheetState = bottomSheetState,
             onDismissRequest = { bottomSheetVisible = false }
         ) {
-            Column(modifier = Modifier.verticalScroll(scrollState)) {
-                Card3UI(
-                    navController,
-                    cardNumber = cardNumber.text,
-                    cardHolderName = cardHolderName.text,
-                    expiryDate = expiryDate.text,
-                    cvc = cvc.text,
-                    xpressCardPay = xpressCardPay,
-                )
+            MyAppTheme {
+                Column(modifier = Modifier.verticalScroll(scrollState)) {
+                    Card3UI(
+                        navController,
+                        cardNumber = cardNumber.text,
+                        cardHolderName = cardHolderName.text,
+                        expiryDate = expiryDate.text,
+                        cvc = cvc.text,
+                        xpressCardPay = xpressCardPay,
+                    )
 
-                CardInputForm(
-                    cardHolderName = cardHolderName,
-                    onCardHolderNameChange = { cardHolderName = it },
-                    cardNumber = cardNumber,
-                    onCardNumberChange = { cardNumber = it },
-                    cvc = cvc,
-                    onCvcChange = { cvc = it },
-                    expiryDate = expiryDate,
-                    onExpiryDateChange = { expiryDate = it },
-                    xpressCardPay = xpressCardPay,
-                    activity = activity,
-                    sale3dsRedirectLauncher = sale3dsRedirectLauncher
-                )
+                    CardInputForm(
+                        cardHolderName = cardHolderName,
+                        onCardHolderNameChange = { cardHolderName = it },
+                        cardNumber = cardNumber,
+                        onCardNumberChange = { cardNumber = it },
+                        cvc = cvc,
+                        onCvcChange = { cvc = it },
+                        expiryDate = expiryDate,
+                        onExpiryDateChange = { expiryDate = it },
+                        xpressCardPay = xpressCardPay,
+                        activity = activity,
+                        sale3dsRedirectLauncher = sale3dsRedirectLauncher
+                    )
+                }
             }
 
         }

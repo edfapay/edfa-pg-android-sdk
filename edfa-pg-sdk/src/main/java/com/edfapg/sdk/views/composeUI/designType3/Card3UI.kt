@@ -53,7 +53,7 @@ fun Card3UI(
             .height(210.dp)
             .heightIn(max = Dp.Unspecified, min = 100.dp)
             .background(
-                Color(0xFF00A86B),
+                Color(0xFF73AD31),
                 shape = RoundedCornerShape(16.dp)
             )
 
@@ -192,7 +192,7 @@ fun Card3UI(
 
                     Column {
                         Text(
-                            text = stringResource(id = R.string.cvv),
+                            text = stringResource(id = R.string.cvv_code),
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.White
                         )

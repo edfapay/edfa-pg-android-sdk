@@ -10,6 +10,7 @@
     <string name="card_holder">TITULAR DE LA TARJETA</string>
     <string name="card_number">NÚMERO DE TARJETA</string>
     <string name="expiry">EXPIRACIÓN</string>
+    <string name="cvv_code">Código CVV</string>
     <string name="cvv">CVV</string>
     <string name="sar">SAR</string>
     <string name="txt_card_holdername">Nombre del titular de la tarjeta</string>
@@ -17,5 +18,6 @@
     <string name="txt_validate">"VÁLIDO \nHASTA"</string>
     <string name="txt_month">"MES/AÑO"</string>
     <string name="txt_total">"Monto Total"</string>
+    <string name="al_rajhi_bank">AL RAJHI BANK</string>
 
 </resources>

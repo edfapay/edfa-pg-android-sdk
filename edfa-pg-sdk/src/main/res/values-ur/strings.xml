@@ -9,6 +9,7 @@
     <string name="card_holder">کارڈ ہولڈر</string>
     <string name="card_number">کارڈ نمبر</string>
     <string name="expiry">میعاد</string>
+    <string name="cvv_code">سی وی وی</string>
     <string name="cvv">سی وی وی</string>
     <string name="sar">ایس اے آر</string>
     <string name="txt_card_holdername">کارڈ ہولڈر کا نام</string>
@@ -16,4 +17,5 @@
     <string name="txt_validate">"درست \nتک"</string>
     <string name="txt_month">"مہینہ/سال"</string>
     <string name="txt_total">"کل رقم"</string>
+    <string name="al_rajhi_bank">AL RAJHI BANK</string>
 </resources>

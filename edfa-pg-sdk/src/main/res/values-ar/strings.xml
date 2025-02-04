@@ -11,6 +11,7 @@
     <string name="card_holder">الاسم على البطاقة</string>
     <string name="card_number">رقم البطاقة</string>
     <string name="expiry">تاريخ الانتهاء</string>
+    <string name="cvv_code">الرمز</string>
     <string name="cvv">الرمز</string>
     <string name="sar">SAR</string>
     <string name="txt_card_holdername">اسم حامل البطاقة</string>
@@ -18,8 +19,7 @@
     <string name="txt_validate">"صالح \nحتى"</string>
     <string name="txt_month">"شهر/سنة"</string>
     <string name="txt_total">"المبلغ الإجمالي"</string>
-
-
+    <string name="al_rajhi_bank">AL RAJHI BANK</string>
 
 
 </resources>

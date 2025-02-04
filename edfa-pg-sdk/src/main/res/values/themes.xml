@@ -17,6 +17,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+
     <style name="Theme.EdfaPgAndroidSDK.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.EdfaPgAndroidSDK.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

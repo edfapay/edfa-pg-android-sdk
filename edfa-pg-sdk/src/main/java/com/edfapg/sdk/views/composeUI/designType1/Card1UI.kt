@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,8 +22,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -39,140 +43,117 @@ fun Card1UI(
     expiryDate: String,
     cvc: String
 ) {
+
+    val spaceBetween = 10.dp
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 20.dp, end = 20.dp)
-            .height(180.dp)
+            .height(200.dp)
             .heightIn(max = Dp.Unspecified, min = 100.dp)
             .background(
-                Color(0xFF00A86B),
+                Color(0xFF73AD31),
                 shape = RoundedCornerShape(16.dp)
             )
     ) {
 
         Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 30.dp, end = 20.dp),
+//            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = stringResource(id = R.string.txt_desc),
-                style = MaterialTheme.typography.labelSmall,
-                color = Color.White,
-                fontSize = 6.5.sp,
+//            Text(
+//                modifier = Modifier
+//                    .padding(top = spaceBetween),
+//                text = stringResource(R.string.al_rajhi_bank),
+//                color = Color.White,
+//                fontSize = 14.sp,
+//            )
+            Image(
                 modifier = Modifier
-                    .padding(start = 20.dp, top = 5.dp),
+                    .padding(top = spaceBetween)
+                    .size(30.dp),
+                painter = painterResource(id = R.drawable.chip),
+                contentDescription = "holographic"
             )
-            Box(
+            Text(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.Black)
-                    .height(50.dp)
+                    .padding(top = spaceBetween),
+                text = cardNumber,
+                color = Color.White
+            )
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .padding(top = spaceBetween),
             ) {
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = stringResource(id = R.string.txt_validate),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    fontSize = 6.sp,
+                    lineHeight = 6.sp
+                )
+                Text(
+                    modifier = Modifier.padding(start = 10.dp),
+                    text = expiryDate,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.weight(0.5f))
+                Text(
+                    modifier = Modifier.align(Alignment.CenterVertically),
+                    text = stringResource(id = R.string.cvv_code),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    fontSize = 6.sp,
+                    lineHeight = 6.sp
+                )
+                Text(
+                    modifier = Modifier.padding(start = 10.dp),
+                    text = cvc,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.White,
+                )
 
             }
-            Spacer(modifier = Modifier.weight(1f))
-            Column() {
-                Text(
-                    modifier = Modifier
-                        .padding(start = 20.dp, top = 5.dp),
-                    text = cardNumber,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = Color.White
-                )
-                Spacer(modifier = Modifier.height(5.dp))
-                Text(
-                    modifier = Modifier
-                        .padding(start = 20.dp),
-                    text = cardHolderName,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = Color.White
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
-                    , verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Spacer(modifier = Modifier.weight(0.5f))
+            Row {
+                Column{
                     Text(
-                        modifier = Modifier.align(Alignment.CenterVertically),
-                        text = stringResource(id = R.string.txt_validate),
+                        modifier = Modifier
+                            .padding(
+                                top = spaceBetween
+                            ),
+                        text = cardHolderName,
                         style = MaterialTheme.typography.labelSmall,
                         color = Color.White,
-                        textAlign = TextAlign.Center,
-                        fontSize = 8.sp,
-                        lineHeight = 10.sp
                     )
-                    Column {
-                        Text(
-                            text = stringResource(id = R.string.txt_month),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = Color.White,
-                            fontSize = 8.sp
-                        )
-                        Text(
-                            text = expiryDate,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = Color.White,
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                    Spacer(modifier = Modifier.weight(0.5f))
-                    Column {
-                        Text(
-                            text = stringResource(id = R.string.cvv),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = Color.White
-                        )
-                        Text(
-                            text = cvc,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = Color.White
-                        )
-                    }
-                    Spacer(modifier = Modifier.weight(0.5f))
-                    Box(
+                    Text(
+                        text = "-----------",
+                        color = Color.White,
+                        lineHeight = 1.sp
+                    )
+                }
+                Spacer(modifier = Modifier.weight(1f))
+                Box(
+                    modifier = Modifier
+                        .size(100.dp)
+                ) {
+                    Image(
                         modifier = Modifier
-                            .size(100.dp)
-                    ) {
-                        Image(
-                            modifier = Modifier
-                                .size(50.dp)
-                                .align(Alignment.Center),
-                            painter = painterResource(id = R.drawable.holographic),
-                            contentDescription = "holographic"
-                        )
-                        Column(
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                        ) {
-                            repeat(20) {
-                                Row {
-                                    Text(
-                                        text = "Master Card",
-                                        color = Color.White.copy(alpha = 0.2f),
-                                        fontSize = 5.sp,
-                                        modifier = Modifier.padding(2.dp),
-                                        lineHeight = 2.sp
-
-                                    )
-                                    Text(
-                                        text = "Master Card",
-                                        color = Color.White.copy(alpha = 0.2f),
-                                        fontSize = 5.sp,
-                                        modifier = Modifier.padding(2.dp),
-                                        lineHeight = 2.sp
-
-                                    )
-                                }
-                            }
-
-                        }
-                    }
-
+                            .size(50.dp)
+                            .align(Alignment.Center),
+                        painter = painterResource(id = R.drawable.visa_white_icon),
+                        contentDescription = "holographic"
+                    )
                 }
             }
+
         }
     }
 }
@@ -186,9 +167,9 @@ fun CardForm(
 ) {
 
     Card1UI(
-        cardNumber = cardNumber.text.ifEmpty { "**** **** **** ****" },
+        cardNumber = cardNumber.text.ifEmpty { "****  ****  ****  ****" },
         cardHolderName = cardHolderName.text.ifEmpty { stringResource(id = R.string.txt_card_holdername)},
-        expiryDate = expiryDate.text.ifEmpty { "00/00" },
+        expiryDate = expiryDate.text.ifEmpty { "MM/YY" },
         cvc = cvc.text.ifEmpty { "0000" }
     )
 }
