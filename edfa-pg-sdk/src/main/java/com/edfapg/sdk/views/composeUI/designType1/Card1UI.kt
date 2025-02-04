@@ -59,7 +59,7 @@ fun Card1UI(
                 text = stringResource(id = R.string.txt_desc),
                 style = MaterialTheme.typography.labelSmall,
                 color = Color.White,
-                fontSize = 7.sp,
+                fontSize = 6.5.sp,
                 modifier = Modifier
                     .padding(start = 20.dp, top = 5.dp),
             )

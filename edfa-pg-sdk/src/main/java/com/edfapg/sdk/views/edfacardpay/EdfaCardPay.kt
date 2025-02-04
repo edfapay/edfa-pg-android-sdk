@@ -77,11 +77,14 @@ open class EdfaCardPay : EdfapayCardDetailsInitializer {
 
     fun initialize(
         context: Context,
+
         onError: (Any) -> Unit,
-        onPresent: (Activity) -> Unit
+        onPresent: (Activity) -> Unit,
+
     ) {
         _onError = onError
         _onPresent = onPresent
+
         val validationErrors = _payer?.validate()
         if (validationErrors != null) {
             if (validationErrors.isNotEmpty()) {
@@ -113,7 +116,7 @@ open class EdfaCardPay : EdfapayCardDetailsInitializer {
     fun intent(
         context: Context,
         onError: (Any) -> Unit,
-        onPresent: (Activity) -> Unit
+        onPresent: (Activity) -> Unit,
     ): Intent {
         _onError = onError
         _onPresent = onPresent
