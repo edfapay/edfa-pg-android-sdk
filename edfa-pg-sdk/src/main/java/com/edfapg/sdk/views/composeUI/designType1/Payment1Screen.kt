@@ -110,6 +110,10 @@ fun Payment1Screen(
                 }
             }
         }
+    }else{
+        LaunchedEffect(Unit) {
+            (context as? Activity)?.finish()
+        }
     }
 }
 

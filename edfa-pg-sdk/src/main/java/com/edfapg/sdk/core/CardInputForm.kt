@@ -403,7 +403,7 @@ fun CardInputField(
         modifier = modifier
             .fillMaxWidth()
             .height(70.dp)
-            .padding(top = 10.dp)
+            .padding(top = 5.dp)
             .background(
                 Color(0xFFF1F4F8),
                 shape = RoundedCornerShape(12.dp)
@@ -413,7 +413,7 @@ fun CardInputField(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, top = 5.dp)
+                    .padding(start = 16.dp)
                     .zIndex(3f)
                     .background(
                         Color(Color.White.value.toLong()),
@@ -424,33 +424,28 @@ fun CardInputField(
                     text = title,
                     color = Color(0xFF8F9BB3),
                     style = MaterialTheme.typography.labelSmall,
+                    fontSize = 12.sp,
                 )
             }
             Box(
                 modifier = Modifier
-                    .padding(start = 10.dp, end = 10.dp)
+                    .padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
                     .fillMaxWidth()
                     .background(Color.White, shape = RoundedCornerShape(16.dp))
             ) {
                 val localFocusManager = LocalFocusManager.current
-                val localSoftwareKeyboardController = LocalSoftwareKeyboardController.current
-                val focusRequester = remember { FocusRequester() }
                 BasicTextField(
                     value = value,
                     onValueChange = onValueChange,
                     singleLine = true,
                     textStyle = TextStyle(
-                        fontSize = 18.sp,
+                        fontSize = 14.sp,
                         color = Color.Black
                     ),
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color(0xFFF1F4F8)) // Background color
-                        .padding(horizontal = 8.dp) // Padding inside the text field
-                        .focusable(true)
-                        .focusRequester(focusRequester)
-                        .onFocusChanged { if (it.isFocused) localSoftwareKeyboardController?.hide() }
-                        .focusable(),
+                        .padding(horizontal = 4.dp), // Padding inside the text field
                     keyboardOptions = KeyboardOptions(
                         keyboardType = inputType,
                         imeAction = action

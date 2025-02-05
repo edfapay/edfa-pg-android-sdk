@@ -2,6 +2,7 @@ package com.example.paymentgatewaynew.payment2
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.activity.result.ActivityResultLauncher
@@ -96,9 +97,14 @@ fun Payment2Screen(navController: NavController,xpressCardPay: EdfaCardPay?,acti
             sheetState = bottomSheetState,
             modifier = Modifier.fillMaxHeight(0.9f),
             containerColor = Color.White,
-            onDismissRequest = { bottomSheetVisible = false }
+            onDismissRequest = { bottomSheetVisible = false
+           }
         ) {
             CardEntryForm(navController, xpressCardPay, activity, sale3dsRedirectLauncher)
+        }
+    }else{
+        LaunchedEffect(Unit) {
+            (context as? Activity)?.finish()
         }
     }
 }

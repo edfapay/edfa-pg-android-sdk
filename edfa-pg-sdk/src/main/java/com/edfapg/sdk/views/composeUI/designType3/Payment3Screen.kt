@@ -118,5 +118,9 @@ fun Payment3Screen(
             }
 
         }
+    }else{
+        LaunchedEffect(Unit) {
+            (context as? Activity)?.finish()
+        }
     }
 }
