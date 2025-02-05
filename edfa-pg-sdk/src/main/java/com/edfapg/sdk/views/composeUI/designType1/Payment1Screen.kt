@@ -2,6 +2,7 @@ package com.example.paymentgatewaynew.payment1
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.activity.result.ActivityResultLauncher
@@ -30,6 +31,7 @@ import androidx.navigation.NavController
 import com.edfapg.sdk.R
 import com.edfapg.sdk.utils.MyAppTheme
 import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,12 +76,13 @@ fun Payment1Screen(
     }
 
     LaunchedEffect(bottomSheetVisible) {
-        if (bottomSheetVisible) {
+        if (bottomSheetVisible && bottomSheetState.isVisible.not()) {
             bottomSheetState.show()
-        } else {
+        } else if (!bottomSheetVisible) {
             bottomSheetState.hide()
         }
     }
+
 
     // Show the ModalBottomSheet when visible
     if (bottomSheetVisible) {
@@ -110,7 +113,7 @@ fun Payment1Screen(
                 }
             }
         }
-    }else{
+    } else {
         LaunchedEffect(Unit) {
             (context as? Activity)?.finish()
         }
