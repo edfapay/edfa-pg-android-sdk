@@ -192,46 +192,43 @@ fun CardView(cardNumber: String, cardHolderName: String, expiryDate: String, cvc
             )
             Spacer(modifier = Modifier.height(16.dp))
             Row(
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Spacer(modifier = Modifier.weight(0.5f))
+                modifier = Modifier.fillMaxWidth(),
+                ) {
                 Text(
                     modifier = Modifier.align(Alignment.CenterVertically),
                     text = stringResource(id = R.string.txt_validate),
                     style = MaterialTheme.typography.labelSmall,
                     color = Color.White,
                     textAlign = TextAlign.Center,
-                    fontSize = 8.sp,
-                    lineHeight = 10.sp
+                    fontSize = 6.sp,
+                    lineHeight = 6.sp
                 )
-                Column {
-                    Text(
-                        text = stringResource(id = R.string.txt_month),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color.White,
-                        fontSize = 8.sp
-                    )
-                    Text(
-                        text = expiryDate,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color.White,
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                Spacer(modifier = Modifier.weight(0.1f))
+
+                Text(
+                    modifier = Modifier.width(50.dp),
+                    text = expiryDate,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.White,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold
+                )
                 Spacer(modifier = Modifier.weight(0.5f))
-                Column {
-                    Text(
-                        text = stringResource(id = R.string.cvv),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color.White
-                    )
-                    Text(
-                        text = cvc,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color.White
-                    )
-                }
+                Text(
+                    modifier = Modifier.align(Alignment.CenterVertically),
+                    text = stringResource(id = R.string.cvv),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.White,
+                    fontSize = 6.sp,
+                    lineHeight = 6.sp
+                )
+                Spacer(modifier = Modifier.weight(0.1f))
+                Text(
+                    modifier = Modifier.width(50.dp),
+                    text = cvc,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.White
+                )
             }
         }
     }
@@ -248,6 +245,6 @@ fun Card2Form(
         cardNumber = cardNumber.text.ifEmpty { "**** **** **** ****" },
         cardHolderName = cardHolderName.text.ifEmpty { stringResource(id = R.string.txt_card_holdername)},
         expiryDate = expiryDate.text.ifEmpty { "00/00" },
-        cvc = cvc.text.ifEmpty { "000" }
+        cvc = cvc.text.ifEmpty { "0000" }
     )
 }

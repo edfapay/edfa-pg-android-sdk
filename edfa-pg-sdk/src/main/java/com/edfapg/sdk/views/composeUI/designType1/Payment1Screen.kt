@@ -120,7 +120,7 @@ fun TitleAmount(amount: String, currency: String) {
             text = stringResource(id = R.string.txt_total),
             textAlign = TextAlign.Center,
             modifier = Modifier
-                .padding(5.dp)
+                .padding(start = 5.dp, end = 5.dp)
                 .fillMaxWidth(),
             fontSize = 14.sp
         )
@@ -128,7 +128,7 @@ fun TitleAmount(amount: String, currency: String) {
             text = "$amount $currency",
             textAlign = TextAlign.Center,
             modifier = Modifier
-                .padding(5.dp)
+                .padding(start = 5.dp, end = 5.dp)
                 .fillMaxWidth(),
             fontWeight = FontWeight.Bold,
             fontSize = 22.sp

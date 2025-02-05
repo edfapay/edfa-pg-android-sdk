@@ -61,35 +61,34 @@ fun Card1UI(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(start = 30.dp, end = 20.dp),
-//            verticalArrangement = Arrangement.SpaceBetween
         ) {
-//            Text(
-//                modifier = Modifier
-//                    .padding(top = spaceBetween),
-//                text = stringResource(R.string.al_rajhi_bank),
-//                color = Color.White,
-//                fontSize = 14.sp,
-//            )
-            Image(
-                modifier = Modifier
-                    .padding(top = spaceBetween)
-                    .size(30.dp),
-                painter = painterResource(id = R.drawable.chip),
-                contentDescription = "holographic"
-            )
+            Row {
+                Image(
+                    modifier = Modifier
+                        .padding(top = spaceBetween)
+                        .size(30.dp),
+                    painter = painterResource(id = R.drawable.chip),
+                    contentDescription = "holographic"
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Image(
+                    modifier = Modifier
+                        .padding(top = spaceBetween)
+                        .size(50.dp),
+                    painter = painterResource(id = R.drawable.edfapay_logo_white),
+                    contentDescription = "holographic"
+                )
+            }
             Text(
-                modifier = Modifier
-                    .padding(top = spaceBetween),
                 text = cardNumber,
                 color = Color.White
             )
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .padding(top = spaceBetween),
             ) {
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
+                    modifier = Modifier.align(Alignment.CenterVertically),
                     text = stringResource(id = R.string.txt_validate),
                     style = MaterialTheme.typography.labelSmall,
                     color = Color.White,
@@ -98,7 +97,9 @@ fun Card1UI(
                     lineHeight = 6.sp
                 )
                 Text(
-                    modifier = Modifier.padding(start = 10.dp),
+                    modifier = Modifier
+                        .padding(start = 10.dp)
+                        .width(50.dp),
                     text = expiryDate,
                     style = MaterialTheme.typography.labelSmall,
                     color = Color.White,
@@ -115,7 +116,9 @@ fun Card1UI(
                     lineHeight = 6.sp
                 )
                 Text(
-                    modifier = Modifier.padding(start = 10.dp),
+                    modifier = Modifier
+                        .padding(start = 10.dp)
+                        .width(50.dp),
                     text = cvc,
                     style = MaterialTheme.typography.labelSmall,
                     color = Color.White,
@@ -165,10 +168,10 @@ fun CardForm(
     expiryDate: TextFieldValue,
     cvc: TextFieldValue
 ) {
-
     Card1UI(
         cardNumber = cardNumber.text.ifEmpty { "****  ****  ****  ****" },
-        cardHolderName = cardHolderName.text.ifEmpty { stringResource(id = R.string.txt_card_holdername)},
+        cardHolderName = cardHolderName.text.ifEmpty {
+            stringResource(id = R.string.txt_card_holdername) },
         expiryDate = expiryDate.text.ifEmpty { "MM/YY" },
         cvc = cvc.text.ifEmpty { "0000" }
     )

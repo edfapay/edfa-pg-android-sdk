@@ -136,8 +136,11 @@ fun CardInputForm(
             value = cardHolderName,
             inputType = KeyboardType.Text,
             action = ImeAction.Next,
-            onValueChange = onCardHolderNameChange
-        )
+            onValueChange = { newValue ->
+                if (newValue.text.length <= 20) {  // Enforce 15-character limit
+                    onCardHolderNameChange(newValue)
+                }
+            })
 
         CardInputField(
             title = stringResource(id = R.string.card_number),
@@ -229,8 +232,10 @@ fun CardInputForm(
                     year = digitsOnly.drop(2)
 
                     // Get current month and year
-                    val currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1 // Calendar.MONTH is 0-indexed
-                    val currentYear = Calendar.getInstance().get(Calendar.YEAR) % 100 // Last two digits of the year
+                    val currentMonth = Calendar.getInstance()
+                        .get(Calendar.MONTH) + 1 // Calendar.MONTH is 0-indexed
+                    val currentYear = Calendar.getInstance()
+                        .get(Calendar.YEAR) % 100 // Last two digits of the year
 
                     // Validate month input
                     val isMonthInputValid = month.toIntOrNull()?.let { enteredMonth ->
@@ -269,7 +274,6 @@ fun CardInputForm(
                     isFormValid = isCardNumberValid && isCvvValid && isMonthValid
 
 
-
                     // Ensure correct formatting and pre-append 0 if necessary
                     val validatedMonth = when {
                         month.isEmpty() -> ""
@@ -282,21 +286,27 @@ fun CardInputForm(
 
                     // Ensure correct cursor position
                     val originalCursorPosition = newValue.selection.start
-                    val newCursorPosition = if (validatedMonth.length == 2 && originalCursorPosition <= 2) {
-                        2 // If the month is two digits, place cursor at the end of the month
-                    } else if (originalCursorPosition > 2) {
-                        // If the cursor is after the month, adjust for the "/" character
-                        originalCursorPosition + 1
-                    } else {
-                        originalCursorPosition // Keep the original cursor position if in the valid range
-                    }
+                    val newCursorPosition =
+                        if (validatedMonth.length == 2 && originalCursorPosition <= 2) {
+                            2 // If the month is two digits, place cursor at the end of the month
+                        } else if (originalCursorPosition > 2) {
+                            // If the cursor is after the month, adjust for the "/" character
+                            originalCursorPosition + 1
+                        } else {
+                            originalCursorPosition // Keep the original cursor position if in the valid range
+                        }
 
                     // Check if the input value is valid before updating
                     if (isMonthInputValid || year.isEmpty()) { // Allow updating only if month is valid or year is empty
                         onExpiryDateChange(
                             newValue.copy(
                                 text = formattedValue,
-                                selection = TextRange(newCursorPosition.coerceIn(0, formattedValue.length))
+                                selection = TextRange(
+                                    newCursorPosition.coerceIn(
+                                        0,
+                                        formattedValue.length
+                                    )
+                                )
                             )
                         )
                     }
@@ -337,7 +347,10 @@ fun CardInputForm(
                             { response, cardData ->
                                 PaymentActivity.saleResponse = response
                                 isResponseReceived = true
-                                val intent = EdfaPgSaleWebRedirectActivity.intent(context = activity!!, cardData)
+                                val intent = EdfaPgSaleWebRedirectActivity.intent(
+                                    context = activity!!,
+                                    cardData
+                                )
                                 sale3dsRedirectLauncher.launch(intent)
                             },
                             { error ->
@@ -436,7 +449,7 @@ fun CardInputField(
                         .padding(horizontal = 8.dp) // Padding inside the text field
                         .focusable(true)
                         .focusRequester(focusRequester)
-                        .onFocusChanged { if(it.isFocused) localSoftwareKeyboardController?.hide() }
+                        .onFocusChanged { if (it.isFocused) localSoftwareKeyboardController?.hide() }
                         .focusable(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = inputType,

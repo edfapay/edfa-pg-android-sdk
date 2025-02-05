@@ -97,7 +97,7 @@ fun Payment3Screen(
                         cardNumber = cardNumber.text,
                         cardHolderName = cardHolderName.text,
                         expiryDate = expiryDate.text,
-                        cvc = cvc.text,
+                        cvv = cvc.text,
                         xpressCardPay = xpressCardPay,
                     )
 

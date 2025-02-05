@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -36,6 +37,7 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.edfapg.sdk.R
 import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
+import com.example.paymentgatewaynew.payment2.Card2UI
 
 @Composable
 fun Card3UI(
@@ -43,9 +45,10 @@ fun Card3UI(
     cardNumber: String,
     cardHolderName: String,
     expiryDate: String,
-    cvc: String,
+    cvv: String,
     xpressCardPay: EdfaCardPay?
 ) {
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -67,7 +70,7 @@ fun Card3UI(
                 xpressCardPay?._order?.let {
                     val amount = it.formattedAmount() // Get formatted amount from order
                     val currency = it.formattedCurrency() // Get formatted currency from order
-                    TitleAmount(amount = amount, currency = currency)
+                    TitleAmount(amount = amount, currency = currency, expiryDate, cvv)
                 }
             }
 
@@ -121,7 +124,7 @@ fun Card3UI(
                     )
                     Column(modifier = Modifier.padding(start = 10.dp)) {
                         Text(
-                            text = cardHolderName.ifEmpty {stringResource(id = R.string.txt_card_holdername)},
+                            text = cardHolderName.ifEmpty { stringResource(id = R.string.txt_card_holdername) },
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.Black
                         )
@@ -131,6 +134,51 @@ fun Card3UI(
                             color = Color.Black
                         )
 
+                    }
+                    Spacer(
+                        modifier = Modifier.weight(0.3f)
+                    )
+                    Column(
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.txt_validate),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.Black,
+                            textAlign = TextAlign.Center,
+                            fontSize = 6.sp,
+                            lineHeight = 6.sp
+                        )
+                        Text(
+                            modifier = Modifier.width(50.dp)
+                                .align(
+                                    Alignment.CenterHorizontally
+                                ),
+                            text = expiryDate.ifEmpty { "MM/YY" },
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.Black,
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+
+                        )
+//                    Spacer(modifier = Modifier.weight(0.5f))
+                    }
+                    Column {
+                        Text(
+                            text = stringResource(id = R.string.cvv_code),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.Black,
+                            fontSize = 6.sp,
+                            lineHeight = 6.sp
+                        )
+                        Text(
+                            modifier = Modifier.width(50.dp).align(
+                                Alignment.CenterHorizontally
+                            ),
+                            text = cvv.ifEmpty { "0000" },
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.Black,
+                            fontSize = 10.sp,
+                        )
                     }
                 }
             }
@@ -158,91 +206,6 @@ fun Card3UI(
                     style = MaterialTheme.typography.labelSmall,
                     color = Color.White
                 )
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Spacer(modifier = Modifier.weight(0.5f))
-                    Text(
-                        modifier = Modifier.align(Alignment.CenterVertically),
-                        text = stringResource(id = R.string.txt_validate),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color.White,
-                        textAlign = TextAlign.Center,
-                        fontSize = 8.sp,
-                        lineHeight = 10.sp
-                    )
-                    Column {
-                        Text(
-                            text = stringResource(id = R.string.txt_month),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = Color.White,
-                            fontSize = 8.sp
-                        )
-                        Text(
-                            text = expiryDate,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = Color.White,
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                    Spacer(modifier = Modifier.weight(0.5f))
-
-                    Column {
-                        Text(
-                            text = stringResource(id = R.string.cvv_code),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = Color.White
-                        )
-                        Text(
-                            text = cvc,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = Color.White
-                        )
-                    }
-                    Spacer(modifier = Modifier.weight(0.5f))
-                    Box(
-                        modifier = Modifier
-                            .size(100.dp)
-                    ) {
-                        Image(
-                            modifier = Modifier
-                                .size(50.dp)
-                                .align(Alignment.Center),
-                            painter = painterResource(id = R.drawable.holographic),
-                            contentDescription = "holographic"
-                        )
-                        Column(
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                        ) {
-                            repeat(20) {
-                                Row {
-                                    Text(
-                                        text = "Master Card",
-                                        color = Color.White.copy(alpha = 0.2f),
-                                        fontSize = 5.sp,
-                                        modifier = Modifier.padding(2.dp),
-                                        lineHeight = 2.sp
-
-                                    )
-                                    Text(
-                                        text = "Master Card",
-                                        color = Color.White.copy(alpha = 0.2f),
-                                        fontSize = 5.sp,
-                                        modifier = Modifier.padding(2.dp),
-                                        lineHeight = 2.sp
-
-                                    )
-                                }
-                            }
-
-                        }
-                    }
-
-                }
             }
 
 
@@ -252,13 +215,16 @@ fun Card3UI(
 
 
 @Composable
-fun TitleAmount(amount: String,currency:String) {
+fun TitleAmount(amount: String, currency: String, expiryDate: String, cvv: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 16.dp, top = 16.dp, end = 16.dp)
+            .padding(start = 16.dp, end = 16.dp)
     ) {
-        Column {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+        ) {
             Text(
                 text = stringResource(id = R.string.txt_total),
                 textAlign = TextAlign.Start,
@@ -276,7 +242,19 @@ fun TitleAmount(amount: String,currency:String) {
                 fontWeight = FontWeight.Bold,
                 fontSize = 22.sp
             )
+
         }
         Spacer(modifier = Modifier.weight(1f))
+        Column(
+        ) {
+            Image(
+                modifier = Modifier
+                    .size(50.dp),
+                painter = painterResource(id = R.drawable.edfapay_logo_white),
+                contentDescription = "holographic"
+            )
+        }
+
+
     }
 }
