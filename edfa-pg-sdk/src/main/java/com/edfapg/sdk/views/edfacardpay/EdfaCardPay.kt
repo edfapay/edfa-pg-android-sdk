@@ -11,6 +11,8 @@ import com.edfapg.sdk.model.request.payer.EdfaPgPayer
 import com.edfapg.sdk.model.response.sale.EdfaPgSaleResponse
 import com.edfapg.sdk.toolbox.EdfaPayDesignType
 import com.edfapg.sdk.toolbox.EdfaPayLanguage
+import com.edfapg.sdk.toolbox.delayAtIO
+import kotlinx.coroutines.delay
 
 internal var instance: EdfaCardPay? = null
 
@@ -23,7 +25,7 @@ interface EdfapayCardDetailsInitializer {
     }
 }
 
-
+private var isCalled = false
 open class EdfaCardPay : EdfapayCardDetailsInitializer {
     constructor() {
         instance = this
@@ -75,13 +77,23 @@ open class EdfaCardPay : EdfapayCardDetailsInitializer {
         return this
     }
 
+
     fun initialize(
         context: Context,
-
         onError: (Any) -> Unit,
         onPresent: (Activity) -> Unit,
 
     ) {
+
+        if(isCalled){
+            return
+        }
+
+        isCalled = true
+        delayAtIO(500){
+            isCalled = false
+        }
+
         _onError = onError
         _onPresent = onPresent
 
@@ -104,13 +116,13 @@ open class EdfaCardPay : EdfapayCardDetailsInitializer {
 
             }
         }
-        context.startActivity(
-            intent(
-                context,
-                onError,
-                onPresent
+            context.startActivity(
+                intent(
+                    context,
+                    onError,
+                    onPresent
+                )
             )
-        )
     }
 
     fun intent(
