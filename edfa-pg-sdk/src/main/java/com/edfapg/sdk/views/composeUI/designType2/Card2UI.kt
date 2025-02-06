@@ -216,7 +216,7 @@ fun CardView(cardNumber: String, cardHolderName: String, expiryDate: String, cvc
                 Spacer(modifier = Modifier.weight(0.5f))
                 Text(
                     modifier = Modifier.align(Alignment.CenterVertically),
-                    text = stringResource(id = R.string.cvv),
+                    text = stringResource(id = R.string.cvv_code),
                     style = MaterialTheme.typography.labelSmall,
                     color = Color.White,
                     fontSize = 6.sp,

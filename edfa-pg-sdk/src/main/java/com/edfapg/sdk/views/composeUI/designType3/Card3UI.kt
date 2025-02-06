@@ -157,7 +157,6 @@ fun Card3UI(
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.Black,
                             fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold,
 
                         )
 //                    Spacer(modifier = Modifier.weight(0.5f))
