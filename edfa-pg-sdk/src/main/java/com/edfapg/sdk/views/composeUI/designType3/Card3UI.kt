@@ -23,7 +23,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -48,6 +50,12 @@ fun Card3UI(
     cvv: String,
     xpressCardPay: EdfaCardPay?
 ) {
+    var scheme = '0'
+    if (cardNumber.isNotEmpty() && cardNumber.first() == '4') {
+        scheme = '4'
+    } else if (cardNumber.isNotEmpty() && (cardNumber.first() == '5' || cardNumber.first() == '2')) {
+        scheme = '5'
+    }
 
     Box(
         modifier = Modifier
@@ -56,11 +64,23 @@ fun Card3UI(
             .height(210.dp)
             .heightIn(max = Dp.Unspecified, min = 100.dp)
             .background(
-                Color(0xFF73AD31),
+                Color(0xFF2BD190),
                 shape = RoundedCornerShape(16.dp)
             )
 
     ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .alpha(0.9f) // 50% transparency for the image
+        ) {
+            Image(
+                modifier = Modifier.fillMaxSize(),
+                painter = painterResource(id = R.drawable.card_map_bg), // Replace with your image resource
+                contentDescription = null,
+                contentScale = ContentScale.Crop
+            )
+        }
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween
@@ -119,7 +139,15 @@ fun Card3UI(
                     Image(
                         modifier = Modifier
                             .size(50.dp),
-                        painter = painterResource(id = R.drawable.visa_orange_icon),
+                        painter =
+                        painterResource(
+                            id = when (scheme) {
+                                '4' -> R.drawable.visa_orange_icon
+                                '5' -> R.drawable.ic_mastercard_logo
+                                else -> R.drawable.vector_transparent // Default transparent icon
+
+                            }
+                        ),
                         contentDescription = "holographic"
                     )
                     Column(modifier = Modifier.padding(start = 10.dp)) {

@@ -118,7 +118,7 @@ fun CardInputForm(
     }
 
     LaunchedEffect(isCardNumberValid, isCvvValid, isMonthValid, isYearValid) {
-        isFormValid = isCardNumberValid && isCvvValid && isMonthValid
+        isFormValid = isCardNumberValid && isCvvValid && isMonthValid && isYearValid
         println("isFormValid: $isFormValid isCardNumberValid: $isCardNumberValid isCvvValid: $isCvvValid isMonthValid: $isMonthValid isYearValid: $isYearValid")
     }
 

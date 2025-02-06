@@ -21,7 +21,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -43,6 +46,12 @@ fun Card1UI(
     expiryDate: String,
     cvc: String
 ) {
+    var scheme = '0'
+    if (cardNumber.isNotEmpty() && cardNumber.first() == '4') {
+        scheme = '4'
+    } else if (cardNumber.isNotEmpty() && (cardNumber.first() == '5' || cardNumber.first() == '2')) {
+        scheme = '5'
+    }
 
     val spaceBetween = 10.dp
     Box(
@@ -52,114 +61,137 @@ fun Card1UI(
             .height(200.dp)
             .heightIn(max = Dp.Unspecified, min = 100.dp)
             .background(
-                Color(0xFF73AD31),
+                color = Color(0xFF2BD190), //0xFF108F68 --second color in figma
+//                color = Color(0xFF00E6A0), //00E6A0 --second color in figma
                 shape = RoundedCornerShape(16.dp)
             )
     ) {
-
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 30.dp, end = 20.dp),
+                .alpha(0.9f) // 50% transparency for the image
         ) {
-            Row {
-                Image(
-                    modifier = Modifier
-                        .padding(top = spaceBetween)
-                        .size(30.dp),
-                    painter = painterResource(id = R.drawable.chip),
-                    contentDescription = "holographic"
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Image(
-                    modifier = Modifier
-                        .padding(top = spaceBetween)
-                        .size(50.dp),
-                    painter = painterResource(id = R.drawable.edfapay_logo_white),
-                    contentDescription = "holographic"
-                )
-            }
-            Text(
-                text = cardNumber,
-                color = Color.White
+            Image(
+                modifier = Modifier.fillMaxSize(),
+                painter = painterResource(id = R.drawable.card_map_bg), // Replace with your image resource
+                contentDescription = null,
+                contentScale = ContentScale.Crop
             )
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
+        }
+        Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 30.dp, end = 20.dp),
             ) {
-                Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    modifier = Modifier.align(Alignment.CenterVertically),
-                    text = stringResource(id = R.string.txt_validate),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = Color.White,
-                    textAlign = TextAlign.Center,
-                    fontSize = 6.sp,
-                    lineHeight = 6.sp
-                )
-                Text(
-                    modifier = Modifier
-                        .padding(start = 10.dp)
-                        .width(50.dp),
-                    text = expiryDate,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.weight(0.5f))
-                Text(
-                    modifier = Modifier.align(Alignment.CenterVertically),
-                    text = stringResource(id = R.string.cvv_code),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = Color.White,
-                    textAlign = TextAlign.Center,
-                    fontSize = 6.sp,
-                    lineHeight = 6.sp
-                )
-                Text(
-                    modifier = Modifier
-                        .padding(start = 10.dp)
-                        .width(50.dp),
-                    text = cvc,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = Color.White,
-                )
-
-            }
-            Row {
-                Column{
-                    Text(
-                        modifier = Modifier
-                            .padding(
-                                top = spaceBetween
-                            ),
-                        text = cardHolderName,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color.White,
-                    )
-                    Text(
-                        text = "-----------",
-                        color = Color.White,
-                        lineHeight = 1.sp
-                    )
-                }
-                Spacer(modifier = Modifier.weight(1f))
-                Box(
-                    modifier = Modifier
-                        .size(100.dp)
-                ) {
+                Row {
                     Image(
                         modifier = Modifier
-                            .size(50.dp)
-                            .align(Alignment.Center),
-                        painter = painterResource(id = R.drawable.visa_white_icon),
+                            .padding(top = spaceBetween)
+                            .size(30.dp),
+                        painter = painterResource(id = R.drawable.chip),
+                        contentDescription = "holographic"
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Image(
+                        modifier = Modifier
+                            .padding(top = spaceBetween)
+                            .size(50.dp),
+                        painter = painterResource(id = R.drawable.edfapay_logo_white),
                         contentDescription = "holographic"
                     )
                 }
-            }
+                Text(
+                    text = cardNumber,
+                    color = Color.White
+                )
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        modifier = Modifier.align(Alignment.CenterVertically),
+                        text = stringResource(id = R.string.txt_validate),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        fontSize = 6.sp,
+                        lineHeight = 6.sp
+                    )
+                    Text(
+                        modifier = Modifier
+                            .padding(start = 10.dp)
+                            .width(50.dp),
+                        text = expiryDate,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.weight(0.5f))
+                    Text(
+                        modifier = Modifier.align(Alignment.CenterVertically),
+                        text = stringResource(id = R.string.cvv_code),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        fontSize = 6.sp,
+                        lineHeight = 6.sp
+                    )
+                    Text(
+                        modifier = Modifier
+                            .padding(start = 10.dp)
+                            .width(50.dp),
+                        text = cvc,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color.White,
+                    )
 
+                }
+                Row {
+                    Column {
+                        Text(
+                            modifier = Modifier
+                                .padding(
+                                    top = spaceBetween
+                                ),
+                            text = cardHolderName,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.White,
+                        )
+                        Text(
+                            text = "-----------",
+                            color = Color.White,
+                            lineHeight = 1.sp
+                        )
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    Box(
+                        modifier = Modifier
+                            .size(100.dp)
+                    ) {
+                        Image(
+                            modifier = Modifier
+                                .size(50.dp)
+                                .align(Alignment.Center),
+                            painter =
+                            painterResource(
+                                id = when (scheme) {
+                                    '4' -> R.drawable.visa_white_icon
+                                    '5' -> R.drawable.ic_mastercard_logo
+                                    else -> R.drawable.vector_transparent // Default transparent icon
+
+                                }
+                            ),
+                            contentDescription = "holographic"
+                        )
+                    }
+                }
+
+            }
         }
-    }
+
 }
+
+
 
 @Composable
 fun CardForm(
@@ -171,7 +203,8 @@ fun CardForm(
     Card1UI(
         cardNumber = cardNumber.text.ifEmpty { "****  ****  ****  ****" },
         cardHolderName = cardHolderName.text.ifEmpty {
-            stringResource(id = R.string.txt_card_holdername) },
+            stringResource(id = R.string.txt_card_holdername)
+        },
         expiryDate = expiryDate.text.ifEmpty { "MM/YY" },
         cvc = cvc.text.ifEmpty { "0000" }
     )

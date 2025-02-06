@@ -146,7 +146,7 @@ fun Card2UI(
                 .offset(y = if (greenCard) 0.dp else 20.dp)
                 .zIndex(if (greenCard) 3f else 1f)
                 .background(
-                    Color(0xFF73AD31),
+                    Color(0xFF2BD190),
                     shape = RoundedCornerShape(
                         topStart = 16.dp,
                         topEnd = 0.dp,

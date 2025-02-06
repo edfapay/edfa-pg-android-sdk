@@ -70,7 +70,7 @@ fun Footer(){
             ) {
                 Image(
                     modifier = Modifier.size(50.dp),
-                    painter = painterResource(id = R.drawable.mastercard), // Replace with your mada image
+                    painter = painterResource(id = R.drawable.ic_mastercard_logo), // Replace with your mada image
                     contentDescription = "mastercard"
                 )
             }
