@@ -39,6 +39,7 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.edfapg.sdk.R
 import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
+import com.example.paymentgatewaynew.payment1.Card1UI
 import com.example.paymentgatewaynew.payment2.Card2UI
 
 @Composable
@@ -150,14 +151,23 @@ fun Card3UI(
                         ),
                         contentDescription = "holographic"
                     )
+
                     Column(modifier = Modifier.padding(start = 10.dp)) {
                         Text(
-                            text = cardHolderName.ifEmpty { stringResource(id = R.string.txt_card_holdername) },
+                            text = if (cardHolderName.isEmpty() || cardHolderName.first().isWhitespace()) {
+                                stringResource(id = R.string.txt_card_holdername)
+                            } else {
+                                cardHolderName
+                            },
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.Black
                         )
                         Text(
-                            text = cardNumber.ifEmpty { "**** **** **** ****" },
+                            text = if (cardNumber.isEmpty() || cardNumber.first().isWhitespace()) {
+                                "****  ****  ****  ****"
+                            } else {
+                                cardNumber
+                            },
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.Black
                         )
@@ -181,7 +191,11 @@ fun Card3UI(
                                 .align(
                                     Alignment.CenterHorizontally
                                 ),
-                            text = expiryDate.ifEmpty { "MM/YY" },
+                            text = if (expiryDate.isEmpty() || expiryDate.first().isWhitespace()) {
+                                "MM/YY"
+                            } else {
+                                expiryDate
+                            },
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.Black,
                             fontSize = 10.sp,
@@ -201,7 +215,11 @@ fun Card3UI(
                             modifier = Modifier.width(50.dp).align(
                                 Alignment.CenterHorizontally
                             ),
-                            text = cvv.ifEmpty { "0000" },
+                            text = if (cvv.isEmpty() || cvv.first().isWhitespace()) {
+                                "0000"
+                            } else {
+                                cvv
+                            },
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.Black,
                             fontSize = 10.sp,

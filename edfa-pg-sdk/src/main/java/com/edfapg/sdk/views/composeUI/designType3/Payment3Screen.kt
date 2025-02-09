@@ -40,10 +40,10 @@ fun Payment3Screen(
     val context = LocalContext.current
 
     var bottomSheetVisible by remember { mutableStateOf(true) }
-    var cardNumber by remember { mutableStateOf(TextFieldValue("")) }
-    var cardHolderName by remember { mutableStateOf(TextFieldValue("")) }
-    var expiryDate by remember { mutableStateOf(TextFieldValue("")) }
-    var cvc by remember { mutableStateOf(TextFieldValue("")) }
+    var cardNumber by remember { mutableStateOf(TextFieldValue(" ")) }
+    var cardHolderName by remember { mutableStateOf(TextFieldValue(" ")) }
+    var expiryDate by remember { mutableStateOf(TextFieldValue(" ")) }
+    var cvc by remember { mutableStateOf(TextFieldValue(" ")) }
 
     val scrollState = rememberScrollState()
     val bottomSheetState = rememberModalBottomSheetState(

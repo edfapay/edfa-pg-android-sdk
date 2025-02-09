@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.edfapg.sdk.R
+import com.example.paymentgatewaynew.payment1.Card1UI
 
 @Composable
 fun Card2UI(
@@ -242,9 +243,25 @@ fun Card2Form(
     cvc: TextFieldValue
 ) {
     Card2UI(
-        cardNumber = cardNumber.text.ifEmpty { "**** **** **** ****" },
-        cardHolderName = cardHolderName.text.ifEmpty { stringResource(id = R.string.txt_card_holdername)},
-        expiryDate = expiryDate.text.ifEmpty { "00/00" },
-        cvc = cvc.text.ifEmpty { "0000" }
+        cardNumber = if (cardNumber.text.isEmpty() || cardNumber.text.first().isWhitespace()) {
+            "****  ****  ****  ****"
+        } else {
+            cardNumber.text
+        },
+        cardHolderName = if (cardHolderName.text.isEmpty() || cardHolderName.text.first().isWhitespace()) {
+            stringResource(id = R.string.txt_card_holdername)
+        } else {
+            cardHolderName.text
+        },
+        expiryDate = if (expiryDate.text.isEmpty() || expiryDate.text.first().isWhitespace()) {
+            "MM/YY"
+        } else {
+            expiryDate.text
+        },
+        cvc = if (cvc.text.isEmpty() || cvc.text.first().isWhitespace()) {
+            "0000"
+        } else {
+            cvc.text
+        }
     )
 }
