@@ -200,12 +200,29 @@ fun CardForm(
     expiryDate: TextFieldValue,
     cvc: TextFieldValue
 ) {
+    println("Payment1Form ${cardHolderName}")
+
     Card1UI(
-        cardNumber = cardNumber.text.ifEmpty { "****  ****  ****  ****" },
-        cardHolderName = cardHolderName.text.ifEmpty {
-            stringResource(id = R.string.txt_card_holdername)
+        cardNumber = if (cardNumber.text.isEmpty() || cardNumber.text.first().isWhitespace()) {
+            "****  ****  ****  ****"
+        } else {
+            cardNumber.text
         },
-        expiryDate = expiryDate.text.ifEmpty { "MM/YY" },
-        cvc = cvc.text.ifEmpty { "0000" }
+        cardHolderName = if (cardHolderName.text.isEmpty() || cardHolderName.text.first().isWhitespace()) {
+            stringResource(id = R.string.txt_card_holdername)
+        } else {
+            cardHolderName.text
+        },
+        expiryDate = if (expiryDate.text.isEmpty() || expiryDate.text.first().isWhitespace()) {
+            "MM/YY"
+        } else {
+            expiryDate.text
+        },
+        cvc = if (cvc.text.isEmpty() || cvc.text.first().isWhitespace()) {
+            "0000"
+        } else {
+            cvc.text
+        }
     )
+
 }

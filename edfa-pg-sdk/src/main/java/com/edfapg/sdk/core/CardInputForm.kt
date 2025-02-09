@@ -137,10 +137,23 @@ fun CardInputForm(
             inputType = KeyboardType.Text,
             action = ImeAction.Next,
             onValueChange = { newValue ->
-                if (newValue.text.length <= 20) {  // Enforce 15-character limit
-                    onCardHolderNameChange(newValue)
+                // Enforce a maximum length of 20 characters
+                val truncatedValue = if (newValue.text.length > 20) {
+                    newValue.copy(
+                        text = newValue.text.take(20), // Truncate to 20 characters
+                        selection = TextRange(20) // Move cursor to the end
+                    )
+                } else {
+                    newValue // Use the original value if within the limit
                 }
-            })
+
+                println(
+                    "CardHolderName: ${truncatedValue.text}"
+                )
+                // Update the card holder name
+                onCardHolderNameChange(truncatedValue)
+            }
+        )
 
         CardInputField(
             title = stringResource(id = R.string.card_number),
@@ -149,21 +162,22 @@ fun CardInputForm(
             inputType = KeyboardType.Number,
             action = ImeAction.Next,
             onValueChange = { newValue ->
-                if (newValue.text.length <= Card.CARD_NUMBER_MAX.toInt()) {
+                if (newValue.text.length in 1..19) {
+                    val digitsOnly = newValue.text.replace("\\D".toRegex(), "")
 
-                    val digitsOnly = newValue.text.replace(" ", "")
+
                     val formattedValue = digitsOnly.chunked(4).joinToString(" ")
 
                     unformattedNumber = digitsOnly
 
-                    // Validate card number based on length
-                    isCardNumberValid =
-                        digitsOnly.length in Card.CARD_NUMBER_MIN.toInt()..Card.CARD_NUMBER_MAX.toInt()
+                    isCardNumberValid = digitsOnly.length in 12..19
+                    println("isCardNumberValid: ${digitsOnly.length} :: $isCardNumberValid")
 
-                    // Adjust cursor position for formatted text
                     val originalCursorPosition = newValue.selection.start
+
                     val spacesBeforeCursor =
                         newValue.text.take(originalCursorPosition).count { it == ' ' }
+
                     val newCursorPosition =
                         originalCursorPosition + formattedValue.take(originalCursorPosition)
                             .count { it == ' ' } - spacesBeforeCursor
@@ -178,11 +192,12 @@ fun CardInputForm(
                         )
                     )
 
-                    // Recalculate form validity on every card number change
+                    // Recalculate form validity
                     isFormValid = isCardNumberValid && isCvvValid && isMonthValid
                 }
             }
         )
+
 
 
         Row(
@@ -197,21 +212,25 @@ fun CardInputForm(
                 action = ImeAction.Next,
                 value = cvc,
                 onValueChange = { newValue ->
-                    if (newValue.text.length <= Card.CVV_MAX.toInt()) {
-                        val newText = newValue.text.replace(" ", "")
+                    // Remove all non-digit characters
+                    val digitsOnly = newValue.text.replace("\\D".toRegex(), "")
+
+                    // Ensure input is within the max allowed length
+                    if (digitsOnly.length <= Card.CVV_MAX.toInt()) {
                         val selection = newValue.selection
 
                         onCvcChange(
                             TextFieldValue(
-                                text = newText,
-                                selection = TextRange(selection.start.coerceIn(0, newText.length))
+                                text = digitsOnly,
+                                selection = TextRange(selection.start.coerceIn(0, digitsOnly.length))
                             )
                         )
 
-                        cvv = newText
+                        cvv = digitsOnly
                     }
-                },
+                }
             )
+
 //            if (!isCvvValid) {
 //                Text("Invalid CVV", color = Color.Red)
 //            }
@@ -225,21 +244,20 @@ fun CardInputForm(
                 action = ImeAction.Done,
                 value = expiryDate,
                 onValueChange = { newValue ->
-                    val digitsOnly = newValue.text.replace("/", "").take(4)
+                    // Remove all non-digit characters
+                    val digitsOnly = newValue.text.replace("\\D".toRegex(), "").take(4)
 
-                    // Extract month and year from the digitsOnly
+                    // Extract month and year from the digits
                     month = digitsOnly.take(2)
                     year = digitsOnly.drop(2)
 
                     // Get current month and year
-                    val currentMonth = Calendar.getInstance()
-                        .get(Calendar.MONTH) + 1 // Calendar.MONTH is 0-indexed
-                    val currentYear = Calendar.getInstance()
-                        .get(Calendar.YEAR) % 100 // Last two digits of the year
+                    val currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1 // Calendar.MONTH is 0-based
+                    val currentYear = Calendar.getInstance().get(Calendar.YEAR) % 100 // Last two digits of year
 
                     // Validate month input
                     val isMonthInputValid = month.toIntOrNull()?.let { enteredMonth ->
-                        enteredMonth in 1..12 // Only allow months from 01 to 12
+                        enteredMonth in 1..12 // Ensure months are between 01-12
                     } ?: false
 
                     // Validate year
@@ -247,73 +265,54 @@ fun CardInputForm(
                         enteredYear >= currentYear // Year should be current or in the future
                     } ?: false
 
-                    println("isFormValid isYearValid: $isYearValid ${year.length} ${year.toIntOrNull()}")
-
-                    // Validate month and date only if month is valid
                     val isDateValid = if (isMonthInputValid) {
                         month.toIntOrNull()?.let { enteredMonth ->
                             when {
-                                // If the year is less than the current year, date is invalid
                                 year.toIntOrNull() ?: 0 < currentYear -> false
-                                // If the entered year is the same as the current year, check the month
                                 year.toIntOrNull() == currentYear -> enteredMonth >= currentMonth
-                                // If the entered year is in the future, date is valid
                                 else -> true
                             }
                         } ?: false
                     } else {
-                        false // If the month input is invalid, date valid is false
+                        false
                     }
 
-                    // Update isMonthValid based on the corrected date validation
-                    isMonthValid = isMonthInputValid && isDateValid // Ensure month is valid
-
-                    println("isMonthValid: $isMonthInputValid $isDateValid")
-
-                    // Update the overall form validation
+                    isMonthValid = isMonthInputValid && isDateValid
                     isFormValid = isCardNumberValid && isCvvValid && isMonthValid
 
-
-                    // Ensure correct formatting and pre-append 0 if necessary
+                    // Format month correctly (prepend 0 if necessary)
                     val validatedMonth = when {
                         month.isEmpty() -> ""
                         month.toIntOrNull() == null || month.toInt() > 12 -> "${month.first()}"
-                        month.first() > '1' -> "0$month" // Prepend 0 if the month starts with 2 or greater
+                        month.first() > '1' -> "0$month"
                         else -> month
                     }
-                    val formattedValue = listOf(validatedMonth, year).filter { it.isNotEmpty() }
+
+                    // Format as MM/YY
+                    val formattedValue = listOf(validatedMonth, year)
+                        .filter { it.isNotEmpty() }
                         .joinToString("/")
 
                     // Ensure correct cursor position
                     val originalCursorPosition = newValue.selection.start
-                    val newCursorPosition =
-                        if (validatedMonth.length == 2 && originalCursorPosition <= 2) {
-                            2 // If the month is two digits, place cursor at the end of the month
-                        } else if (originalCursorPosition > 2) {
-                            // If the cursor is after the month, adjust for the "/" character
-                            originalCursorPosition + 1
-                        } else {
-                            originalCursorPosition // Keep the original cursor position if in the valid range
-                        }
+                    val newCursorPosition = when {
+                        validatedMonth.length == 2 && originalCursorPosition <= 2 -> 2
+                        originalCursorPosition > 2 -> originalCursorPosition + 1 // Adjust for '/'
+                        else -> originalCursorPosition
+                    }.coerceIn(0, formattedValue.length)
 
-                    // Check if the input value is valid before updating
-                    if (isMonthInputValid || year.isEmpty()) { // Allow updating only if month is valid or year is empty
+                    // Only update if input is valid
+                    if (isMonthInputValid || year.isEmpty()) {
                         onExpiryDateChange(
                             newValue.copy(
                                 text = formattedValue,
-                                selection = TextRange(
-                                    newCursorPosition.coerceIn(
-                                        0,
-                                        formattedValue.length
-                                    )
-                                )
+                                selection = TextRange(newCursorPosition)
                             )
                         )
                     }
                 }
-
-
             )
+
         }
 
 
@@ -436,7 +435,15 @@ fun CardInputField(
                 val localFocusManager = LocalFocusManager.current
                 BasicTextField(
                     value = value,
-                    onValueChange = onValueChange,
+                    onValueChange = { newValue ->
+                        val updatedText =
+                            if (newValue.text.startsWith(" ") && newValue.text.length > value.text.length) {
+                                newValue.text.trimStart() // Remove leading space only if inserting text
+                            } else {
+                                newValue.text
+                            }
+                        onValueChange(newValue.copy(text = updatedText))
+                    },
                     singleLine = true,
                     textStyle = TextStyle(
                         fontSize = 14.sp,
@@ -445,7 +452,7 @@ fun CardInputField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color(0xFFF1F4F8)) // Background color
-                        .padding(horizontal = 4.dp), // Padding inside the text field
+                        .padding(horizontal = 4.dp),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = inputType,
                         imeAction = action
@@ -461,6 +468,7 @@ fun CardInputField(
                         }
                     }
                 )
+
             }
         }
     }

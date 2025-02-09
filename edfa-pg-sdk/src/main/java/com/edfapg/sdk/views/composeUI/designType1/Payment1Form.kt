@@ -22,10 +22,10 @@ import com.example.paymentgatewaynew.common.CardInputForm
 
 @Composable
 fun Payment1Form(xpressCardPay: EdfaCardPay?,activity: Activity,sale3dsRedirectLauncher: ActivityResultLauncher<Intent>) {
-    var cardNumber by remember { mutableStateOf(TextFieldValue("")) }
-    var cardHolderName by remember { mutableStateOf(TextFieldValue("")) }
-    var expiryDate by remember { mutableStateOf(TextFieldValue("")) }
-    var cvc by remember { mutableStateOf(TextFieldValue("")) }
+    var cardNumber by remember { mutableStateOf(TextFieldValue(" ")) }
+    var cardHolderName by remember { mutableStateOf(TextFieldValue(" ")) }
+    var expiryDate by remember { mutableStateOf(TextFieldValue(" ")) }
+    var cvc by remember { mutableStateOf(TextFieldValue(" ")) }
     val scrollState = rememberScrollState()
 
     Column(
