@@ -111,7 +111,7 @@ fun CardInputForm(
     var isMonthValid = month.toIntOrNull()?.let {
         it in Card.MONTH_MIN.toInt()..Card.MONTH_MAX.toInt()
     } ?: false
-    var isYearValid = false
+    var isYearValid by remember { mutableStateOf(false) }
 
     var isFormValid by remember {
         mutableStateOf(false)
@@ -120,6 +120,7 @@ fun CardInputForm(
     LaunchedEffect(isCardNumberValid, isCvvValid, isMonthValid, isYearValid) {
         isFormValid = isCardNumberValid && isCvvValid && isMonthValid && isYearValid
         println("isFormValid: $isFormValid isCardNumberValid: $isCardNumberValid isCvvValid: $isCvvValid isMonthValid: $isMonthValid isYearValid: $isYearValid")
+        println("inCardInputForm:: GlobalValid: isCardNumberValid: $isCardNumberValid isCvvValid: $isCvvValid isMonthValid: $isMonthValid isYearValid: $isYearValid")
     }
 
     Column(
@@ -171,7 +172,7 @@ fun CardInputForm(
                     unformattedNumber = digitsOnly
 
                     isCardNumberValid = digitsOnly.length in 12..19
-                    println("isCardNumberValid: ${digitsOnly.length} :: $isCardNumberValid")
+                    println("inCardInputForm::isCardNumberValid: ${digitsOnly.length} :: $isCardNumberValid")
 
                     val originalCursorPosition = newValue.selection.start
 
@@ -194,6 +195,7 @@ fun CardInputForm(
 
                     // Recalculate form validity
                     isFormValid = isCardNumberValid && isCvvValid && isMonthValid
+                    println("inCardInputForm: isFormValid : $isFormValid")
                 }
             }
         )
@@ -264,6 +266,7 @@ fun CardInputForm(
                     isYearValid = year.length == 2 && year.toIntOrNull()?.let { enteredYear ->
                         enteredYear >= currentYear // Year should be current or in the future
                     } ?: false
+
 
                     val isDateValid = if (isMonthInputValid) {
                         month.toIntOrNull()?.let { enteredMonth ->
@@ -432,6 +435,7 @@ fun CardInputField(
                     .fillMaxWidth()
                     .background(Color.White, shape = RoundedCornerShape(16.dp))
             ) {
+
                 val localFocusManager = LocalFocusManager.current
                 BasicTextField(
                     value = value,
