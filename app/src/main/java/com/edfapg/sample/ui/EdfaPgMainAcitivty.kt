@@ -83,7 +83,7 @@ class EdfaPgMainAcitivty : BaseActivity() {
         val edfaCardPay = EdfaCardPay()
             .setOrder(order)
             .setPayer(payer)
-            .setDesignType(EdfaPayDesignType.one)
+            .setDesignType(EdfaPayDesignType.two)
             .setLanguage(EdfaPayLanguage.ar)
             .onTransactionFailure { res, data ->
                 print("$res $data")
