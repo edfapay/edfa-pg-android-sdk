@@ -10,6 +10,7 @@ import com.edfapg.sdk.core.EdfaPgSdk
 import com.edfapg.sdk.core.handleSaleResponse
 import com.edfapg.sdk.model.api.EdfaPgStatus
 import com.edfapg.sdk.model.request.card.EdfaPgCard
+import com.edfapg.sdk.model.request.options.EdfaPgSaleOptions
 import com.edfapg.sdk.model.response.base.error.EdfaPgError
 import com.edfapg.sdk.model.response.gettransactiondetails.EdfaPgGetTransactionDetailsSuccess
 import com.edfapg.sdk.model.response.sale.EdfaPgSaleResponse
@@ -31,6 +32,11 @@ class EdfaPayWithCardDetails(private val context: Context) : EdfaCardPay() {
         val order = _order
         val payer = _payer
         val card = _card
+        val recurring = _recurring
+
+        println("recurringInit::EdfaPayWithCardDetails ${recurring}")
+
+
         if (order != null && payer != null && card != null) {
             saleResponse = null
             EdfaPgSdk.Adapter.SALE.execute(
@@ -38,7 +44,7 @@ class EdfaPayWithCardDetails(private val context: Context) : EdfaCardPay() {
                 card = card,
                 payer = payer,
                 termUrl3ds = EdfaPgUtil.ProcessCompleteCallbackUrl,
-                options = null,
+                options = recurring,
                 auth = false,
                 callback = handleSaleResponse(
                     CardTransactionData(

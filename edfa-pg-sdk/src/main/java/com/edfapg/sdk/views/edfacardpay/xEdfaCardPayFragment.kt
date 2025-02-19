@@ -4,6 +4,7 @@ import com.edfapg.sdk.core.EdfaPgSdk
 import com.edfapg.sdk.model.api.EdfaPgResult
 import com.edfapg.sdk.model.api.EdfaPgStatus
 import com.edfapg.sdk.model.request.card.EdfaPgCard
+import com.edfapg.sdk.model.request.options.EdfaPgSaleOptions
 import com.edfapg.sdk.model.response.base.error.EdfaPgError
 import com.edfapg.sdk.model.response.gettransactiondetails.EdfaPgGetTransactionDetailsSuccess
 import com.edfapg.sdk.model.response.sale.EdfaPgSaleCallback
@@ -16,6 +17,7 @@ import com.edfapg.sdk.views.edfacardpay.creditcardview.models.CreditCard
 internal fun EdfaCardPayFragment.doSaleTransaction(cardDetail: CreditCard?){
     val order = xpressCardPay?._order
     val payer = xpressCardPay?._payer
+    val recurring = xpressCardPay?._recurring
     if(order != null && payer != null && cardDetail != null){
 
         val month = cardDetail.expiryMonth()
@@ -25,13 +27,14 @@ internal fun EdfaCardPayFragment.doSaleTransaction(cardDetail: CreditCard?){
 
         val card = EdfaPgCard(cardDetail.unformattedNumber, month, year, cardDetail.cvv)
 
+        println("recurringInit::EdfaCardPayFragment ${recurring}")
         saleResponse = null
         EdfaPgSdk.Adapter.SALE.execute(
             order = order,
             card = card,
             payer = payer,
             termUrl3ds = EdfaPgUtil.ProcessCompleteCallbackUrl,
-            options = null,
+            options = recurring,
             auth = false,
             callback = handleSaleResponse(CardTransactionData(order, payer, card, null))
         )

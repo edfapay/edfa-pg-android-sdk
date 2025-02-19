@@ -6,6 +6,7 @@ import android.content.Intent
 import androidx.fragment.app.Fragment
 import com.edfapg.sdk.PaymentActivity
 import com.edfapg.sdk.model.request.card.EdfaPgCard
+import com.edfapg.sdk.model.request.options.EdfaPgSaleOptions
 import com.edfapg.sdk.model.request.order.EdfaPgSaleOrder
 import com.edfapg.sdk.model.request.payer.EdfaPgPayer
 import com.edfapg.sdk.model.response.sale.EdfaPgSaleResponse
@@ -36,6 +37,7 @@ open class EdfaCardPay : EdfapayCardDetailsInitializer {
     var _card: EdfaPgCard? = null
     var _design: EdfaPayDesignType = EdfaPayDesignType.one
     var _language: EdfaPayLanguage = EdfaPayLanguage.en
+    var _recurring: EdfaPgSaleOptions? = null
 
     var _onTransactionFailure: ((EdfaPgSaleResponse?, Any?) -> Unit)? = null
     var _onTransactionSuccess: ((EdfaPgSaleResponse?, Any?) -> Unit)? = null
@@ -54,6 +56,11 @@ open class EdfaCardPay : EdfapayCardDetailsInitializer {
 
     fun setCard(card: EdfaPgCard): EdfaCardPay {
         _card = card
+        return this
+    }
+
+    fun setRecurring(recurring: Boolean): EdfaCardPay {
+        _recurring = EdfaPgSaleOptions("", recurring)
         return this
     }
 

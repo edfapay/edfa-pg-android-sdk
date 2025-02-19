@@ -83,15 +83,20 @@ class EdfaPgMainAcitivty : BaseActivity() {
         val edfaCardPay = EdfaCardPay()
             .setOrder(order)
             .setPayer(payer)
+            .setRecurring(true)
             .setDesignType(EdfaPayDesignType.two)
-            .setLanguage(EdfaPayLanguage.ar)
+            .setLanguage(EdfaPayLanguage.en)
             .onTransactionFailure { res, data ->
                 print("$res $data")
+
                 Toast.makeText(this, "Transaction Failure", Toast.LENGTH_LONG).show()
             }.onTransactionSuccess { res, data ->
                 print("$res $data")
                 Toast.makeText(this, "Transaction Success", Toast.LENGTH_LONG).show()
             }
+        println(
+            "recurring:: ${edfaCardPay._recurring}"
+        )
 
         /*
         * Precise way to start card payment (ready to use)
@@ -129,6 +134,7 @@ class EdfaPgMainAcitivty : BaseActivity() {
             .setOrder(order)
             .setPayer(payer)
             .setCard(card)
+
             .onTransactionFailure { res, data ->
                 print("$res $data")
                 Toast.makeText(this, "Transaction Failure", Toast.LENGTH_LONG).show()
