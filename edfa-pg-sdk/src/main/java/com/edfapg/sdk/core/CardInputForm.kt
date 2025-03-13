@@ -163,34 +163,34 @@ fun CardInputForm(
             inputType = KeyboardType.Number,
             action = ImeAction.Next,
             onValueChange = { newValue ->
-                if (newValue.text.length in 1..19) {
-                    val digitsOnly = newValue.text.replace("\\D".toRegex(), "")
+                val rawDigits = newValue.text.replace("\\D".toRegex(), "") // Extract only digits
 
+                if (rawDigits.length <= 16) { // Allow only 16 digits
+                    val formattedValue = rawDigits.chunked(4).joinToString(" ") // Format as "**** **** **** ****"
 
-                    val formattedValue = digitsOnly.chunked(4).joinToString(" ")
+                    unformattedNumber = rawDigits
+                    isCardNumberValid = rawDigits.length in 12..16
 
-                    unformattedNumber = digitsOnly
-
-                    isCardNumberValid = digitsOnly.length in 12..19
-                    println("inCardInputForm::isCardNumberValid: ${digitsOnly.length} :: $isCardNumberValid")
+                    println("inCardInputForm::isCardNumberValid: ${rawDigits.length} :: $isCardNumberValid")
 
                     val originalCursorPosition = newValue.selection.start
-
-                    val spacesBeforeCursor =
-                        newValue.text.take(originalCursorPosition).count { it == ' ' }
-
+                    val spacesBeforeCursor = newValue.text.take(originalCursorPosition).count { it == ' ' }
                     val newCursorPosition =
                         originalCursorPosition + formattedValue.take(originalCursorPosition)
                             .count { it == ' ' } - spacesBeforeCursor
 
-                    val adjustedCursorPosition =
-                        newCursorPosition.coerceIn(0, formattedValue.length)
+                    val adjustedCursorPosition = newCursorPosition.coerceIn(0, formattedValue.length)
 
+                    // Handle clearing the input properly
                     onCardNumberChange(
-                        newValue.copy(
-                            text = formattedValue,
-                            selection = TextRange(adjustedCursorPosition)
-                        )
+                        if (rawDigits.isEmpty()) {
+                            TextFieldValue("") // Ensures the field is properly cleared
+                        } else {
+                            TextFieldValue(
+                                text = formattedValue,
+                                selection = TextRange(adjustedCursorPosition)
+                            )
+                        }
                     )
 
                     // Recalculate form validity
@@ -198,6 +198,7 @@ fun CardInputForm(
                     println("inCardInputForm: isFormValid : $isFormValid")
                 }
             }
+
         )
 
 
