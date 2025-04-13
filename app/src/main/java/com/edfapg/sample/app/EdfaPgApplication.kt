@@ -23,8 +23,8 @@ class EdfaPgApplication : Application() {
 
         EdfaPgSdk.init(
             this,
-            clientKey = MERCHANT_KEY,
-            clientPass = MERCHANT_PASSWORD,
+            clientKey = "MERCHANT_KEY",
+            clientPass = "MERCHANT_PASSWORD",
             paymentUrl = PAYMENT_URL,
         )
 
