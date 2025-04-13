@@ -23,7 +23,7 @@ android {
 //        applicationId "com.edfapg.sdk"
         minSdk 21
         targetSdk 34
-
+        consumerProguardFiles 'consumer-rules.pro'
         aarMetadata {
             minCompileSdk = 16
         }
@@ -33,7 +33,9 @@ android {
 
     buildTypes {
         release {
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            consumerProguardFiles 'consumer-rules.pro'
         }
     }
     composeOptions {

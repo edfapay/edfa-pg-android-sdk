@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.Size
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
@@ -20,10 +21,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -79,6 +84,7 @@ import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
 import com.edfapg.sdk.views.edfacardpay.EdfaCardPayFragment
 import com.edfapg.sdk.views.edfacardpay.EdfaPgSaleWebRedirectActivity
 import com.edfapg.sdk.views.edfacardpay.handleSaleResponse
+import kotlinx.coroutines.delay
 import org.junit.runner.manipulation.Ordering.Context
 import java.util.Calendar
 
@@ -392,7 +398,9 @@ fun CardInputForm(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(
+    ExperimentalFoundationApi::class
+)
 @Composable
 fun CardInputField(
     modifier: Modifier = Modifier,
@@ -403,6 +411,10 @@ fun CardInputField(
     action: ImeAction = ImeAction.Next,
     onValueChange: (TextFieldValue) -> Unit
 ) {
+    val focusRequester = remember { FocusRequester() }
+    var isFocused by remember { mutableStateOf(false) }
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -412,6 +424,10 @@ fun CardInputField(
                 Color(0xFFF1F4F8),
                 shape = RoundedCornerShape(12.dp)
             )
+            .bringIntoViewRequester(bringIntoViewRequester)
+            .onFocusChanged { focusState ->
+                isFocused = focusState.isFocused
+            }
     ) {
         Column(verticalArrangement = Arrangement.Center) {
             Box(
@@ -437,14 +453,13 @@ fun CardInputField(
                     .fillMaxWidth()
                     .background(Color.White, shape = RoundedCornerShape(16.dp))
             ) {
-
                 val localFocusManager = LocalFocusManager.current
                 BasicTextField(
                     value = value,
                     onValueChange = { newValue ->
                         val updatedText =
                             if (newValue.text.startsWith(" ") && newValue.text.length > value.text.length) {
-                                newValue.text.trimStart() // Remove leading space only if inserting text
+                                newValue.text.trimStart()
                             } else {
                                 newValue.text
                             }
@@ -457,14 +472,18 @@ fun CardInputField(
                     ),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color(0xFFF1F4F8)) // Background color
-                        .padding(horizontal = 4.dp),
+                        .background(Color(0xFFF1F4F8))
+                        .padding(horizontal = 4.dp)
+                        .focusRequester(focusRequester)
+                        .onFocusChanged { focusState ->
+                            isFocused = focusState.isFocused
+                        },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = inputType,
                         imeAction = action
                     ),
                     keyboardActions = KeyboardActions(onDone = { localFocusManager.clearFocus() }),
-                    cursorBrush = SolidColor(Color(0xFF2C3246)), // Cursor color
+                    cursorBrush = SolidColor(Color(0xFF2C3246)),
                     decorationBox = { innerTextField ->
                         Box(
                             modifier = Modifier.fillMaxSize(),
@@ -474,9 +493,16 @@ fun CardInputField(
                         }
                     }
                 )
-
             }
         }
     }
 
+    // This will bring the entire Box into view when focused
+    if (isFocused) {
+        LaunchedEffect(Unit) {
+            // This delay ensures the keyboard has time to open before scrolling
+            delay(100)
+            focusRequester.requestFocus()
+        }
+    }
 }
