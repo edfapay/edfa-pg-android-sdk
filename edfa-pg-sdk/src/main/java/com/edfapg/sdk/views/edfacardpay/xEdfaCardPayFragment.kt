@@ -18,6 +18,8 @@ internal fun EdfaCardPayFragment.doSaleTransaction(cardDetail: CreditCard?){
     val order = xpressCardPay?._order
     val payer = xpressCardPay?._payer
     val recurring = xpressCardPay?._recurring
+    val saleAuth = xpressCardPay?._saleAuth
+
     if(order != null && payer != null && cardDetail != null){
 
         val month = cardDetail.expiryMonth()
@@ -35,7 +37,7 @@ internal fun EdfaCardPayFragment.doSaleTransaction(cardDetail: CreditCard?){
             payer = payer,
             termUrl3ds = EdfaPgUtil.ProcessCompleteCallbackUrl,
             options = recurring,
-            auth = false,
+            auth = saleAuth ?: false,
             callback = handleSaleResponse(CardTransactionData(order, payer, card, null))
         )
     } else {

@@ -13,7 +13,6 @@ import com.edfapg.sdk.model.response.sale.EdfaPgSaleResponse
 import com.edfapg.sdk.toolbox.EdfaPayDesignType
 import com.edfapg.sdk.toolbox.EdfaPayLanguage
 import com.edfapg.sdk.toolbox.delayAtIO
-import kotlinx.coroutines.delay
 
 internal var instance: EdfaCardPay? = null
 
@@ -38,6 +37,7 @@ open class EdfaCardPay : EdfapayCardDetailsInitializer {
     var _design: EdfaPayDesignType = EdfaPayDesignType.one
     var _language: EdfaPayLanguage = EdfaPayLanguage.en
     var _recurring: EdfaPgSaleOptions? = null
+    var _saleAuth = false
 
     var _onTransactionFailure: ((EdfaPgSaleResponse?, Any?) -> Unit)? = null
     var _onTransactionSuccess: ((EdfaPgSaleResponse?, Any?) -> Unit)? = null
@@ -59,8 +59,13 @@ open class EdfaCardPay : EdfapayCardDetailsInitializer {
         return this
     }
 
-    fun setRecurring(recurring: Boolean): EdfaCardPay {
+    fun setRecurring(recurring: Boolean = true): EdfaCardPay {
         _recurring = EdfaPgSaleOptions("", recurring)
+        return this
+    }
+
+    fun setAuth(auth:Boolean = true): EdfaCardPay {
+        _saleAuth = auth
         return this
     }
 
