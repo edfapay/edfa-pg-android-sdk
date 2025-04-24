@@ -9,9 +9,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import com.edfapg.sample.app.SaleOrderValidator
+import com.edfapg.sample.app.LIVE_CARD3
 import com.edfapg.sample.databinding.ActivityMainBinding
-import com.edfapg.sdk.model.request.card.EdfaPgCard
 import com.edfapg.sdk.model.request.order.EdfaPgSaleOrder
 import com.edfapg.sdk.model.request.payer.EdfaPgPayer
 import com.edfapg.sdk.model.response.base.error.EdfaPgError
@@ -84,6 +83,7 @@ class EdfaPgMainAcitivty : BaseActivity() {
             .setOrder(order)
             .setPayer(payer)
             .setRecurring(true)
+            .setAuth(true)
             .setDesignType(EdfaPayDesignType.two)
             .setLanguage(EdfaPayLanguage.en)
             .onTransactionFailure { res, data ->
@@ -127,9 +127,8 @@ class EdfaPgMainAcitivty : BaseActivity() {
             "171.100.100.123"
         )
 
-//        val card = EdfaPgCard("4458 2713 2974 8293", 7, 2029, "331")
-//        val card = EdfaPgCard("5452057473989962", 3, 2026, "386")
-        val card = EdfaPgCard("4890222013171587", 9, 2029, "826")
+        val card = LIVE_CARD3 // This from com.edfapg.sample.app.Credential.kt (.gitignore)
+//        val card = EdfaPgCard("4458xxxxxxxx8293", 1, 2090, "123")
         EdfaPayWithCardDetails(this)
             .setOrder(order)
             .setPayer(payer)
