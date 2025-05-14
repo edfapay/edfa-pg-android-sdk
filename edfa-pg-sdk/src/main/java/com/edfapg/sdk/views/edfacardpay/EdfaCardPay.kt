@@ -59,15 +59,19 @@ open class EdfaCardPay : EdfapayCardDetailsInitializer {
         return this
     }
 
+    fun isRecurring() = _recurring?.recurringInit ?: false
     fun setRecurring(recurring: Boolean = true): EdfaCardPay {
         _recurring = EdfaPgSaleOptions("", recurring)
         return this
     }
 
+    fun isAuth() = _saleAuth
     fun setAuth(auth:Boolean = true): EdfaCardPay {
         _saleAuth = auth
         return this
     }
+
+
 
     fun setDesignType(designType: EdfaPayDesignType): EdfaCardPay {
         _design = designType

@@ -89,9 +89,28 @@ class EdfaPayWithCardDetails(private val context: Context) : EdfaCardPay() {
 
         else
             with(result) {
-                when (status) {
-                    EdfaPgStatus.SETTLED -> _onTransactionSuccess?.let { success -> success(saleResponse, result) }
-                    else -> _onTransactionFailure?.let { failure -> failure(saleResponse, result) }
+                if (status == EdfaPgStatus.SETTLED)
+                    _onTransactionSuccess?.let { success ->
+                        success(
+                            saleResponse,
+                            result
+                        )
+                    }
+
+                else if (status == EdfaPgStatus.PENDING && isAuth())
+                    _onTransactionSuccess?.let { success ->
+                        success(
+                            saleResponse,
+                            result
+                        )
+                    }
+
+                else _onTransactionFailure?.let { failure ->
+                    failure(
+                        saleResponse,
+                        result
+                    )
+                }
 
 //                EdfaPgStatus.SECURE_3D -> TODO()
 //                EdfaPgStatus.REDIRECT -> TODO()
@@ -100,7 +119,6 @@ class EdfaPayWithCardDetails(private val context: Context) : EdfaCardPay() {
 //                EdfaPgStatus.REFUND -> TODO()
 //                EdfaPgStatus.CHARGEBACK -> TODO()
 //                EdfaPgStatus.DECLINED -> TODO()
-                }
             }
     }
 }

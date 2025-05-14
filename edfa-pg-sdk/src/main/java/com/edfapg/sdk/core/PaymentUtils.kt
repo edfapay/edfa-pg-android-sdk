@@ -98,20 +98,28 @@ fun transactionCompleted(
         }
     else
         with(data) {
-            when (status) {
-                EdfaPgStatus.SETTLED -> EdfaCardPay.shared()!!._onTransactionSuccess?.let { success ->
+            if (status == EdfaPgStatus.SETTLED)
+                EdfaCardPay.shared()!!._onTransactionSuccess?.let { success ->
+                    success(
+                    saleResponse,
+                    data
+                )
+            }
+
+            else if (status == EdfaPgStatus.PENDING && EdfaCardPay.shared()!!.isAuth())
+                EdfaCardPay.shared()!!._onTransactionSuccess?.let { success ->
                     success(
                         saleResponse,
                         data
                     )
-                }
+            }
 
-                else -> EdfaCardPay.shared()!!._onTransactionFailure?.let { failure ->
-                    failure(
-                        saleResponse,
-                        data
-                    )
-                }
+            else EdfaCardPay.shared()!!._onTransactionFailure?.let { failure ->
+                failure(
+                    saleResponse,
+                    data
+                )
+            }
 //                EdfaPgStatus.SECURE_3D -> TODO()
 //                EdfaPgStatus.REDIRECT -> TODO()
 //                EdfaPgStatus.PENDING -> TODO()
@@ -119,7 +127,6 @@ fun transactionCompleted(
 //                EdfaPgStatus.REFUND -> TODO()
 //                EdfaPgStatus.CHARGEBACK -> TODO()
 //                EdfaPgStatus.DECLINED -> TODO()
-            }
         }
 
 
