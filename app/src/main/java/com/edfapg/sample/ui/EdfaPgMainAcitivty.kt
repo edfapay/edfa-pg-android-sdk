@@ -9,8 +9,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import com.edfapg.sample.app.LIVE_CARD3
 import com.edfapg.sample.databinding.ActivityMainBinding
+import com.edfapg.sdk.model.request.card.EdfaPgCard
 import com.edfapg.sdk.model.request.order.EdfaPgSaleOrder
 import com.edfapg.sdk.model.request.payer.EdfaPgPayer
 import com.edfapg.sdk.model.response.base.error.EdfaPgError
@@ -127,8 +127,8 @@ class EdfaPgMainAcitivty : BaseActivity() {
             "171.100.100.123"
         )
 
-        val card = LIVE_CARD3 // This from com.edfapg.sample.app.Credential.kt (.gitignore)
-//        val card = EdfaPgCard("4458xxxxxxxx8293", 1, 2090, "123")
+//        val card = com.edfapg.sample.app.LIVE_CARD3 // This from com.edfapg.sample.app.Credential.kt (.gitignore)
+        val card = EdfaPgCard("4458xxxxxxxx8293", 1, 2090, "123")
         EdfaPayWithCardDetails(this)
             .setOrder(order)
             .setPayer(payer)
