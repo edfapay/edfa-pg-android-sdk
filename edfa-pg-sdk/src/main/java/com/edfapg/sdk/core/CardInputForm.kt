@@ -7,6 +7,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.Size
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,6 +35,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -140,7 +143,7 @@ fun CardInputForm(
         CardInputField(
             title = stringResource(id = R.string.card_holder),
             placeholder = "Name",
-            value = cardHolderName,
+            newValue = cardHolderName,
             inputType = KeyboardType.Text,
             action = ImeAction.Next,
             onValueChange = { newValue ->
@@ -165,7 +168,7 @@ fun CardInputForm(
         CardInputField(
             title = stringResource(id = R.string.card_number),
             placeholder = "**** **** **** ****",
-            value = cardNumber,
+            newValue = cardNumber,
             inputType = KeyboardType.Number,
             action = ImeAction.Next,
             onValueChange = { newValue ->
@@ -219,7 +222,7 @@ fun CardInputForm(
                 placeholder = "000",
                 inputType = KeyboardType.Number,
                 action = ImeAction.Next,
-                value = cvc,
+                newValue = cvc,
                 onValueChange = { newValue ->
                     // Remove all non-digit characters
                     val digitsOnly = newValue.text.replace("\\D".toRegex(), "")
@@ -251,7 +254,7 @@ fun CardInputForm(
                 placeholder = "MM/YY",
                 inputType = KeyboardType.Number,
                 action = ImeAction.Done,
-                value = expiryDate,
+                newValue = expiryDate,
                 onValueChange = { newValue ->
                     // Remove all non-digit characters
                     val digitsOnly = newValue.text.replace("\\D".toRegex(), "").take(4)
@@ -399,14 +402,14 @@ fun CardInputForm(
 
 
 @OptIn(
-    ExperimentalFoundationApi::class
+    ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class
 )
 @Composable
 fun CardInputField(
     modifier: Modifier = Modifier,
     title: String = stringResource(id = R.string.card_holder),
     placeholder: String = "Name",
-    value: TextFieldValue,
+    newValue: TextFieldValue,
     inputType: KeyboardType,
     action: ImeAction = ImeAction.Next,
     onValueChange: (TextFieldValue) -> Unit
@@ -454,16 +457,28 @@ fun CardInputField(
                     .background(Color.White, shape = RoundedCornerShape(16.dp))
             ) {
                 val localFocusManager = LocalFocusManager.current
-                BasicTextField(
-                    value = value,
-                    onValueChange = { newValue ->
-                        val updatedText =
-                            if (newValue.text.startsWith(" ") && newValue.text.length > value.text.length) {
-                                newValue.text.trimStart()
+
+                TextField(
+                    value = newValue,
+                    onValueChange =
+                    { updated ->
+                        val trimmedText =
+                            if (updated.text.startsWith(" ") && updated.text.length > newValue.text.length) {
+                                updated.text.trimStart()
+
                             } else {
-                                newValue.text
+                                updated.text
                             }
-                        onValueChange(newValue.copy(text = updatedText))
+                        if (trimmedText != newValue.text) {
+                            onValueChange(
+                                TextFieldValue(
+                                    text = trimmedText,
+                                    selection = TextRange(trimmedText.length)
+                                )
+                            )
+                        } else {
+                            onValueChange(updated)
+                        }
                     },
                     singleLine = true,
                     textStyle = TextStyle(
@@ -482,27 +497,18 @@ fun CardInputField(
                         keyboardType = inputType,
                         imeAction = action
                     ),
+                    label = { Text(text = newValue.text) },
                     keyboardActions = KeyboardActions(onDone = { localFocusManager.clearFocus() }),
-                    cursorBrush = SolidColor(Color(0xFF2C3246)),
-                    decorationBox = { innerTextField ->
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.CenterStart
-                        ) {
-                            innerTextField()
-                        }
-                    }
+                    colors = TextFieldDefaults.textFieldColors(
+                        focusedTextColor = Color.Black,
+                        cursorColor = Color.Black,
+                        containerColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
+                    ),
                 )
-            }
-        }
-    }
 
-    // This will bring the entire Box into view when focused
-    if (isFocused) {
-        LaunchedEffect(Unit) {
-            // This delay ensures the keyboard has time to open before scrolling
-            delay(100)
-            focusRequester.requestFocus()
+            }
         }
     }
 }
