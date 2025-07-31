@@ -408,92 +408,103 @@ fun CardInputForm(
     }
 }
 
+
+@OptIn(
+    ExperimentalFoundationApi::class
+)
 @Composable
 fun CardInputField(
-    title: String,
-    placeholder: String,
+    modifier: Modifier = Modifier,
+    title: String = stringResource(id = R.string.card_holder),
+    placeholder: String = "Name",
     newValue: TextFieldValue,
     inputType: KeyboardType,
     action: ImeAction = ImeAction.Next,
-    onValueChange: (TextFieldValue) -> Unit,
-    modifier: Modifier = Modifier,
-    focusRequester: FocusRequester = remember { FocusRequester() }
+    onValueChange: (TextFieldValue) -> Unit
 ) {
+    val focusRequester = remember { FocusRequester() }
     var isFocused by remember { mutableStateOf(false) }
-    val interactionSource = remember { MutableInteractionSource() }
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
 
-    Column(modifier = modifier) {
-        // Title
-        Text(
-            text = title,
-            color = Color(0xFF8F9BB3),
-            style = MaterialTheme.typography.labelSmall,
-            fontSize = 12.sp,
-            modifier = Modifier.padding(bottom = 4.dp)
-        )
-
-        // Input container
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp)
-                .background(
-                    color = Color(0xFFF1F4F8),
-                    shape = RoundedCornerShape(8.dp)
-                )
-                .border(
-                    width = 1.dp,
-                    color = if (isFocused) Color.Blue else Color.Transparent,
-                    shape = RoundedCornerShape(8.dp)
-                )
-                .clickable(
-                    interactionSource = interactionSource,
-                    indication = null
-                ) {
-                    focusRequester.requestFocus()
-                    // Move cursor to end when clicked
-                    if (newValue.text.isNotEmpty()) {
-                        onValueChange(newValue.copy(selection = TextRange(newValue.text.length)))
-                    }
-                }
-        ) {
-            BasicTextField(
-                value = newValue,
-                onValueChange = onValueChange,
-                textStyle = TextStyle(
-                    color = Color.Black,
-                    fontSize = 16.sp
-                ),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = inputType,
-                    imeAction = action
-                ),
-                singleLine = true,
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(70.dp)
+            .padding(top = 5.dp)
+            .background(
+                Color(0xFFF1F4F8),
+                shape = RoundedCornerShape(12.dp)
+            )
+            .bringIntoViewRequester(bringIntoViewRequester)
+            .onFocusChanged { focusState ->
+                isFocused = focusState.isFocused
+            }
+    ) {
+        Column(verticalArrangement = Arrangement.Center) {
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 12.dp)
-                    .focusRequester(focusRequester)
-                    .onFocusChanged { focusState ->
-                        isFocused = focusState.isFocused
-                        // Ensure cursor at end when focused
-                        if (focusState.isFocused && newValue.text.isNotEmpty()) {
-                            onValueChange(newValue.copy(selection = TextRange(newValue.text.length)))
-                        }
-                    },
-                cursorBrush = SolidColor(Color.Black)
-            )
-
-            // Placeholder
-            if (newValue.text.isEmpty()) {
+                    .padding(start = 16.dp)
+                    .zIndex(3f)
+                    .background(
+                        Color(Color.White.value.toLong()),
+                        shape = RoundedCornerShape(16.dp)
+                    )
+            ) {
                 Text(
-                    text = placeholder,
+                    text = title,
                     color = Color(0xFF8F9BB3),
-                    fontSize = 16.sp,
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp, vertical = 12.dp)
-                        .alpha(0.6f)
+                    style = MaterialTheme.typography.labelSmall,
+                    fontSize = 12.sp,
                 )
+            }
+            Box(
+                modifier = Modifier
+                    .padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
+                    .fillMaxWidth()
+                    .background(Color.Transparent, shape = RoundedCornerShape(16.dp))
+            ) {
+
+                BasicTextField(
+                    value = newValue,
+                    onValueChange = onValueChange,
+                    textStyle = TextStyle(
+                        color = Color.Black,
+                        fontSize = 16.sp
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = inputType,
+                        imeAction = action
+                    ),
+                    singleLine = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 1.dp)
+                        .focusRequester(focusRequester)
+                        .onFocusChanged { focusState ->
+                            isFocused = focusState.isFocused
+                            // Ensure cursor at end when focused
+                            if (focusState.isFocused && newValue.text.isNotEmpty()) {
+                                onValueChange(newValue.copy(selection = TextRange(newValue.text.length)))
+                            }
+                        },
+                    cursorBrush = SolidColor(Color.Black)
+                )
+
+                if (newValue.text.isEmpty()) {
+                    Text(
+                        text = placeholder,
+                        color = Color.Transparent,
+                        fontSize = 16.sp,
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp, vertical = 12.dp)
+                            .alpha(0.6f)
+                    )
+                }
+
             }
         }
     }
+
 }
+
