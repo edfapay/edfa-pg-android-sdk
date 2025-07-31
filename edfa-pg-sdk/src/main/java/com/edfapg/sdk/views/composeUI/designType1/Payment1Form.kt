@@ -14,6 +14,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -22,10 +24,14 @@ import com.example.paymentgatewaynew.common.CardInputForm
 
 @Composable
 fun Payment1Form(xpressCardPay: EdfaCardPay?,activity: Activity,sale3dsRedirectLauncher: ActivityResultLauncher<Intent>) {
-    var cardNumber by remember { mutableStateOf(TextFieldValue(" ")) }
-    var cardHolderName by remember { mutableStateOf(TextFieldValue(" ")) }
-    var expiryDate by remember { mutableStateOf(TextFieldValue(" ")) }
-    var cvc by remember { mutableStateOf(TextFieldValue(" ")) }
+    var cardHolderName by remember {
+        mutableStateOf(TextFieldValue("", selection = TextRange(0)))
+    }
+    var cardNumber by remember {
+        mutableStateOf(TextFieldValue("", selection = TextRange(0)))
+    }
+    var expiryDate by remember { mutableStateOf(TextFieldValue("", selection = TextRange(0))) }
+    var cvc by remember {  mutableStateOf(TextFieldValue("", selection = TextRange(0))) }
     val scrollState = rememberScrollState()
 
     Column(

@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,9 +31,13 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -46,6 +51,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
@@ -125,6 +132,7 @@ fun CardInputForm(
     var isFormValid by remember {
         mutableStateOf(false)
     }
+    val focusManager = LocalFocusManager.current
 
     LaunchedEffect(isCardNumberValid, isCvvValid, isMonthValid, isYearValid) {
         isFormValid = isCardNumberValid && isCvvValid && isMonthValid && isYearValid
@@ -400,114 +408,91 @@ fun CardInputForm(
     }
 }
 
-
-@OptIn(
-    ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class
-)
 @Composable
 fun CardInputField(
-    modifier: Modifier = Modifier,
-    title: String = stringResource(id = R.string.card_holder),
-    placeholder: String = "Name",
+    title: String,
+    placeholder: String,
     newValue: TextFieldValue,
     inputType: KeyboardType,
     action: ImeAction = ImeAction.Next,
-    onValueChange: (TextFieldValue) -> Unit
+    onValueChange: (TextFieldValue) -> Unit,
+    modifier: Modifier = Modifier,
+    focusRequester: FocusRequester = remember { FocusRequester() }
 ) {
-    val focusRequester = remember { FocusRequester() }
     var isFocused by remember { mutableStateOf(false) }
-    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    val interactionSource = remember { MutableInteractionSource() }
 
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(70.dp)
-            .padding(top = 5.dp)
-            .background(
-                Color(0xFFF1F4F8),
-                shape = RoundedCornerShape(12.dp)
-            )
-            .bringIntoViewRequester(bringIntoViewRequester)
-            .onFocusChanged { focusState ->
-                isFocused = focusState.isFocused
-            }
-    ) {
-        Column(verticalArrangement = Arrangement.Center) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp)
-                    .zIndex(3f)
-                    .background(
-                        Color(Color.White.value.toLong()),
-                        shape = RoundedCornerShape(16.dp)
-                    )
-            ) {
-                Text(
-                    text = title,
-                    color = Color(0xFF8F9BB3),
-                    style = MaterialTheme.typography.labelSmall,
-                    fontSize = 12.sp,
+    Column(modifier = modifier) {
+        // Title
+        Text(
+            text = title,
+            color = Color(0xFF8F9BB3),
+            style = MaterialTheme.typography.labelSmall,
+            fontSize = 12.sp,
+            modifier = Modifier.padding(bottom = 4.dp)
+        )
+
+        // Input container
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp)
+                .background(
+                    color = Color(0xFFF1F4F8),
+                    shape = RoundedCornerShape(8.dp)
                 )
-            }
-            Box(
+                .border(
+                    width = 1.dp,
+                    color = if (isFocused) Color.Blue else Color.Transparent,
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .clickable(
+                    interactionSource = interactionSource,
+                    indication = null
+                ) {
+                    focusRequester.requestFocus()
+                    // Move cursor to end when clicked
+                    if (newValue.text.isNotEmpty()) {
+                        onValueChange(newValue.copy(selection = TextRange(newValue.text.length)))
+                    }
+                }
+        ) {
+            BasicTextField(
+                value = newValue,
+                onValueChange = onValueChange,
+                textStyle = TextStyle(
+                    color = Color.Black,
+                    fontSize = 16.sp
+                ),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = inputType,
+                    imeAction = action
+                ),
+                singleLine = true,
                 modifier = Modifier
-                    .padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
                     .fillMaxWidth()
-                    .background(Color.White, shape = RoundedCornerShape(16.dp))
-            ) {
-                val localFocusManager = LocalFocusManager.current
-
-                TextField(
-                    value = newValue,
-                    onValueChange =
-                    { updated ->
-                        val trimmedText =
-                            if (updated.text.startsWith(" ") && updated.text.length > newValue.text.length) {
-                                updated.text.trimStart()
-
-                            } else {
-                                updated.text
-                            }
-                        if (trimmedText != newValue.text) {
-                            onValueChange(
-                                TextFieldValue(
-                                    text = trimmedText,
-                                    selection = TextRange(trimmedText.length)
-                                )
-                            )
-                        } else {
-                            onValueChange(updated)
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                    .focusRequester(focusRequester)
+                    .onFocusChanged { focusState ->
+                        isFocused = focusState.isFocused
+                        // Ensure cursor at end when focused
+                        if (focusState.isFocused && newValue.text.isNotEmpty()) {
+                            onValueChange(newValue.copy(selection = TextRange(newValue.text.length)))
                         }
                     },
-                    singleLine = true,
-                    textStyle = TextStyle(
-                        fontSize = 14.sp,
-                        color = Color.Black
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color(0xFFF1F4F8))
-                        .padding(horizontal = 4.dp)
-                        .focusRequester(focusRequester)
-                        .onFocusChanged { focusState ->
-                            isFocused = focusState.isFocused
-                        },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = inputType,
-                        imeAction = action
-                    ),
-                    label = { Text(text = newValue.text) },
-                    keyboardActions = KeyboardActions(onDone = { localFocusManager.clearFocus() }),
-                    colors = TextFieldDefaults.textFieldColors(
-                        focusedTextColor = Color.Black,
-                        cursorColor = Color.Black,
-                        containerColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
-                    ),
-                )
+                cursorBrush = SolidColor(Color.Black)
+            )
 
+            // Placeholder
+            if (newValue.text.isEmpty()) {
+                Text(
+                    text = placeholder,
+                    color = Color(0xFF8F9BB3),
+                    fontSize = 16.sp,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp, vertical = 12.dp)
+                        .alpha(0.6f)
+                )
             }
         }
     }
