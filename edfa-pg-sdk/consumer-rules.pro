@@ -14,20 +14,12 @@
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+-keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
-#-renamesourcefileattribute SourceFile
+-renamesourcefileattribute SourceFile
 
-#-keep class com.edfapg.databinding.** {public *;}
-#-keep class com.edfapg.sdk.core.* {public *;}
-#-keep class com.edfapg.sdk.model.** {public *;}
-#-keep class com.edfapg.sdk.model.request.order.EdfaPgSaleOrder.*
-#-keep class com.edfapg.sdk.model.** {public *;}
-#-keep class com.edfapg.sdk.views.** {public *;}
-#-keep class com.edfapg.sdk.feature.adapter.* {public *;}
-#-keep class com.edfapg.sdk.** { *; }
 
 # Keep all classes and members in the main package and subpackages
 -keep class com.edfapg.** {
@@ -37,7 +29,11 @@
 #-keep class com.edfapg.sdk.model.response.sale.** { *; }
 # Gson uses generic type information stored in a class file when working with fields.
 -keepattributes Signature
+-keepattributes *Annotation*
 
 # Gson specific classes
 -keep class com.google.gson.** { *; }
 -keep class com.google.gson.reflect.** { *; }
+-keep class com.google.gson.** { *; }
+-keep class retrofit2.** { *; }
+-dontwarn okhttp3.**
