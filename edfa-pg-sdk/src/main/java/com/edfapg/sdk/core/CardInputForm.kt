@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
@@ -502,19 +503,32 @@ fun CardInputField(
                         .padding(horizontal = 16.dp, vertical = 1.dp)
                         .focusRequester(focusRequester),
                     cursorBrush = SolidColor(Color.Black),
-                    interactionSource = interactionSource
-                )
+                    interactionSource = interactionSource,
+                    decorationBox = { innerTextField ->
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            innerTextField()
 
-                if (newValue.text.isEmpty()) {
-                    Text(
-                        text = placeholder,
-                        color = Color(0xFF8F9BB3), // Changed to visible color
-                        fontSize = 16.sp,
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp, vertical = 12.dp)
-                            .alpha(0.6f)
-                    )
-                }
+                            if (newValue.text.isNotEmpty()) {
+                                Icon(
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = "Clear",
+                                    modifier = Modifier
+                                        .align(Alignment.CenterEnd)
+                                        .clickable {
+                                            onValueChange(TextFieldValue("", TextRange.Zero))
+                                            focusRequester.requestFocus()
+                                        }
+                                        .padding(end = 2.dp)
+                                        .size(20.dp),
+                                    tint = Color(0xFF8F9BB3)
+                                )
+                            }
+                        }
+                    }
+                )
             }
         }
     }
