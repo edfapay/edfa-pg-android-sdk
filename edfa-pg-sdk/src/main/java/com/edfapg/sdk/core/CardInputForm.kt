@@ -132,7 +132,8 @@ fun CardInputForm(
     var isFormValid by remember {
         mutableStateOf(false)
     }
-    val focusManager = LocalFocusManager.current
+
+    val (cardHolderFocus, cardNumberFocus, cvcFocus, expiryDateFocus) = remember { List(4) { FocusRequester() } }
 
     LaunchedEffect(isCardNumberValid, isCvvValid, isMonthValid, isYearValid) {
         isFormValid = isCardNumberValid && isCvvValid && isMonthValid && isYearValid
@@ -154,6 +155,7 @@ fun CardInputForm(
             newValue = cardHolderName,
             inputType = KeyboardType.Text,
             action = ImeAction.Next,
+            focusRequester = cardHolderFocus,
             onValueChange = { newValue ->
                 // Enforce a maximum length of 20 characters
                 val truncatedValue = if (newValue.text.length > 20) {
@@ -179,6 +181,7 @@ fun CardInputForm(
             newValue = cardNumber,
             inputType = KeyboardType.Number,
             action = ImeAction.Next,
+            focusRequester = cardNumberFocus,
             onValueChange = { newValue ->
                 val rawDigits = newValue.text.replace("\\D".toRegex(), "") // Extract only digits
 
@@ -231,23 +234,20 @@ fun CardInputForm(
                 inputType = KeyboardType.Number,
                 action = ImeAction.Next,
                 newValue = cvc,
+                focusRequester = cvcFocus,
                 onValueChange = { newValue ->
                     // Remove all non-digit characters
                     val digitsOnly = newValue.text.replace("\\D".toRegex(), "")
 
-                    // Ensure input is within the max allowed length
-                    if (digitsOnly.length <= Card.CVV_MAX.toInt()) {
-                        val selection = newValue.selection
-
-                        onCvcChange(
-                            TextFieldValue(
-                                text = digitsOnly,
-                                selection = TextRange(selection.start.coerceIn(0, digitsOnly.length))
-                            )
+                    // Always place cursor at end after modification
+                    onCvcChange(
+                        TextFieldValue(
+                            text = digitsOnly.take(Card.CVV_MAX.toInt()),
+                            selection = TextRange(digitsOnly.length.coerceAtMost(Card.CVV_MAX.toInt()))
                         )
+                    )
 
-                        cvv = digitsOnly
-                    }
+                    cvv = digitsOnly.take(Card.CVV_MAX.toInt())
                 }
             )
 
@@ -263,6 +263,7 @@ fun CardInputForm(
                 inputType = KeyboardType.Number,
                 action = ImeAction.Done,
                 newValue = expiryDate,
+                focusRequester = expiryDateFocus,
                 onValueChange = { newValue ->
                     // Remove all non-digit characters
                     val digitsOnly = newValue.text.replace("\\D".toRegex(), "").take(4)
@@ -409,9 +410,7 @@ fun CardInputForm(
 }
 
 
-@OptIn(
-    ExperimentalFoundationApi::class
-)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CardInputField(
     modifier: Modifier = Modifier,
@@ -420,11 +419,12 @@ fun CardInputField(
     newValue: TextFieldValue,
     inputType: KeyboardType,
     action: ImeAction = ImeAction.Next,
-    onValueChange: (TextFieldValue) -> Unit
+    onValueChange: (TextFieldValue) -> Unit,
+    focusRequester: FocusRequester = remember { FocusRequester() }
 ) {
-    val focusRequester = remember { FocusRequester() }
     var isFocused by remember { mutableStateOf(false) }
-    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    val interactionSource = remember { MutableInteractionSource() }
+    val focusManager = LocalFocusManager.current
 
     Box(
         modifier = modifier
@@ -435,19 +435,29 @@ fun CardInputField(
                 Color(0xFFF1F4F8),
                 shape = RoundedCornerShape(12.dp)
             )
-            .bringIntoViewRequester(bringIntoViewRequester)
             .onFocusChanged { focusState ->
+                val gainedFocus = !isFocused && focusState.isFocused
                 isFocused = focusState.isFocused
+
+                if (gainedFocus) {
+                    // Handle both click and programmatic focus
+                    onValueChange(
+                        newValue.copy(
+                            selection = TextRange(newValue.text.length)
+                        )
+                    )
+                }
             }
     ) {
         Column(verticalArrangement = Arrangement.Center) {
+            // Title
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp)
                     .zIndex(3f)
                     .background(
-                        Color(Color.White.value.toLong()),
+                        Color.Transparent,
                         shape = RoundedCornerShape(16.dp)
                     )
             ) {
@@ -458,13 +468,20 @@ fun CardInputField(
                     fontSize = 12.sp,
                 )
             }
+
+            // Input area
             Box(
                 modifier = Modifier
-                    .padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
+                    .padding(horizontal = 10.dp, vertical = 8.dp)
                     .fillMaxWidth()
                     .background(Color.Transparent, shape = RoundedCornerShape(16.dp))
+                    .clickable(
+                        interactionSource = interactionSource,
+                        indication = null
+                    ) {
+                        focusRequester.requestFocus()
+                    }
             ) {
-
                 BasicTextField(
                     value = newValue,
                     onValueChange = onValueChange,
@@ -476,35 +493,30 @@ fun CardInputField(
                         keyboardType = inputType,
                         imeAction = action
                     ),
+                    keyboardActions = KeyboardActions(
+                        onNext = { focusManager.moveFocus(FocusDirection.Next) }
+                    ),
                     singleLine = true,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 1.dp)
-                        .focusRequester(focusRequester)
-                        .onFocusChanged { focusState ->
-                            isFocused = focusState.isFocused
-                            // Ensure cursor at end when focused
-                            if (focusState.isFocused && newValue.text.isNotEmpty()) {
-                                onValueChange(newValue.copy(selection = TextRange(newValue.text.length)))
-                            }
-                        },
-                    cursorBrush = SolidColor(Color.Black)
+                        .focusRequester(focusRequester),
+                    cursorBrush = SolidColor(Color.Black),
+                    interactionSource = interactionSource
                 )
 
                 if (newValue.text.isEmpty()) {
                     Text(
                         text = placeholder,
-                        color = Color.Transparent,
+                        color = Color(0xFF8F9BB3), // Changed to visible color
                         fontSize = 16.sp,
                         modifier = Modifier
                             .padding(horizontal = 16.dp, vertical = 12.dp)
                             .alpha(0.6f)
                     )
                 }
-
             }
         }
     }
-
 }
 
