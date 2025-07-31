@@ -83,8 +83,7 @@ class EdfaPgMainAcitivty : BaseActivity() {
             .setOrder(order)
             .setPayer(payer)
             .setRecurring(true)
-            .setAuth(true)
-            .setDesignType(EdfaPayDesignType.two)
+            .setDesignType(EdfaPayDesignType.one)
             .setLanguage(EdfaPayLanguage.en)
             .onTransactionFailure { res, data ->
                 print("$res $data")
