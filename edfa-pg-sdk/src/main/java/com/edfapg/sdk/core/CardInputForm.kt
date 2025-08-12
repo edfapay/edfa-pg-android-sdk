@@ -1,23 +1,23 @@
-package com.example.paymentgatewaynew.common
+package com.edfapg.sdk.core
 
 import Footer
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.os.Handler
+import android.os.Looper
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.ActivityResultLauncher
-import androidx.annotation.Size
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusable
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
@@ -26,19 +26,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -59,12 +56,8 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyEvent
-import androidx.compose.ui.input.key.KeyEventType
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.onKeyEvent
-import androidx.compose.ui.input.key.type
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
@@ -77,26 +70,15 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import androidx.navigation.NavController
 import com.edfapg.sdk.PaymentActivity
 import com.edfapg.sdk.R
-import com.edfapg.sdk.core.EdfaPgSdk
-import com.edfapg.sdk.core.handleSaleResponse
-import com.edfapg.sdk.model.api.EdfaPgResult
 import com.edfapg.sdk.model.request.card.EdfaPgCard
-import com.edfapg.sdk.model.response.base.error.EdfaPgError
-import com.edfapg.sdk.model.response.sale.EdfaPgSaleCallback
-import com.edfapg.sdk.model.response.sale.EdfaPgSaleResponse
-import com.edfapg.sdk.model.response.sale.EdfaPgSaleResult
 import com.edfapg.sdk.toolbox.EdfaPgUtil
 import com.edfapg.sdk.toolbox.EdfaPgValidation.Card
 import com.edfapg.sdk.views.edfacardpay.CardTransactionData
 import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
-import com.edfapg.sdk.views.edfacardpay.EdfaCardPayFragment
 import com.edfapg.sdk.views.edfacardpay.EdfaPgSaleWebRedirectActivity
-import com.edfapg.sdk.views.edfacardpay.handleSaleResponse
 import kotlinx.coroutines.delay
-import org.junit.runner.manipulation.Ordering.Context
 import java.util.Calendar
 
 
@@ -149,6 +131,10 @@ fun CardInputForm(
             .padding(16.dp)
             .imePadding()
     ) {
+        LaunchedEffect(Unit) {
+            delay(300)  // Small delay to allow composition
+            cardHolderFocus.requestFocus()
+        }
 
         CardInputField(
             title = stringResource(id = R.string.card_holder),
@@ -252,10 +238,6 @@ fun CardInputForm(
                 }
             )
 
-//            if (!isCvvValid) {
-//                Text("Invalid CVV", color = Color.Red)
-//            }
-
             Spacer(modifier = Modifier.width(16.dp))
             CardInputField(
                 modifier = Modifier.weight(1f),
@@ -340,64 +322,63 @@ fun CardInputForm(
 
 
         Spacer(modifier = Modifier.height(26.dp))
-        Button(
-
-            onClick = {
-                val order = xpressCardPay?._order
-                val payer = xpressCardPay?._payer
-                val recurring = xpressCardPay?._recurring
-                isButtonClicked = true
-                if (order != null && payer != null) {
-                    val card =
-                        EdfaPgCard(unformattedNumber, month.toInt(), year.toInt() + 2000, cvv)
-                    PaymentActivity.saleResponse = null
-                    isResponseReceived = false
-
-                    EdfaPgSdk.Adapter.SALE.execute(
-                        order = order,
-                        card = card,
-                        payer = payer,
-                        termUrl3ds = EdfaPgUtil.ProcessCompleteCallbackUrl,
-                        options = recurring,
-                        auth = false,
-                        callback = handleSaleResponse(
-                            CardTransactionData(
-                                order,
-                                payer,
-                                card,
-                                null
-                            ),
-                            { response, cardData ->
-                                PaymentActivity.saleResponse = response
-                                isResponseReceived = true
-                                val intent = EdfaPgSaleWebRedirectActivity.intent(
-                                    context = activity!!,
-                                    cardData
-                                )
-                                sale3dsRedirectLauncher.launch(intent)
-                            },
-                            { error ->
-                                isResponseReceived = true
-                                if (error != null) {
-                                    println("Transaction failed: ${error.message}")
-                                } else {
-                                    println("Transaction was declined.")
-                                }
-                            }
-                        )
-                    )
-                }
-            },
-            enabled = isFormValid && (isResponseReceived || !isButtonClicked),
-
-            modifier = Modifier
-                .height(50.dp)
-                .fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.color_main)),
-            shape = RoundedCornerShape(10.dp),
-        ) {
-            Text(text = stringResource(id = R.string.pay), color = Color.White)
-        }
+//        Button(
+//            onClick = {
+//                val order = xpressCardPay?._order
+//                val payer = xpressCardPay?._payer
+//                val recurring = xpressCardPay?._recurring
+//                isButtonClicked = true
+//                if (order != null && payer != null) {
+//                    val card =
+//                        EdfaPgCard(unformattedNumber, month.toInt(), year.toInt() + 2000, cvv)
+//                    PaymentActivity.saleResponse = null
+//                    isResponseReceived = false
+//
+//                    EdfaPgSdk.Adapter.SALE.execute(
+//                        order = order,
+//                        card = card,
+//                        payer = payer,
+//                        termUrl3ds = EdfaPgUtil.ProcessCompleteCallbackUrl,
+//                        options = recurring,
+//                        auth = false,
+//                        callback = handleSaleResponse(
+//                            CardTransactionData(
+//                                order,
+//                                payer,
+//                                card,
+//                                null
+//                            ),
+//                            { response, cardData ->
+//                                PaymentActivity.saleResponse = response
+//                                isResponseReceived = true
+//                                val intent = EdfaPgSaleWebRedirectActivity.intent(
+//                                    context = activity!!,
+//                                    cardData
+//                                )
+//                                sale3dsRedirectLauncher.launch(intent)
+//                            },
+//                            { error ->
+//                                isResponseReceived = true
+//                                if (error != null) {
+//                                    println("Transaction failed: ${error.message}")
+//                                } else {
+//                                    println("Transaction was declined.")
+//                                }
+//                            }
+//                        )
+//                    )
+//                }
+//            },
+//            enabled = isFormValid && (isResponseReceived || !isButtonClicked),
+//
+//            modifier = Modifier
+//                .height(50.dp)
+//                .fillMaxWidth(),
+//            colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.color_main)),
+//            shape = RoundedCornerShape(10.dp),
+//        ) {
+//            Text(text = stringResource(id = R.string.pay), color = Color.White)
+//        }
 
         Spacer(modifier = Modifier.height(16.dp))
         Box(
@@ -410,8 +391,7 @@ fun CardInputForm(
     }
 }
 
-
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun CardInputField(
     modifier: Modifier = Modifier,
@@ -423,9 +403,13 @@ fun CardInputField(
     onValueChange: (TextFieldValue) -> Unit,
     focusRequester: FocusRequester = remember { FocusRequester() }
 ) {
-    var isFocused by remember { mutableStateOf(false) }
-    val interactionSource = remember { MutableInteractionSource() }
+    val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+
+    var autoKeyboardFailed by remember { mutableStateOf(false) }
+    val handler = remember { Handler(Looper.getMainLooper()) }
 
     Box(
         modifier = modifier
@@ -436,101 +420,109 @@ fun CardInputField(
                 Color(0xFFF1F4F8),
                 shape = RoundedCornerShape(12.dp)
             )
-            .onFocusChanged { focusState ->
-                val gainedFocus = !isFocused && focusState.isFocused
-                isFocused = focusState.isFocused
-
-                if (gainedFocus) {
-                    // Handle both click and programmatic focus
-                    onValueChange(
-                        newValue.copy(
-                            selection = TextRange(newValue.text.length)
-                        )
-                    )
-                }
-            }
     ) {
-        Column(verticalArrangement = Arrangement.Center) {
+        Column(verticalArrangement = Arrangement.spacedBy((-15).dp)) {
             // Title
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp)
-                    .zIndex(3f)
-                    .background(
-                        Color.Transparent,
-                        shape = RoundedCornerShape(16.dp)
-                    )
-            ) {
-                Text(
-                    text = title,
-                    color = Color(0xFF8F9BB3),
-                    style = MaterialTheme.typography.labelSmall,
-                    fontSize = 12.sp,
-                )
-            }
+            Text(
+                text = title,
+                color = Color(0xFF8F9BB3),
+                style = MaterialTheme.typography.labelSmall,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(start = 16.dp),
+            )
 
             // Input area
-            Box(
+            TextField(
+                value = newValue,
+                onValueChange = { newTextValue ->
+                    onValueChange(newTextValue)
+                },
+                textStyle = LocalTextStyle.current.copy(
+                    color = Color.Black,
+                    fontSize = 16.sp
+                ),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = inputType,
+                    imeAction = action
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.moveFocus(FocusDirection.Next) }
+                ),
+                singleLine = true,
+                colors = TextFieldDefaults.colors(
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black,
+                    cursorColor = Color.Black,
+                    focusedPlaceholderColor = Color(0xFF8F9BB3),
+                    unfocusedPlaceholderColor = Color(0xFF8F9BB3),
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                ),
                 modifier = Modifier
-                    .padding(horizontal = 10.dp, vertical = 8.dp)
                     .fillMaxWidth()
-                    .background(Color.Transparent, shape = RoundedCornerShape(16.dp))
-                    .clickable(
-                        interactionSource = interactionSource,
-                        indication = null
-                    ) {
-                        focusRequester.requestFocus()
-                    }
-            ) {
-                BasicTextField(
-                    value = newValue,
-                    onValueChange = onValueChange,
-                    textStyle = TextStyle(
-                        color = Color.Black,
-                        fontSize = 16.sp
-                    ),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = inputType,
-                        imeAction = action
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onNext = { focusManager.moveFocus(FocusDirection.Next) }
-                    ),
-                    singleLine = true,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 1.dp)
-                        .focusRequester(focusRequester),
-                    cursorBrush = SolidColor(Color.Black),
-                    interactionSource = interactionSource,
-                    decorationBox = { innerTextField ->
-                        Box(
-                            modifier = Modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.CenterStart
-                        ) {
-                            innerTextField()
+//                    .padding(horizontal = 6.dp, vertical = 0.dp)
+                    .focusRequester(focusRequester)
+                    .bringIntoViewRequester(bringIntoViewRequester)
+                    .onFocusChanged { focusState ->
+                        if (focusState.isFocused) {
+                            onValueChange(newValue.copy(
+                                selection = TextRange(newValue.text.length)
+                            ))
+                            keyboardController?.show()
 
-                            if (newValue.text.isNotEmpty()) {
-                                Icon(
-                                    imageVector = Icons.Default.Close,
-                                    contentDescription = "Clear",
-                                    modifier = Modifier
-                                        .align(Alignment.CenterEnd)
-                                        .clickable {
-                                            onValueChange(TextFieldValue("", TextRange.Zero))
-                                            focusRequester.requestFocus()
-                                        }
-                                        .padding(end = 2.dp)
-                                        .size(20.dp),
-                                    tint = Color(0xFF8F9BB3)
-                                )
-                            }
+                            handler.postDelayed({
+                                if (!autoKeyboardFailed) {
+                                    autoKeyboardFailed = true
+                                    showKeyboardProgrammatically(context)
+                                }
+                            }, 300)
                         }
                     }
-                )
-            }
+                    .pointerInput(Unit) {
+                        detectTapGestures {
+                            onValueChange(newValue.copy(
+                                selection = TextRange(newValue.text.length)
+                            ))
+                        }
+                    }
+                    .clickable {
+                        focusRequester.requestFocus()
+                        if (autoKeyboardFailed) {
+                            showKeyboardProgrammatically(context)
+                        }
+                    },
+                trailingIcon = {
+                    if (newValue.text.isNotEmpty()) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Clear",
+                            modifier = Modifier
+                                .clickable {
+                                    onValueChange(TextFieldValue("", TextRange.Zero))
+                                    focusRequester.requestFocus()
+                                    if (autoKeyboardFailed) {
+                                        showKeyboardProgrammatically(context)
+                                    }
+                                }
+                                .padding(end = 2.dp)
+                                .size(20.dp),
+                            tint = Color.Black
+//                            Color(0xFF8F9BB3)
+                        )
+                    }
+                }
+            )
         }
     }
 }
 
+// Keyboard function remains the same
+fun showKeyboardProgrammatically(context: Context) {
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+    Handler(Looper.getMainLooper()).postDelayed({
+        imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0)
+    }, 100)
+}

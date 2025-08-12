@@ -19,8 +19,8 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.edfapg.sdk.core.CardInputForm
 import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
-import com.example.paymentgatewaynew.common.CardInputForm
 
 @Composable
 fun Payment1Form(xpressCardPay: EdfaCardPay?,activity: Activity,sale3dsRedirectLauncher: ActivityResultLauncher<Intent>) {
