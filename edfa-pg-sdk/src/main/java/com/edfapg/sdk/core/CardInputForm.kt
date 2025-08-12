@@ -322,63 +322,63 @@ fun CardInputForm(
 
 
         Spacer(modifier = Modifier.height(26.dp))
-//        Button(
-//            onClick = {
-//                val order = xpressCardPay?._order
-//                val payer = xpressCardPay?._payer
-//                val recurring = xpressCardPay?._recurring
-//                isButtonClicked = true
-//                if (order != null && payer != null) {
-//                    val card =
-//                        EdfaPgCard(unformattedNumber, month.toInt(), year.toInt() + 2000, cvv)
-//                    PaymentActivity.saleResponse = null
-//                    isResponseReceived = false
-//
-//                    EdfaPgSdk.Adapter.SALE.execute(
-//                        order = order,
-//                        card = card,
-//                        payer = payer,
-//                        termUrl3ds = EdfaPgUtil.ProcessCompleteCallbackUrl,
-//                        options = recurring,
-//                        auth = false,
-//                        callback = handleSaleResponse(
-//                            CardTransactionData(
-//                                order,
-//                                payer,
-//                                card,
-//                                null
-//                            ),
-//                            { response, cardData ->
-//                                PaymentActivity.saleResponse = response
-//                                isResponseReceived = true
-//                                val intent = EdfaPgSaleWebRedirectActivity.intent(
-//                                    context = activity!!,
-//                                    cardData
-//                                )
-//                                sale3dsRedirectLauncher.launch(intent)
-//                            },
-//                            { error ->
-//                                isResponseReceived = true
-//                                if (error != null) {
-//                                    println("Transaction failed: ${error.message}")
-//                                } else {
-//                                    println("Transaction was declined.")
-//                                }
-//                            }
-//                        )
-//                    )
-//                }
-//            },
-//            enabled = isFormValid && (isResponseReceived || !isButtonClicked),
-//
-//            modifier = Modifier
-//                .height(50.dp)
-//                .fillMaxWidth(),
-//            colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.color_main)),
-//            shape = RoundedCornerShape(10.dp),
-//        ) {
-//            Text(text = stringResource(id = R.string.pay), color = Color.White)
-//        }
+        Button(
+            onClick = {
+                val order = xpressCardPay?._order
+                val payer = xpressCardPay?._payer
+                val recurring = xpressCardPay?._recurring
+                isButtonClicked = true
+                if (order != null && payer != null) {
+                    val card =
+                        EdfaPgCard(unformattedNumber, month.toInt(), year.toInt() + 2000, cvv)
+                    PaymentActivity.saleResponse = null
+                    isResponseReceived = false
+
+                    EdfaPgSdk.Adapter.SALE.execute(
+                        order = order,
+                        card = card,
+                        payer = payer,
+                        termUrl3ds = EdfaPgUtil.ProcessCompleteCallbackUrl,
+                        options = recurring,
+                        auth = false,
+                        callback = handleSaleResponse(
+                            CardTransactionData(
+                                order,
+                                payer,
+                                card,
+                                null
+                            ),
+                            { response, cardData ->
+                                PaymentActivity.saleResponse = response
+                                isResponseReceived = true
+                                val intent = EdfaPgSaleWebRedirectActivity.intent(
+                                    context = activity!!,
+                                    cardData
+                                )
+                                sale3dsRedirectLauncher.launch(intent)
+                            },
+                            { error ->
+                                isResponseReceived = true
+                                if (error != null) {
+                                    println("Transaction failed: ${error.message}")
+                                } else {
+                                    println("Transaction was declined.")
+                                }
+                            }
+                        )
+                    )
+                }
+            },
+            enabled = isFormValid && (isResponseReceived || !isButtonClicked),
+
+            modifier = Modifier
+                .height(50.dp)
+                .fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.color_main)),
+            shape = RoundedCornerShape(10.dp),
+        ) {
+            Text(text = stringResource(id = R.string.pay), color = Color.White)
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
         Box(
