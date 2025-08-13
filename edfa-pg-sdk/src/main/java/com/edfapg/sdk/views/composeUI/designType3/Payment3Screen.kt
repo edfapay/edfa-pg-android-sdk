@@ -1,4 +1,3 @@
-package com.example.paymentgatewaynew.payment3
 
 import android.app.Activity
 import android.content.Intent
@@ -25,9 +24,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.navigation.NavController
+import com.edfapg.sdk.core.CardInputForm
 import com.edfapg.sdk.utils.MyAppTheme
 import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
-import com.example.paymentgatewaynew.common.CardInputForm
+import com.example.paymentgatewaynew.payment3.Card3UI
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
