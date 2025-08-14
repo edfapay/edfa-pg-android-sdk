@@ -143,7 +143,7 @@ class CreditCardView : LinearLayout {
     /**
      * Hint of the [number]'s EditText
      */
-    var numberHint: String
+    var numberHint: String = ""
         set(value) {
             binding.cardNumber.hint = value
             field = value
@@ -152,7 +152,7 @@ class CreditCardView : LinearLayout {
     /**
      * Size of the [number]'s text, in SP
      */
-    var numberSize: Float
+    var numberSize: Float = 0f
         set(value) {
             setNumberSize(TypedValue.COMPLEX_UNIT_SP, value)
             field = value
@@ -161,7 +161,7 @@ class CreditCardView : LinearLayout {
     /**
      * [number]'s error
      */
-    var numberError: String
+    var numberError: String = ""
         set(value) {
             binding.cardNumberError.text = value
             field = value
@@ -182,7 +182,7 @@ class CreditCardView : LinearLayout {
     /**
      * Hint of the [holder]'s EditText
      */
-    var holderHint: String
+    var holderHint: String = ""
         set(value) {
             binding.cardHolder.hint = value
             field = value
@@ -191,7 +191,7 @@ class CreditCardView : LinearLayout {
     /**
      * [holder]'s error
      */
-    var holderError: String?
+    var holderError: String? = ""
         set(value) {
             binding.cardHolderError.text = value
             field = value
@@ -200,7 +200,7 @@ class CreditCardView : LinearLayout {
     /**
      * [holder]'s label
      */
-    var holderLabel: String?
+    var holderLabel: String? = ""
         set(value) {
             binding.cardHolderLabel.text = value
             field = value
@@ -235,7 +235,7 @@ class CreditCardView : LinearLayout {
      * Whether or not the "/" should be added to the expiry,
      * if you turn this off you'll have to set it by yourself
      */
-    var formatExpiry: Boolean
+    var formatExpiry: Boolean = false
         set(value) {
             field = value
             expiry = expiry
@@ -244,7 +244,7 @@ class CreditCardView : LinearLayout {
     /**
      * Hint of the [cvv]'s EditText
      */
-    var cvvHint: String
+    var cvvHint: String = ""
         set(value) {
             binding.cardCvv.hint = value
             field = value
@@ -253,7 +253,7 @@ class CreditCardView : LinearLayout {
     /**
      * [cvv]'s label
      */
-    var cvvError: String
+    var cvvError: String = ""
         set(value) {
             binding.cardCvvError.text = value
             field = value
@@ -262,7 +262,7 @@ class CreditCardView : LinearLayout {
     /**
      * Size of the [cvv]'s text, in SP
      */
-    var cvvSize: Float
+    var cvvSize: Float = 0f
         set(value) {
             binding.cardCvv.setTextSize(TypedValue.COMPLEX_UNIT_SP, value)
 
@@ -273,7 +273,7 @@ class CreditCardView : LinearLayout {
      * Color of the [cvv]'s text
      */
     @ColorInt
-    var cvvTextColor: Int
+    var cvvTextColor: Int = 0
         set(value) {
             binding.cardCvv.setTextColor(value)
             field = value
@@ -304,7 +304,7 @@ class CreditCardView : LinearLayout {
     /**
      * Hint of the [expiry]'s EditText
      */
-    var expiryHint: String
+    var expiryHint: String = ""
         set(value) {
             binding.cardExpiry.hint = value
             field = value
@@ -313,7 +313,7 @@ class CreditCardView : LinearLayout {
     /**
      * [expiry]'s error
      */
-    var expiryError: String
+    var expiryError: String = ""
         set(value) {
             binding.cardExpiryError.text = value
             field = value
@@ -322,7 +322,7 @@ class CreditCardView : LinearLayout {
     /**
      * [expiry]'s label
      */
-    var expiryLabel: String?
+    var expiryLabel: String? = ""
         set(value) {
             binding.cardExpiryLabel.text = value
             field = value
@@ -343,7 +343,7 @@ class CreditCardView : LinearLayout {
      *
      * This value can be set to null to disable the formatter
      */
-    var numberFormat: NumberFormat?
+    var numberFormat: NumberFormat? = null
         set(value) {
             field = value
             number = number
@@ -358,7 +358,7 @@ class CreditCardView : LinearLayout {
      * By default there's no filler set, if you need to remove all fillers either
      * clear the list or set this property to null
      */
-    var cvvFillers: List<Filler>?
+    var cvvFillers: List<Filler>? = null
         set(value) {
             val list = value?.toMutableList()
 
@@ -380,7 +380,7 @@ class CreditCardView : LinearLayout {
      * By default there's no filler set, if you need to remove all fillers either
      * clear the list or set this property to null
      */
-    var numberFillers: List<Filler>?
+    var numberFillers: List<Filler>? = null
         set(value) {
             val list = value?.toMutableList()
 
@@ -397,7 +397,7 @@ class CreditCardView : LinearLayout {
      * Color for all texts that are not labels or errors
      */
     @ColorInt
-    var textColor: Int
+    var textColor: Int = 0
         set(value) {
             binding.cardNumber.setTextColor(value)
             binding.cardHolder.setTextColor(value)
@@ -411,7 +411,7 @@ class CreditCardView : LinearLayout {
      * Color for all labels
      */
     @ColorInt
-    var labelColor: Int
+    var labelColor: Int = 0
         set(value) {
             binding.cardHolderLabel.setTextColor(value)
             binding.cardExpiryLabel.setTextColor(value)
@@ -423,7 +423,7 @@ class CreditCardView : LinearLayout {
      * Color for all errors
      */
     @ColorInt
-    var errorColor: Int
+    var errorColor: Int = 0
         set(value) {
             binding.cardNumberError.setTextColor(value)
             binding.cardHolderError.setTextColor(value)
@@ -437,7 +437,7 @@ class CreditCardView : LinearLayout {
      * Color for all text hints
      */
     @ColorInt
-    var hintColor: Int
+    var hintColor: Int = 0
         set(value) {
             binding.cardNumber.setHintTextColor(value)
             binding.cardHolder.setHintTextColor(value)
@@ -450,7 +450,7 @@ class CreditCardView : LinearLayout {
     /**
      * Size of all errors, in SP
      */
-    var errorSize: Float
+    var errorSize: Float = 0f
         set(value) {
             binding.cardNumberError.setTextSize(TypedValue.COMPLEX_UNIT_SP, value)
             binding.cardHolderError.setTextSize(TypedValue.COMPLEX_UNIT_SP, value)
@@ -463,7 +463,7 @@ class CreditCardView : LinearLayout {
     /**
      * Size of all labels, in SP
      */
-    var labelSize: Float
+    var labelSize: Float = 0f
         set(value) {
             binding.cardHolderLabel.setTextSize(TypedValue.COMPLEX_UNIT_SP, value)
             binding.cardExpiryLabel.setTextSize(TypedValue.COMPLEX_UNIT_SP, value)
@@ -474,7 +474,7 @@ class CreditCardView : LinearLayout {
     /**
      * Size of all texts, in SP
      */
-    var textSize: Float
+    var textSize: Float = 0f
         set(value) {
             binding.cardNumberError.setTextSize(TypedValue.COMPLEX_UNIT_SP, value)
             binding.cardHolderError.setTextSize(TypedValue.COMPLEX_UNIT_SP, value)

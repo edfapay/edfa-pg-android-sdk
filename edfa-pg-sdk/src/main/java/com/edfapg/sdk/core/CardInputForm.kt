@@ -132,7 +132,7 @@ fun CardInputForm(
             .imePadding()
     ) {
         LaunchedEffect(Unit) {
-            delay(300)  // Small delay to allow composition
+//            delay(300)  // Small delay to allow composition
             cardHolderFocus.requestFocus()
         }
 
@@ -391,7 +391,6 @@ fun CardInputForm(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun CardInputField(
     modifier: Modifier = Modifier,
@@ -403,13 +402,8 @@ fun CardInputField(
     onValueChange: (TextFieldValue) -> Unit,
     focusRequester: FocusRequester = remember { FocusRequester() }
 ) {
-    val context = LocalContext.current
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val focusManager = LocalFocusManager.current
-    val bringIntoViewRequester = remember { BringIntoViewRequester() }
 
-    var autoKeyboardFailed by remember { mutableStateOf(false) }
-    val handler = remember { Handler(Looper.getMainLooper()) }
+    val focusManager = LocalFocusManager.current
 
     Box(
         modifier = modifier
@@ -462,22 +456,12 @@ fun CardInputField(
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-//                    .padding(horizontal = 6.dp, vertical = 0.dp)
                     .focusRequester(focusRequester)
-                    .bringIntoViewRequester(bringIntoViewRequester)
                     .onFocusChanged { focusState ->
                         if (focusState.isFocused) {
                             onValueChange(newValue.copy(
                                 selection = TextRange(newValue.text.length)
                             ))
-                            keyboardController?.show()
-
-                            handler.postDelayed({
-                                if (!autoKeyboardFailed) {
-                                    autoKeyboardFailed = true
-                                    showKeyboardProgrammatically(context)
-                                }
-                            }, 300)
                         }
                     }
                     .pointerInput(Unit) {
@@ -485,12 +469,6 @@ fun CardInputField(
                             onValueChange(newValue.copy(
                                 selection = TextRange(newValue.text.length)
                             ))
-                        }
-                    }
-                    .clickable {
-                        focusRequester.requestFocus()
-                        if (autoKeyboardFailed) {
-                            showKeyboardProgrammatically(context)
                         }
                     },
                 trailingIcon = {
@@ -501,28 +479,14 @@ fun CardInputField(
                             modifier = Modifier
                                 .clickable {
                                     onValueChange(TextFieldValue("", TextRange.Zero))
-                                    focusRequester.requestFocus()
-                                    if (autoKeyboardFailed) {
-                                        showKeyboardProgrammatically(context)
-                                    }
                                 }
                                 .padding(end = 2.dp)
                                 .size(20.dp),
                             tint = Color.Black
-//                            Color(0xFF8F9BB3)
                         )
                     }
                 }
             )
         }
     }
-}
-
-// Keyboard function remains the same
-fun showKeyboardProgrammatically(context: Context) {
-    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
-    Handler(Looper.getMainLooper()).postDelayed({
-        imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0)
-    }, 100)
 }

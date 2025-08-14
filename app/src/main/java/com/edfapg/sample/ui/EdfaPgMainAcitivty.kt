@@ -83,7 +83,7 @@ class EdfaPgMainAcitivty : BaseActivity() {
             .setOrder(order)
             .setPayer(payer)
             .setRecurring(true)
-            .setDesignType(EdfaPayDesignType.one)
+            .setDesignType(EdfaPayDesignType.three)
             .setLanguage(EdfaPayLanguage.en)
             .onTransactionFailure { res, data ->
                 print("$res $data")
