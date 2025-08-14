@@ -19,7 +19,7 @@ open class CreditCard : Cloneable {
     /**
      * Digits on the front of the credit card
      */
-    var number: String
+    var number: String = ""
         set(value) {
             field = value
 
