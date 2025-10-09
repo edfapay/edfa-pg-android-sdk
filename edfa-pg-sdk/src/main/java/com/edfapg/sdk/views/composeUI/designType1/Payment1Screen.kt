@@ -63,10 +63,8 @@ fun Payment1Screen(
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (bottomSheetVisible) {
-                    // First press: Close the bottom sheet
                     bottomSheetVisible = false
                 } else {
-                    // If the bottom sheet is already closed, finish the activity
                     (context as? Activity)?.finish()
                 }
             }
@@ -95,7 +93,7 @@ fun Payment1Screen(
             onDismissRequest = { bottomSheetVisible = false },
         ) {
             val config = LocalConfiguration.current
-            val halfHeight = (config.screenHeightDp * 0.7f).dp
+            val halfHeight = (config.screenHeightDp * 0.8f).dp
             xpressCardPay?._order?.let {
                 val amount = it.formattedAmount()
                 val currency = it.formattedCurrency()

@@ -101,7 +101,7 @@ fun Payment2Screen(navController: NavController,xpressCardPay: EdfaCardPay?,acti
            }
         ) {
             val config = LocalConfiguration.current
-            val halfHeight = (config.screenHeightDp * 0.7f).dp
+            val halfHeight = (config.screenHeightDp * 0.8f).dp
             Box(Modifier
                 .heightIn(max = halfHeight)) {
                 CardEntryForm(navController, xpressCardPay, activity, sale3dsRedirectLauncher)

@@ -95,7 +95,7 @@ fun Payment3Screen(
 
             MyAppTheme {
                 val config = LocalConfiguration.current
-                val halfHeight = (config.screenHeightDp * 0.7f).dp
+                val halfHeight = (config.screenHeightDp * 0.9f).dp
                 Column(modifier = Modifier.verticalScroll(scrollState)
                     .heightIn(max = halfHeight)
                 ) {
