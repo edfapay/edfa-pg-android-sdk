@@ -56,7 +56,7 @@ object EdfaPgHashUtil {
                 .plus(clientPass)
                 .plus(transactionId.orEmpty())
                 .plus(cardNumberHash)
-                .toUpperCase(Locale.ROOT)
+                .uppercase(Locale.ROOT)
         )
     }
 

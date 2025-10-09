@@ -65,7 +65,7 @@ class PaymentActivity : ComponentActivity() {
             val navController = rememberNavController()
 
             if (design != null) {
-                when (design.toLowerCase()) {
+                when (design.lowercase(Locale.getDefault())) {
                     EdfaPayDesignType.one.value -> if (!isAlreadyShown) {
                         isAlreadyShown = true
                         Payment1Screen(

@@ -4,7 +4,7 @@
 
 package com.edfapg.sdk.feature.adapter
 
-import androidx.viewbinding.BuildConfig
+import com.edfapg.sdk.BuildConfig
 import com.edfapg.sdk.core.ENABLE_DEBUG
 import com.edfapg.sdk.core.EdfaPgCredential
 import com.edfapg.sdk.model.response.base.EdfaPgResponse
