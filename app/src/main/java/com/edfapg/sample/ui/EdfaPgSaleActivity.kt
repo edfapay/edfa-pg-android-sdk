@@ -8,7 +8,6 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
 import com.edfapg.sample.R
 import com.edfapg.sample.app.EdfaPgTransactionStorage
@@ -24,9 +23,10 @@ import com.edfapg.sdk.model.response.base.error.EdfaPgError
 import com.edfapg.sdk.model.response.sale.EdfaPgSaleCallback
 import com.edfapg.sdk.model.response.sale.EdfaPgSaleResponse
 import com.edfapg.sdk.model.response.sale.EdfaPgSaleResult
-import io.kimo.lib.faker.Faker
 import java.text.DecimalFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Random
+import java.util.UUID
 
 class EdfaPgSaleActivity : BaseActivity(R.layout.activity_sale) {
 
@@ -83,17 +83,17 @@ class EdfaPgSaleActivity : BaseActivity(R.layout.activity_sale) {
     private fun randomize(isAll: Boolean) {
         binding.etxtOrderId.setText(UUID.randomUUID().toString())
         binding.etxtOrderAmount.setText(DecimalFormat("#.##").format(random.nextDouble() * 10_000).replace(",", "."))
-        binding.etxtOrderDescription.setText(Faker.Lorem.sentences())
+//        binding.etxtOrderDescription.setText(Faker.Lorem.sentences())
         binding.etxtOrderCurrencyCode.setText("SAR")
 
-        binding.etxtPayerFirstName.setText(Faker.Name.firstName())
-        binding.etxtPayerLastName.setText(Faker.Name.lastName())
-        binding.etxtPayerAddress.setText(Faker.Address.secondaryAddress())
-        binding.etxtPayerCountryCode.setText(Faker.Address.countryAbbreviation())
-        binding.etxtPayerCity.setText(Faker.Address.city())
-        binding.etxtPayerZip.setText(Faker.Address.zipCode())
-        binding.etxtPayerEmail.setText(Faker.Internet.email())
-        binding.etxtPayerPhone.setText(Faker.Phone.phoneWithAreaCode())
+//        binding.etxtPayerFirstName.setText(Faker.Name.firstName())
+//        binding.etxtPayerLastName.setText(Faker.Name.lastName())
+//        binding.etxtPayerAddress.setText(Faker.Address.secondaryAddress())
+//        binding.etxtPayerCountryCode.setText(Faker.Address.countryAbbreviation())
+//        binding.etxtPayerCity.setText(Faker.Address.city())
+//        binding.etxtPayerZip.setText(Faker.Address.zipCode())
+//        binding.etxtPayerEmail.setText(Faker.Internet.email())
+//        binding.etxtPayerPhone.setText(Faker.Phone.phoneWithAreaCode())
         binding.etxtPayerIpAddress.setText(
             "${random.nextInt(256)}.${random.nextInt(256)}.${random.nextInt(256)}.${random.nextInt(
                 256
@@ -104,9 +104,9 @@ class EdfaPgSaleActivity : BaseActivity(R.layout.activity_sale) {
         binding.txtResponse.text = ""
 
         if (isAll) {
-            binding.etxtPayerMiddleName.setText(Faker.Name.lastName())
-            binding.etxtPayerAddress2.setText(Faker.Address.streetWithNumber())
-            binding.etxtPayerState.setText(Faker.Address.state())
+//            binding.etxtPayerMiddleName.setText(Faker.Name.lastName())
+//            binding.etxtPayerAddress2.setText(Faker.Address.streetWithNumber())
+//            binding.etxtPayerState.setText(Faker.Address.state())
 
             payerBirthdate?.set(1000 + random.nextInt(2000), random.nextInt(12), random.nextInt(31))
             binding.etxtPayerBirthdate.setText(payerBirthdate?.time.toString())
