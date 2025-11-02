@@ -17,12 +17,12 @@ ext {
 
 android {
     namespace 'com.edfapg.sdk'
-    compileSdk 34
+    compileSdk 36
 
     defaultConfig {
 //        applicationId "com.edfapg.sdk"
         minSdk 21
-        targetSdk 34
+        targetSdk 36
         consumerProguardFiles 'consumer-rules.pro'
         aarMetadata {
             minCompileSdk = 16
@@ -48,8 +48,6 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-        // Enable desugaring
-        coreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = '1.8'
@@ -80,7 +78,6 @@ dependencies {
     implementation 'androidx.test.ext:junit-ktx:1.1.5'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'junit:junit:4.13.2'
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
 
     implementation("androidx.compose.ui:ui:1.3.2") // Compatible Jetpack Compose 1.3.x
     implementation("androidx.compose.ui:ui-tooling-preview:1.3.2")
@@ -107,6 +104,52 @@ dependencies {
 }
 
 afterEvaluate {
+    project.rootProject.subprojects.findAll { it.plugins.hasPlugin("com.android.application") }.each { appModule ->
+        def androidExt = appModule.extensions.findByName("android")
+        if (androidExt != null) {
+            def minSdk = androidExt.defaultConfig.minSdkVersion.apiLevel
+
+            // Only enable desugaring if needed
+            if (minSdk < 26 || minSdk >= 26) {
+                def compileOptions = androidExt.compileOptions
+
+                // Enable only if not already true
+                if (!compileOptions.coreLibraryDesugaringEnabled) {
+                    appModule.logger.lifecycle("🔧 Enabling core library desugaring for ${appModule.name} (minSdk=$minSdk)")
+                    compileOptions.coreLibraryDesugaringEnabled true
+                }
+
+                // Add dependency only if not already added
+                def hasDesugarDep = appModule.configurations.findByName("coreLibraryDesugaring")
+                        ?.dependencies
+                        ?.any { it.group == "com.android.tools" && it.name == "desugar_jdk_libs" } ?: false
+
+                if (!hasDesugarDep) {
+                    appModule.logger.lifecycle("🔧 Adding desugar_jdk_libs dependency for ${appModule.name}")
+                    appModule.dependencies.add("coreLibraryDesugaring", "com.android.tools:desugar_jdk_libs:2.0.4")
+                }
+            } else {
+                appModule.logger.lifecycle("✅ ${appModule.name} has minSdk=$minSdk, desugaring not needed, if still warn by gradle you can add manually as below")
+                appModule.logger.lifecycle("""
+    android {
+         ...
+         compileOptions {
+             isCoreLibraryDesugaringEnabled = true // For .gradle.kts
+             coreLibraryDesugaringEnabled = true // For .gradle
+         }
+         ...
+    }
+""")
+
+                appModule.logger.lifecycle("""
+    dependencies {
+        coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
+    }
+""")
+            }
+        }
+    }
+
     publishing {
         publications {
             maven(MavenPublication) {
