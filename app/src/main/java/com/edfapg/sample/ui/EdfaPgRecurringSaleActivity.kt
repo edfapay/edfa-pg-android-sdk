@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import com.edfapg.sample.R
 import com.edfapg.sample.app.EdfaPgTransactionStorage
@@ -22,9 +21,9 @@ import com.edfapg.sdk.model.response.base.error.EdfaPgError
 import com.edfapg.sdk.model.response.sale.EdfaPgSaleCallback
 import com.edfapg.sdk.model.response.sale.EdfaPgSaleResponse
 import com.edfapg.sdk.model.response.sale.EdfaPgSaleResult
-import io.kimo.lib.faker.Faker
 import java.text.DecimalFormat
-import java.util.*
+import java.util.Random
+import java.util.UUID
 
 class EdfaPgRecurringSaleActivity : BaseActivity(R.layout.activity_recurring_sale) {
 
@@ -136,7 +135,7 @@ class EdfaPgRecurringSaleActivity : BaseActivity(R.layout.activity_recurring_sal
     private fun randomize() {
         binding.etxtOrderId.setText(UUID.randomUUID().toString())
         binding.etxtOrderAmount.setText(DecimalFormat("#.##").format(random.nextDouble() * 10_000))
-        binding.etxtOrderDescription.setText(Faker.Lorem.sentences())
+//        binding.etxtOrderDescription.setText(Faker.Lorem.sentences())
 
         binding.txtResponse.text = ""
     }

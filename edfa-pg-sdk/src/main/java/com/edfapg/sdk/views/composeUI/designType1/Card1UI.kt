@@ -57,7 +57,7 @@ fun Card1UI(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 20.dp, end = 20.dp)
+            .padding(start = 16.dp, end = 16.dp)
             .height(200.dp)
             .heightIn(max = Dp.Unspecified, min = 100.dp)
             .background(

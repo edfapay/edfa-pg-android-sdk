@@ -4,7 +4,7 @@
 
 package com.edfapg.sdk.feature.adapter
 
-import androidx.viewbinding.BuildConfig
+import com.edfapg.sdk.BuildConfig
 import com.edfapg.sdk.core.ENABLE_DEBUG
 import com.edfapg.sdk.core.EdfaPgCredential
 import com.edfapg.sdk.model.response.base.EdfaPgResponse
@@ -20,6 +20,7 @@ import retrofit2.Callback
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import kotlin.Exception
 
 /**
@@ -51,6 +52,14 @@ abstract class EdfaPgBaseAdapter<Service> {
 
     init {
         val okHttpClientBuilder = OkHttpClient.Builder()
+
+        okHttpClientBuilder
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+
+
+
         if (BuildConfig.DEBUG || ENABLE_DEBUG) {
             val httpLoggingInterceptor = HttpLoggingInterceptor()
             httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)

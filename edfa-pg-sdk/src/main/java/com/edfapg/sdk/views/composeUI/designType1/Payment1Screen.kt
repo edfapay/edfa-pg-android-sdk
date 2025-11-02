@@ -13,6 +13,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.Typography
@@ -20,6 +21,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -61,10 +63,8 @@ fun Payment1Screen(
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (bottomSheetVisible) {
-                    // First press: Close the bottom sheet
                     bottomSheetVisible = false
                 } else {
-                    // If the bottom sheet is already closed, finish the activity
                     (context as? Activity)?.finish()
                 }
             }
@@ -84,29 +84,27 @@ fun Payment1Screen(
             bottomSheetState.hide()
         }
     }
-
-
-    // Show the ModalBottomSheet when visible
     if (bottomSheetVisible) {
         ModalBottomSheet(
-            modifier = Modifier.fillMaxHeight(0.9f),
+            modifier = Modifier
+                .imePadding(),
             sheetState = bottomSheetState,
             containerColor = Color.White,
-
-            onDismissRequest = { bottomSheetVisible = false } // Hide the sheet when dismissed
+            onDismissRequest = { bottomSheetVisible = false },
         ) {
+            val config = LocalConfiguration.current
+            val halfHeight = (config.screenHeightDp * 0.8f).dp
             xpressCardPay?._order?.let {
-                val amount = it.formattedAmount() // Get formatted amount from order
-                val currency = it.formattedCurrency() // Get formatted currency from order
+                val amount = it.formattedAmount()
+                val currency = it.formattedCurrency()
                 MyAppTheme {
-                    val scrollState = rememberScrollState()
-
-                    Column {
+                    Column(Modifier
+                        .heightIn(max = halfHeight)) {
                         Box {
                             TitleAmount(
                                 amount = amount,
                                 currency = currency
-                            )  // Pass data to TitleAmount
+                            )
                         }
                         Payment1Form(
                             xpressCardPay = xpressCardPay,

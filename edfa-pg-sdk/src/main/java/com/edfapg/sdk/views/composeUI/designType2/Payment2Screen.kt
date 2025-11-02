@@ -1,4 +1,3 @@
-package com.example.paymentgatewaynew.payment2
 
 import android.app.Activity
 import android.content.Intent
@@ -14,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -32,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -42,10 +43,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.edfapg.sdk.R
+import com.edfapg.sdk.core.CardInputForm
 import com.edfapg.sdk.utils.MyAppTheme
 import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
-import com.example.paymentgatewaynew.common.CardInputForm
-import com.example.paymentgatewaynew.payment1.Payment1Form
+import com.example.paymentgatewaynew.payment2.Card2Form
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -95,12 +96,16 @@ fun Payment2Screen(navController: NavController,xpressCardPay: EdfaCardPay?,acti
     if (bottomSheetVisible) {
         ModalBottomSheet(
             sheetState = bottomSheetState,
-            modifier = Modifier.fillMaxHeight(0.9f),
             containerColor = Color.White,
             onDismissRequest = { bottomSheetVisible = false
            }
         ) {
-            CardEntryForm(navController, xpressCardPay, activity, sale3dsRedirectLauncher)
+            val config = LocalConfiguration.current
+            val halfHeight = (config.screenHeightDp * 0.8f).dp
+            Box(Modifier
+                .heightIn(max = halfHeight)) {
+                CardEntryForm(navController, xpressCardPay, activity, sale3dsRedirectLauncher)
+            }
         }
     }else{
         LaunchedEffect(Unit) {
@@ -136,10 +141,10 @@ fun TitleAmount(amount:String,currency:String) {
 
 @Composable
 fun CardEntryForm(navController:NavController,xpressCardPay: EdfaCardPay?,activity: Activity,sale3dsRedirectLauncher: ActivityResultLauncher<Intent>) {
-    var cardNumber by remember { mutableStateOf(TextFieldValue(" ")) }
-    var cardHolderName by remember { mutableStateOf(TextFieldValue(" ")) }
-    var expiryDate by remember { mutableStateOf(TextFieldValue(" ")) }
-    var cvc by remember { mutableStateOf(TextFieldValue(" ")) }
+    var cardNumber by remember { mutableStateOf(TextFieldValue("")) }
+    var cardHolderName by remember { mutableStateOf(TextFieldValue("")) }
+    var expiryDate by remember { mutableStateOf(TextFieldValue("")) }
+    var cvc by remember { mutableStateOf(TextFieldValue("")) }
     val scrollState = rememberScrollState()
 
     MyAppTheme {

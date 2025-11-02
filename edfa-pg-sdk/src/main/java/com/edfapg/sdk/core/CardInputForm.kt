@@ -1,39 +1,45 @@
-package com.example.paymentgatewaynew.common
+package com.edfapg.sdk.core
 
 import Footer
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.os.Handler
+import android.os.Looper
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.ActivityResultLauncher
-import androidx.annotation.Size
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -43,17 +49,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyEvent
-import androidx.compose.ui.input.key.KeyEventType
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.onKeyEvent
-import androidx.compose.ui.input.key.type
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
@@ -66,26 +70,15 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import androidx.navigation.NavController
 import com.edfapg.sdk.PaymentActivity
 import com.edfapg.sdk.R
-import com.edfapg.sdk.core.EdfaPgSdk
-import com.edfapg.sdk.core.handleSaleResponse
-import com.edfapg.sdk.model.api.EdfaPgResult
 import com.edfapg.sdk.model.request.card.EdfaPgCard
-import com.edfapg.sdk.model.response.base.error.EdfaPgError
-import com.edfapg.sdk.model.response.sale.EdfaPgSaleCallback
-import com.edfapg.sdk.model.response.sale.EdfaPgSaleResponse
-import com.edfapg.sdk.model.response.sale.EdfaPgSaleResult
 import com.edfapg.sdk.toolbox.EdfaPgUtil
 import com.edfapg.sdk.toolbox.EdfaPgValidation.Card
 import com.edfapg.sdk.views.edfacardpay.CardTransactionData
 import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
-import com.edfapg.sdk.views.edfacardpay.EdfaCardPayFragment
 import com.edfapg.sdk.views.edfacardpay.EdfaPgSaleWebRedirectActivity
-import com.edfapg.sdk.views.edfacardpay.handleSaleResponse
 import kotlinx.coroutines.delay
-import org.junit.runner.manipulation.Ordering.Context
 import java.util.Calendar
 
 
@@ -123,6 +116,8 @@ fun CardInputForm(
         mutableStateOf(false)
     }
 
+    val (cardHolderFocus, cardNumberFocus, cvcFocus, expiryDateFocus) = remember { List(4) { FocusRequester() } }
+
     LaunchedEffect(isCardNumberValid, isCvvValid, isMonthValid, isYearValid) {
         isFormValid = isCardNumberValid && isCvvValid && isMonthValid && isYearValid
         println("isFormValid: $isFormValid isCardNumberValid: $isCardNumberValid isCvvValid: $isCvvValid isMonthValid: $isMonthValid isYearValid: $isYearValid")
@@ -136,13 +131,18 @@ fun CardInputForm(
             .padding(16.dp)
             .imePadding()
     ) {
+        LaunchedEffect(Unit) {
+//            delay(300)  // Small delay to allow composition
+            cardHolderFocus.requestFocus()
+        }
 
         CardInputField(
             title = stringResource(id = R.string.card_holder),
             placeholder = "Name",
-            value = cardHolderName,
+            newValue = cardHolderName,
             inputType = KeyboardType.Text,
             action = ImeAction.Next,
+            focusRequester = cardHolderFocus,
             onValueChange = { newValue ->
                 // Enforce a maximum length of 20 characters
                 val truncatedValue = if (newValue.text.length > 20) {
@@ -165,9 +165,10 @@ fun CardInputForm(
         CardInputField(
             title = stringResource(id = R.string.card_number),
             placeholder = "**** **** **** ****",
-            value = cardNumber,
+            newValue = cardNumber,
             inputType = KeyboardType.Number,
             action = ImeAction.Next,
+            focusRequester = cardNumberFocus,
             onValueChange = { newValue ->
                 val rawDigits = newValue.text.replace("\\D".toRegex(), "") // Extract only digits
 
@@ -219,30 +220,23 @@ fun CardInputForm(
                 placeholder = "000",
                 inputType = KeyboardType.Number,
                 action = ImeAction.Next,
-                value = cvc,
+                newValue = cvc,
+                focusRequester = cvcFocus,
                 onValueChange = { newValue ->
                     // Remove all non-digit characters
                     val digitsOnly = newValue.text.replace("\\D".toRegex(), "")
 
-                    // Ensure input is within the max allowed length
-                    if (digitsOnly.length <= Card.CVV_MAX.toInt()) {
-                        val selection = newValue.selection
-
-                        onCvcChange(
-                            TextFieldValue(
-                                text = digitsOnly,
-                                selection = TextRange(selection.start.coerceIn(0, digitsOnly.length))
-                            )
+                    // Always place cursor at end after modification
+                    onCvcChange(
+                        TextFieldValue(
+                            text = digitsOnly.take(Card.CVV_MAX.toInt()),
+                            selection = TextRange(digitsOnly.length.coerceAtMost(Card.CVV_MAX.toInt()))
                         )
+                    )
 
-                        cvv = digitsOnly
-                    }
+                    cvv = digitsOnly.take(Card.CVV_MAX.toInt())
                 }
             )
-
-//            if (!isCvvValid) {
-//                Text("Invalid CVV", color = Color.Red)
-//            }
 
             Spacer(modifier = Modifier.width(16.dp))
             CardInputField(
@@ -251,7 +245,8 @@ fun CardInputForm(
                 placeholder = "MM/YY",
                 inputType = KeyboardType.Number,
                 action = ImeAction.Done,
-                value = expiryDate,
+                newValue = expiryDate,
+                focusRequester = expiryDateFocus,
                 onValueChange = { newValue ->
                     // Remove all non-digit characters
                     val digitsOnly = newValue.text.replace("\\D".toRegex(), "").take(4)
@@ -328,7 +323,6 @@ fun CardInputForm(
 
         Spacer(modifier = Modifier.height(26.dp))
         Button(
-
             onClick = {
                 val order = xpressCardPay?._order
                 val payer = xpressCardPay?._payer
@@ -397,23 +391,19 @@ fun CardInputForm(
     }
 }
 
-
-@OptIn(
-    ExperimentalFoundationApi::class
-)
 @Composable
 fun CardInputField(
     modifier: Modifier = Modifier,
     title: String = stringResource(id = R.string.card_holder),
     placeholder: String = "Name",
-    value: TextFieldValue,
+    newValue: TextFieldValue,
     inputType: KeyboardType,
     action: ImeAction = ImeAction.Next,
-    onValueChange: (TextFieldValue) -> Unit
+    onValueChange: (TextFieldValue) -> Unit,
+    focusRequester: FocusRequester = remember { FocusRequester() }
 ) {
-    val focusRequester = remember { FocusRequester() }
-    var isFocused by remember { mutableStateOf(false) }
-    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+
+    val focusManager = LocalFocusManager.current
 
     Box(
         modifier = modifier
@@ -424,85 +414,79 @@ fun CardInputField(
                 Color(0xFFF1F4F8),
                 shape = RoundedCornerShape(12.dp)
             )
-            .bringIntoViewRequester(bringIntoViewRequester)
-            .onFocusChanged { focusState ->
-                isFocused = focusState.isFocused
-            }
     ) {
-        Column(verticalArrangement = Arrangement.Center) {
-            Box(
+        Column(verticalArrangement = Arrangement.spacedBy((-15).dp)) {
+            // Title
+            Text(
+                text = title,
+                color = Color(0xFF8F9BB3),
+                style = MaterialTheme.typography.labelSmall,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(start = 16.dp),
+            )
+
+            // Input area
+            TextField(
+                value = newValue,
+                onValueChange = { newTextValue ->
+                    onValueChange(newTextValue)
+                },
+                textStyle = LocalTextStyle.current.copy(
+                    color = Color.Black,
+                    fontSize = 16.sp
+                ),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = inputType,
+                    imeAction = action
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.moveFocus(FocusDirection.Next) }
+                ),
+                singleLine = true,
+                colors = TextFieldDefaults.colors(
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black,
+                    cursorColor = Color.Black,
+                    focusedPlaceholderColor = Color(0xFF8F9BB3),
+                    unfocusedPlaceholderColor = Color(0xFF8F9BB3),
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp)
-                    .zIndex(3f)
-                    .background(
-                        Color(Color.White.value.toLong()),
-                        shape = RoundedCornerShape(16.dp)
-                    )
-            ) {
-                Text(
-                    text = title,
-                    color = Color(0xFF8F9BB3),
-                    style = MaterialTheme.typography.labelSmall,
-                    fontSize = 12.sp,
-                )
-            }
-            Box(
-                modifier = Modifier
-                    .padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
-                    .fillMaxWidth()
-                    .background(Color.White, shape = RoundedCornerShape(16.dp))
-            ) {
-                val localFocusManager = LocalFocusManager.current
-                BasicTextField(
-                    value = value,
-                    onValueChange = { newValue ->
-                        val updatedText =
-                            if (newValue.text.startsWith(" ") && newValue.text.length > value.text.length) {
-                                newValue.text.trimStart()
-                            } else {
-                                newValue.text
-                            }
-                        onValueChange(newValue.copy(text = updatedText))
-                    },
-                    singleLine = true,
-                    textStyle = TextStyle(
-                        fontSize = 14.sp,
-                        color = Color.Black
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color(0xFFF1F4F8))
-                        .padding(horizontal = 4.dp)
-                        .focusRequester(focusRequester)
-                        .onFocusChanged { focusState ->
-                            isFocused = focusState.isFocused
-                        },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = inputType,
-                        imeAction = action
-                    ),
-                    keyboardActions = KeyboardActions(onDone = { localFocusManager.clearFocus() }),
-                    cursorBrush = SolidColor(Color(0xFF2C3246)),
-                    decorationBox = { innerTextField ->
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.CenterStart
-                        ) {
-                            innerTextField()
+                    .focusRequester(focusRequester)
+                    .onFocusChanged { focusState ->
+                        if (focusState.isFocused) {
+                            onValueChange(newValue.copy(
+                                selection = TextRange(newValue.text.length)
+                            ))
                         }
                     }
-                )
-            }
-        }
-    }
-
-    // This will bring the entire Box into view when focused
-    if (isFocused) {
-        LaunchedEffect(Unit) {
-            // This delay ensures the keyboard has time to open before scrolling
-            delay(100)
-            focusRequester.requestFocus()
+                    .pointerInput(Unit) {
+                        detectTapGestures {
+                            onValueChange(newValue.copy(
+                                selection = TextRange(newValue.text.length)
+                            ))
+                        }
+                    },
+                trailingIcon = {
+                    if (newValue.text.isNotEmpty()) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Clear",
+                            modifier = Modifier
+                                .clickable {
+                                    onValueChange(TextFieldValue("", TextRange.Zero))
+                                }
+                                .padding(end = 2.dp)
+                                .size(20.dp),
+                            tint = Color.Black
+                        )
+                    }
+                }
+            )
         }
     }
 }

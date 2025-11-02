@@ -1,5 +1,7 @@
 package com.edfapg.sdk
 
+import Payment2Screen
+import Payment3Screen
 import android.app.Activity
 import android.content.res.Configuration
 import android.os.Bundle
@@ -22,8 +24,6 @@ import com.edfapg.sdk.toolbox.EdfaPayDesignType
 import com.edfapg.sdk.toolbox.serializable
 import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
 import com.example.paymentgatewaynew.payment1.Payment1Screen
-import com.example.paymentgatewaynew.payment2.Payment2Screen
-import com.example.paymentgatewaynew.payment3.Payment3Screen
 import kotlinx.coroutines.delay
 import java.util.Locale
 
@@ -65,7 +65,7 @@ class PaymentActivity : ComponentActivity() {
             val navController = rememberNavController()
 
             if (design != null) {
-                when (design.toLowerCase()) {
+                when (design.lowercase(Locale.getDefault())) {
                     EdfaPayDesignType.one.value -> if (!isAlreadyShown) {
                         isAlreadyShown = true
                         Payment1Screen(
