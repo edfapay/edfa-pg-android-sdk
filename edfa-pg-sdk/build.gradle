@@ -98,52 +98,6 @@ dependencies {
 }
 
 afterEvaluate {
-    project.rootProject.subprojects.findAll { it.plugins.hasPlugin("com.android.application") }.each { appModule ->
-        def androidExt = appModule.extensions.findByName("android")
-        if (androidExt != null) {
-            def minSdk = androidExt.defaultConfig.minSdkVersion.apiLevel
-
-            // Only enable desugaring if needed
-            if (minSdk < 26 || minSdk >= 26) {
-                def compileOptions = androidExt.compileOptions
-
-                // Enable only if not already true
-                if (!compileOptions.coreLibraryDesugaringEnabled) {
-                    appModule.logger.lifecycle("🔧 Enabling core library desugaring for ${appModule.name} (minSdk=$minSdk)")
-                    compileOptions.coreLibraryDesugaringEnabled true
-                }
-
-                // Add dependency only if not already added
-                def hasDesugarDep = appModule.configurations.findByName("coreLibraryDesugaring")
-                        ?.dependencies
-                        ?.any { it.group == "com.android.tools" && it.name == "desugar_jdk_libs" } ?: false
-
-                if (!hasDesugarDep) {
-                    appModule.logger.lifecycle("🔧 Adding desugar_jdk_libs dependency for ${appModule.name}")
-                    appModule.dependencies.add("coreLibraryDesugaring", "com.android.tools:desugar_jdk_libs:2.0.4")
-                }
-            } else {
-                appModule.logger.lifecycle("✅ ${appModule.name} has minSdk=$minSdk, desugaring not needed, if still warn by gradle you can add manually as below")
-                appModule.logger.lifecycle("""
-    android {
-         ...
-         compileOptions {
-             isCoreLibraryDesugaringEnabled = true // For .gradle.kts
-             coreLibraryDesugaringEnabled = true // For .gradle
-         }
-         ...
-    }
-""")
-
-                appModule.logger.lifecycle("""
-    dependencies {
-        coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
-    }
-""")
-            }
-        }
-    }
-
     publishing {
         publications {
             maven(MavenPublication) {
