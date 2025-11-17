@@ -42,20 +42,23 @@ object EdfaPgHashUtil {
         cardNumber: String,
         @Nullable
         @Size(EdfaPgValidation.Text.UUID)
-        transactionId: String? = null
+        transactionId: String? = null,
+        @Nullable
+        extras: String? = null
     ): String {
         val emailHash = email.reversed()
         val clientPass = EdfaPgCredential.clientPass()
 
-        val cardNumberHash1 = cardNumber.take(6)
-        val cardNumberHash2 = cardNumber.takeLast(4)
-        val cardNumberHash = cardNumberHash1.plus(cardNumberHash2).reversed()
+        val cardPart1 = cardNumber.take(6)
+        val cardPart2 = cardNumber.takeLast(4)
+        val cardPart12Revered = cardPart1.plus(cardPart2).reversed()
 
         return md5(
             emailHash
                 .plus(clientPass)
                 .plus(transactionId.orEmpty())
-                .plus(cardNumberHash)
+                .plus(cardPart12Revered)
+                .plus(extras.orEmpty())
                 .uppercase(Locale.ROOT)
         )
     }

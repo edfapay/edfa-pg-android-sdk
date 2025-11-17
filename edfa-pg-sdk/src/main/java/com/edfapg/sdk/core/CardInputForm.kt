@@ -327,6 +327,7 @@ fun CardInputForm(
                 val order = xpressCardPay?._order
                 val payer = xpressCardPay?._payer
                 val recurring = xpressCardPay?._recurring
+                val extras = xpressCardPay?._extras
                 isButtonClicked = true
                 if (order != null && payer != null) {
                     val card =
@@ -338,6 +339,7 @@ fun CardInputForm(
                         order = order,
                         card = card,
                         payer = payer,
+                        extras = extras,
                         termUrl3ds = EdfaPgUtil.ProcessCompleteCallbackUrl,
                         options = recurring,
                         auth = false,

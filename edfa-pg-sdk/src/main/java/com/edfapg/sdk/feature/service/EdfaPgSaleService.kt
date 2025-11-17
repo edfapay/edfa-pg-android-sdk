@@ -100,6 +100,8 @@ interface EdfaPgSaleService {
         @Size(max = EdfaPgValidation.Text.LONG)
         @Field("order_description")
         orderDescription: String,
+        @Field("extras")
+        extras: String,
         @NonNull
         @Size(min = EdfaPgValidation.Card.CARD_NUMBER_MIN, max = EdfaPgValidation.Card.CARD_NUMBER_MAX)
         @Field("card_number")
@@ -190,6 +192,7 @@ client_key : c2b8fb04-110f-11ea-bcd3-0242c0a85004
 order_id : ORDER-12345
 order_amount : 1.99
 order_currency : USD
+extras : "[{"action":"SALE","type":"SMS","value":12.5}]"
 order_description : Product
 card_number : 4111111111111111
 card_exp_month : 01

@@ -7,6 +7,7 @@ package com.edfapg.sdk.model.request.order
 import androidx.annotation.FloatRange
 import androidx.annotation.NonNull
 import androidx.annotation.Size
+import com.edfapg.sdk.model.request.Extra
 import com.edfapg.sdk.toolbox.EdfaPgValidation
 import java.io.Serializable
 import java.util.Currency

@@ -24,6 +24,7 @@ import com.edfapg.sdk.model.response.sale.EdfaPgSaleResult
 import java.text.DecimalFormat
 import java.util.Random
 import java.util.UUID
+import kotlin.collections.listOf
 
 class EdfaPgRecurringSaleActivity : BaseActivity(R.layout.activity_recurring_sale) {
 
@@ -160,7 +161,7 @@ class EdfaPgRecurringSaleActivity : BaseActivity(R.layout.activity_recurring_sal
             val order = EdfaPgOrder(
                 id = binding.etxtOrderId.text.toString(),
                 amount = amount,
-                description = binding.etxtOrderDescription.text.toString()
+                description = binding.etxtOrderDescription.text.toString(),
             )
 
             val recurringOptions = EdfaPgRecurringOptions(
