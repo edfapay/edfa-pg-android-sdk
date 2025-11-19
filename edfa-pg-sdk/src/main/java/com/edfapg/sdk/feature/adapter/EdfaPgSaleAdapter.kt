@@ -84,12 +84,12 @@ object EdfaPgSaleAdapter : EdfaPgBaseAdapter<EdfaPgSaleService>() {
     ) {
         val extraJson = if(extras != null && extras.isNotEmpty()){
             Gson().toJson(extras)
-        }else ""
+        }else "[]"
 
         val hash = EdfaPgHashUtil.hash(
             email = payer.email,
             cardNumber = card.number,
-            extras = extraJson
+            extras = ""
         )
         val payerOptions = payer.options
 

@@ -18,6 +18,7 @@ import com.edfapg.sdk.toolbox.delayAtIO
 internal var instance: EdfaCardPay? = null
 
 interface EdfapayCardDetailsInitializer {
+
     fun initialize(
         onError: (Any) -> Unit,
         onPresent: (Activity) -> Unit
