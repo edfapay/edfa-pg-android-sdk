@@ -28,6 +28,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import com.edfapg.sdk.utils.safePainterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -71,12 +72,15 @@ fun Card1UI(
                 .fillMaxSize()
                 .alpha(0.9f) // 50% transparency for the image
         ) {
-            Image(
-                modifier = Modifier.fillMaxSize(),
-                painter = painterResource(id = R.drawable.card_map_bg), // Replace with your image resource
-                contentDescription = null,
-                contentScale = ContentScale.Crop
-            )
+            val bgPainter = safePainterResource(R.drawable.card_map_bg)
+            bgPainter?.let {
+                Image(
+                    modifier = Modifier.fillMaxSize(),
+                    painter = it,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop
+                )
+            }
         }
         Column(
                 modifier = Modifier
@@ -84,21 +88,27 @@ fun Card1UI(
                     .padding(start = 30.dp, end = 20.dp),
             ) {
                 Row {
-                    Image(
-                        modifier = Modifier
-                            .padding(top = spaceBetween)
-                            .size(30.dp),
-                        painter = painterResource(id = R.drawable.chip),
-                        contentDescription = "holographic"
-                    )
+                    val chipPainter = safePainterResource(R.drawable.chip)
+                    chipPainter?.let {
+                        Image(
+                            modifier = Modifier
+                                .padding(top = spaceBetween)
+                                .size(30.dp),
+                            painter = it,
+                            contentDescription = "holographic"
+                        )
+                    }
                     Spacer(modifier = Modifier.weight(1f))
-                    Image(
-                        modifier = Modifier
-                            .padding(top = spaceBetween)
-                            .size(50.dp),
-                        painter = painterResource(id = R.drawable.edfapay_logo_white),
-                        contentDescription = "holographic"
-                    )
+                    val logoPainter = safePainterResource(R.drawable.edfapay_logo_white)
+                    logoPainter?.let {
+                        Image(
+                            modifier = Modifier
+                                .padding(top = spaceBetween)
+                                .size(50.dp),
+                            painter = it,
+                            contentDescription = "holographic"
+                        )
+                    }
                 }
                 Text(
                     text = cardNumber,
@@ -168,21 +178,22 @@ fun Card1UI(
                         modifier = Modifier
                             .size(100.dp)
                     ) {
-                        Image(
-                            modifier = Modifier
-                                .size(50.dp)
-                                .align(Alignment.Center),
-                            painter =
-                            painterResource(
-                                id = when (scheme) {
-                                    '4' -> R.drawable.visa_white_icon
-                                    '5' -> R.drawable.ic_mastercard_logo
-                                    else -> R.drawable.vector_transparent // Default transparent icon
-
-                                }
-                            ),
-                            contentDescription = "holographic"
+                        val schemePainter = safePainterResource(
+                            when (scheme) {
+                                '4' -> R.drawable.visa_white_icon
+                                '5' -> R.drawable.ic_mastercard_logo
+                                else -> R.drawable.vector_transparent // Default transparent icon
+                            }
                         )
+                        schemePainter?.let {
+                            Image(
+                                modifier = Modifier
+                                    .size(50.dp)
+                                    .align(Alignment.Center),
+                                painter = it,
+                                contentDescription = "holographic"
+                            )
+                        }
                     }
                 }
 
