@@ -18,39 +18,58 @@ import android.util.Log
 fun safePainterResource(id: Int): Painter? {
     val context = LocalContext.current
     var isValidResource by remember(id) { mutableStateOf<Boolean?>(null) }
+    var shouldSkip by remember(id) { mutableStateOf(false) }
     
-    // Validate resource in a side effect
+
+    val resourceName = try {
+        context.resources.getResourceEntryName(id)
+    } catch (e: Exception) {
+        Log.e("PainterResourceHelper", "Resource not found: $id", e)
+        shouldSkip = true
+        null
+    }
+    
+    // Validate resource type in a side effect
     DisposableEffect(id) {
-        isValidResource = try {
-            val drawable = context.resources.getDrawable(id, null)
-            if (drawable == null) {
-                false
-            } else {
-                val className = drawable.javaClass.simpleName
-                val isUnsupported = className.contains("Shape") || 
-                                    className.contains("Gradient") ||
-                                    className.contains("StateList") ||
-                                    className.contains("LayerList")
-                
-                if (isUnsupported) {
-                    Log.w("PainterResourceHelper", "Unsupported drawable type for Compose: $className (resource: $id)")
+        if (!shouldSkip && resourceName != null) {
+            isValidResource = try {
+                val drawable = context.resources.getDrawable(id, null)
+                if (drawable == null) {
                     false
                 } else {
-                    true
+                    val className = drawable.javaClass.simpleName
+                    // Check for unsupported drawable types that Compose can't handle
+                    val isUnsupported = className.contains("Shape") || 
+                                        className.contains("GradientDrawable") ||
+                                        className.contains("StateListDrawable") ||
+                                        className.contains("LayerDrawable") ||
+                                        className.contains("InsetDrawable") ||
+                                        className.contains("ClipDrawable") ||
+                                        className.contains("RotateDrawable") ||
+                                        className.contains("ScaleDrawable") ||
+                                        className.contains("AnimationDrawable")
+                    
+                    if (isUnsupported) {
+                        Log.w("PainterResourceHelper", "Unsupported drawable type for Compose: $className (resource: $id, name: $resourceName)")
+                        shouldSkip = true
+                        false
+                    } else {
+                        true
+                    }
                 }
+            } catch (e: Exception) {
+                Log.e("PainterResourceHelper", "Invalid drawable resource: $id", e)
+                shouldSkip = true
+                false
             }
-        } catch (e: Exception) {
-            Log.e("PainterResourceHelper", "Invalid drawable resource: $id", e)
-            false
         }
         onDispose { }
     }
 
-
-    if (isValidResource == false) {
-        Log.w("PainterResourceHelper", "Loading potentially invalid resource: $id - this may crash")
+    if (shouldSkip || isValidResource == false) {
+        Log.w("PainterResourceHelper", "Attempting to load invalid/unsupported resource: $id ($resourceName) - exception will be caught by global handler")
     }
-    
+
     return painterResource(id = id)
 }
 

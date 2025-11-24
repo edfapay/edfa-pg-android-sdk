@@ -34,8 +34,27 @@ class PaymentActivity : ComponentActivity() {
     private var isAlreadyShown = false
 
 
+    private var defaultExceptionHandler: Thread.UncaughtExceptionHandler? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        defaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler()
+        Thread.setDefaultUncaughtExceptionHandler { thread, exception ->
+            if (exception is IllegalArgumentException && 
+                exception.message?.contains("Only VectorDrawables and rasterized asset types") == true) {
+                Log.e("PaymentActivity", "Caught unsupported drawable exception. Resource validation should have prevented this.", exception)
+                try {
+                    runOnUiThread {
+                        finish()
+                    }
+                } catch (e: Exception) {
+                    defaultExceptionHandler?.uncaughtException(thread, exception)
+                }
+            } else {
+                defaultExceptionHandler?.uncaughtException(thread, exception)
+            }
+        }
 
         val edfaCardPay = EdfaCardPay.shared()
 
@@ -96,6 +115,14 @@ class PaymentActivity : ComponentActivity() {
                     )
                 }
             }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Restore the default exception handler to avoid interfering with other parts of the app
+        defaultExceptionHandler?.let {
+            Thread.setDefaultUncaughtExceptionHandler(it)
         }
     }
 
