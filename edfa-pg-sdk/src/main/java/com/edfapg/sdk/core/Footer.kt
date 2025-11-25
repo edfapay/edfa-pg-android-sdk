@@ -12,12 +12,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import android.util.Log
 import com.edfapg.sdk.R
+import com.edfapg.sdk.utils.safePainterResource
 
 @Composable
 fun Footer(){
@@ -29,16 +32,18 @@ fun Footer(){
             Alignment.Center
 
         ) {
-            Image(
-
-                painter = painterResource(id = R.drawable.pci_dss),
-                contentDescription = "PCI DSS Compliant",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp)
-                    .width(71.dp)
-                    .height(33.dp)
-            )
+            val pciPainter = safePainterResource(R.drawable.pci_dss)
+            pciPainter?.let {
+                Image(
+                    painter = it,
+                    contentDescription = "PCI DSS Compliant",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp)
+                        .width(71.dp)
+                        .height(33.dp)
+                )
+            }
         }
 
         Row(
@@ -54,11 +59,14 @@ fun Footer(){
                 Alignment.Center
 
             ) {
-                Image(
-                    modifier = Modifier.size(50.dp),
-                    painter = painterResource(id = R.drawable.mada), // Replace with your mada image
-                    contentDescription = "mada"
-                )
+                val madaPainter = safePainterResource(R.drawable.mada)
+                madaPainter?.let {
+                    Image(
+                        modifier = Modifier.size(50.dp),
+                        painter = it,
+                        contentDescription = "mada"
+                    )
+                }
             }
 
             Box(
@@ -68,11 +76,14 @@ fun Footer(){
                 Alignment.Center
 
             ) {
-                Image(
-                    modifier = Modifier.size(50.dp),
-                    painter = painterResource(id = R.drawable.ic_mastercard_logo), // Replace with your mada image
-                    contentDescription = "mastercard"
-                )
+                val mastercardPainter = safePainterResource(R.drawable.ic_mastercard_logo)
+                mastercardPainter?.let {
+                    Image(
+                        modifier = Modifier.size(50.dp),
+                        painter = it,
+                        contentDescription = "mastercard"
+                    )
+                }
             }
             Box(
                 modifier = Modifier
@@ -81,11 +92,14 @@ fun Footer(){
                 Alignment.Center
 
             ) {
-                Image(
-                    modifier = Modifier.size(50.dp),
-                    painter = painterResource(id = R.drawable.visa),
-                    contentDescription = "visa"
-                )
+                val visaPainter = safePainterResource(R.drawable.visa)
+                visaPainter?.let {
+                    Image(
+                        modifier = Modifier.size(50.dp),
+                        painter = it,
+                        contentDescription = "visa"
+                    )
+                }
             }
             Box(
                 modifier = Modifier
@@ -94,11 +108,14 @@ fun Footer(){
                 Alignment.Center
 
             ) {
-                Image(
-                    modifier = Modifier.size(50.dp),
-                    painter = painterResource(id = R.drawable.amex),
-                    contentDescription = "amex"
-                )
+                val amexPainter = safePainterResource(R.drawable.amex)
+                amexPainter?.let {
+                    Image(
+                        modifier = Modifier.size(50.dp),
+                        painter = it,
+                        contentDescription = "amex"
+                    )
+                }
             }
         }
 
@@ -116,10 +133,13 @@ fun Footer(){
                 color = Color.Gray
             )
             Spacer(modifier = Modifier.width(4.dp))
-            Image(
-                painter = painterResource(id = R.drawable.edfapay_logo),
-                contentDescription = "EdfaPay Logo"
-            )
+            val logoPainter = safePainterResource(R.drawable.edfapay_logo)
+            logoPainter?.let {
+                Image(
+                    painter = it,
+                    contentDescription = "EdfaPay Logo"
+                )
+            }
         }
     }
 }
