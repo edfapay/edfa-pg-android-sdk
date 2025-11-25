@@ -30,6 +30,9 @@ android {
         }
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+//        buildConfigField "String", "MERCHANT_KEY", "\"d857c073-c58c-49dc-906b-24fa667dc306\""
+//        buildConfigField "String", "MERCHANT_PASSWORD", "\"a92f7b7f0d869d3e676c5facda5262ae\""
     }
 
 
@@ -38,6 +41,11 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             consumerProguardFiles 'consumer-rules.pro'
+        }
+
+        debug{
+            minifyEnabled false
+            debuggable true
         }
     }
 

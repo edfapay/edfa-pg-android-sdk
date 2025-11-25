@@ -33,6 +33,7 @@ class EdfaPayWithCardDetails(private val context: Context) : EdfaCardPay() {
         val payer = _payer
         val card = _card
         val recurring = _recurring
+        val extras = _extras
 
         println("recurringInit::EdfaPayWithCardDetails ${recurring}")
 
@@ -42,6 +43,7 @@ class EdfaPayWithCardDetails(private val context: Context) : EdfaCardPay() {
             EdfaPgSdk.Adapter.SALE.execute(
                 order = order,
                 card = card,
+                extras = extras,
                 payer = payer,
                 termUrl3ds = EdfaPgUtil.ProcessCompleteCallbackUrl,
                 options = recurring,

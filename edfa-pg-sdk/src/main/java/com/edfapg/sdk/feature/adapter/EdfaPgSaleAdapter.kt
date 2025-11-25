@@ -12,6 +12,7 @@ import com.edfapg.sdk.feature.deserializer.EdfaPgSaleDeserializer
 import com.edfapg.sdk.feature.service.EdfaPgSaleService
 import com.edfapg.sdk.model.api.EdfaPgAction
 import com.edfapg.sdk.model.api.EdfaPgOption
+import com.edfapg.sdk.model.request.Extra
 import com.edfapg.sdk.model.request.card.EdfaPgCard
 import com.edfapg.sdk.model.request.card.EdfaPgCardFormatter
 import com.edfapg.sdk.model.request.options.EdfaPgSaleOptions
@@ -23,6 +24,7 @@ import com.edfapg.sdk.model.response.sale.EdfaPgSaleResponse
 import com.edfapg.sdk.toolbox.EdfaPgAmountFormatter
 import com.edfapg.sdk.toolbox.EdfaPgHashUtil
 import com.edfapg.sdk.toolbox.EdfaPgValidation
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import java.util.*
 
@@ -64,6 +66,8 @@ object EdfaPgSaleAdapter : EdfaPgBaseAdapter<EdfaPgSaleService>() {
         @NonNull
         order: EdfaPgSaleOrder,
         @NonNull
+        extras: List<Extra>? = null,
+        @NonNull
         card: EdfaPgCard,
         @NonNull
         payer: EdfaPgPayer,
@@ -78,9 +82,14 @@ object EdfaPgSaleAdapter : EdfaPgBaseAdapter<EdfaPgSaleService>() {
         @NonNull
         callback: EdfaPgSaleCallback
     ) {
+        val extraJson = if(extras != null && extras.isNotEmpty()){
+            Gson().toJson(extras)
+        }else "[]"
+
         val hash = EdfaPgHashUtil.hash(
             email = payer.email,
-            cardNumber = card.number
+            cardNumber = card.number,
+            extras = ""
         )
         val payerOptions = payer.options
 
@@ -92,6 +101,7 @@ object EdfaPgSaleAdapter : EdfaPgBaseAdapter<EdfaPgSaleService>() {
             orderAmount = edfapayAmountFormatter.amountFormat(order.amount),
             orderCurrency = String.format(Locale.US,"%s", order.currency),
             orderDescription = order.description,
+            extras = extraJson,
             cardNumber = String.format(Locale.US,"%s", card.number),
             cardExpireMonth = edfapayCardFormatter.expireMonthFormat(card),
             cardExpireYear = edfapayCardFormatter.expireYearFormat(card),

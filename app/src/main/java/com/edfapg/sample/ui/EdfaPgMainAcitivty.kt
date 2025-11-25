@@ -67,7 +67,7 @@ class EdfaPgMainAcitivty : BaseActivity() {
             id = UUID.randomUUID().toString(),
             amount = 0.12,
             currency = "SAR",
-            description = "Test Order"
+            description = "Test Order",
         )
 
 
@@ -82,6 +82,7 @@ class EdfaPgMainAcitivty : BaseActivity() {
         val edfaCardPay = EdfaCardPay()
             .setOrder(order)
             .setPayer(payer)
+            .setExtras(listOf())
             .setRecurring(true)
             .setDesignType(EdfaPayDesignType.one)
             .setLanguage(EdfaPayLanguage.en)
@@ -116,7 +117,7 @@ class EdfaPgMainAcitivty : BaseActivity() {
             id = UUID.randomUUID().toString(),
             amount = 0.12,
             currency = "SAR",
-            description = "Test Order"
+            description = "Test Order",
         )
 
         val payer = EdfaPgPayer(
@@ -131,6 +132,7 @@ class EdfaPgMainAcitivty : BaseActivity() {
         EdfaPayWithCardDetails(this)
             .setOrder(order)
             .setPayer(payer)
+            .setExtras(listOf())
             .setCard(card)
             .setRecurring(true)
             .onTransactionFailure { res, data ->

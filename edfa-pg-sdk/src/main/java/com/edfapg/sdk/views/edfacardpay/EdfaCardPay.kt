@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.fragment.app.Fragment
 import com.edfapg.sdk.PaymentActivity
+import com.edfapg.sdk.model.request.Extra
 import com.edfapg.sdk.model.request.card.EdfaPgCard
 import com.edfapg.sdk.model.request.options.EdfaPgSaleOptions
 import com.edfapg.sdk.model.request.order.EdfaPgSaleOrder
@@ -17,6 +18,7 @@ import com.edfapg.sdk.toolbox.delayAtIO
 internal var instance: EdfaCardPay? = null
 
 interface EdfapayCardDetailsInitializer {
+
     fun initialize(
         onError: (Any) -> Unit,
         onPresent: (Activity) -> Unit
@@ -33,6 +35,7 @@ open class EdfaCardPay : EdfapayCardDetailsInitializer {
 
     var _order: EdfaPgSaleOrder? = null
     var _payer: EdfaPgPayer? = null
+    var _extras: List<Extra>? = null
     var _card: EdfaPgCard? = null
     var _design: EdfaPayDesignType = EdfaPayDesignType.one
     var _language: EdfaPayLanguage = EdfaPayLanguage.en
@@ -51,6 +54,11 @@ open class EdfaCardPay : EdfapayCardDetailsInitializer {
 
     fun setPayer(payer: EdfaPgPayer): EdfaCardPay {
         _payer = payer
+        return this
+    }
+
+    fun setExtras(extras: List<Extra>): EdfaCardPay {
+        _extras = extras
         return this
     }
 

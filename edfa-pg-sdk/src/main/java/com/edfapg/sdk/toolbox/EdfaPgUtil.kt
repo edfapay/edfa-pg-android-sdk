@@ -10,7 +10,7 @@ import java.io.File
  * The general [com.edfapg.sdk.core.EdfaPgSdk] utils.
  */
 object EdfaPgUtil {
-    val ProcessCompleteCallbackUrl = "https://edfapay.com/process-completed"
+    var ProcessCompleteCallbackUrl = "https://edfapay.com/process-completed"
 
     /**
      * Validate and return the base url (Payment URL).

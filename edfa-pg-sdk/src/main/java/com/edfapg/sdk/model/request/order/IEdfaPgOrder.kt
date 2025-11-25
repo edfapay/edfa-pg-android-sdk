@@ -4,6 +4,9 @@
 
 package com.edfapg.sdk.model.request.order
 
+import androidx.annotation.NonNull
+import com.edfapg.sdk.model.request.Extra
+
 /**
  * The base order data holder description.
  * @see com.edfapg.sdk.feature.adapter.EdfaPgSaleAdapter
