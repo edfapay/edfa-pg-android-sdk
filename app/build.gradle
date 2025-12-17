@@ -54,6 +54,6 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation project(':edfa-pg-sdk')
-//    implementation 'com.github.edfapay:edfa-pg-android-sdk:2.1.0'
+//    implementation 'com.github.edfapay:edfa-pg-android-sdk:2.1.4'
 
 }

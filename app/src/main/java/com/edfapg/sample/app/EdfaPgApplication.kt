@@ -9,6 +9,7 @@ import android.content.pm.ApplicationInfo
 import android.webkit.WebView
 import com.edfapg.sample.ui.BaseActivity
 import com.edfapg.sdk.core.EdfaPgSdk
+import io.kimo.lib.faker.Faker
 import java.util.Locale
 
 
@@ -17,7 +18,7 @@ class EdfaPgApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-//        Faker.with(this)
+        Faker.with(this)
 
         EdfaPgSdk.init(
             this,

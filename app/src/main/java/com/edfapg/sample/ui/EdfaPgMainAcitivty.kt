@@ -9,12 +9,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import com.edfapg.sample.app.EdfaPgTransactionStorage
 import com.edfapg.sample.databinding.ActivityMainBinding
 import com.edfapg.sdk.model.request.card.EdfaPgCard
 import com.edfapg.sdk.model.request.order.EdfaPgSaleOrder
 import com.edfapg.sdk.model.request.payer.EdfaPgPayer
+import com.edfapg.sdk.model.response.base.EdfaPgResponse
 import com.edfapg.sdk.model.response.base.error.EdfaPgError
 import com.edfapg.sdk.model.response.gettransactiondetails.EdfaPgGetTransactionDetailsSuccess
+import com.edfapg.sdk.model.response.sale.EdfaPgSaleResponse
+import com.edfapg.sdk.model.response.sale.EdfaPgSaleResult
 import com.edfapg.sdk.toolbox.EdfaPayDesignType
 import com.edfapg.sdk.toolbox.EdfaPayLanguage
 import com.edfapg.sdk.toolbox.serializable
@@ -25,9 +29,11 @@ import java.util.UUID
 class EdfaPgMainAcitivty : BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var edfapayTransactionStorage: EdfaPgTransactionStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        edfapayTransactionStorage = EdfaPgTransactionStorage(this)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -78,7 +84,6 @@ class EdfaPgMainAcitivty : BaseActivity() {
             "171.100.100.123"
         )
 
-
         val edfaCardPay = EdfaCardPay()
             .setOrder(order)
             .setPayer(payer)
@@ -88,7 +93,6 @@ class EdfaPgMainAcitivty : BaseActivity() {
             .setLanguage(EdfaPayLanguage.en)
             .onTransactionFailure { res, data ->
                 print("$res $data")
-
                 Toast.makeText(this, "Transaction Failure", Toast.LENGTH_LONG).show()
             }.onTransactionSuccess { res, data ->
                 print("$res $data")
