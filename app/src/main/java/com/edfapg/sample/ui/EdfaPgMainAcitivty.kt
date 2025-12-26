@@ -7,10 +7,12 @@ package com.edfapg.sample.ui
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.edfapg.sample.app.EdfaPgTransactionStorage
 import com.edfapg.sample.databinding.ActivityMainBinding
+import com.edfapg.sdk.EdfaSadadPay
 import com.edfapg.sdk.model.request.card.EdfaPgCard
 import com.edfapg.sdk.model.request.order.EdfaPgSaleOrder
 import com.edfapg.sdk.model.request.payer.EdfaPgPayer
@@ -64,6 +66,10 @@ class EdfaPgMainAcitivty : BaseActivity() {
         binding.btnSaleWithCardUi.setOnClickListener {
             payWithCard()
 //            payWithCardDetails()
+        }
+
+        binding.btnSadadPay.setOnClickListener {
+            payWithSadad()
         }
     }
 
@@ -159,6 +165,28 @@ class EdfaPgMainAcitivty : BaseActivity() {
 
     }
 
+    fun payWithSadad(){
+        EdfaSadadPay()
+            .setOrderId(UUID.randomUUID().toString())
+            .setOrderAmount(25.0)
+            .setOrderDescription("Test ss 200")
+            .setCustomerName("waddah s2s")
+            .setMobileNumber("0539662569")
+            .onSuccess { response ->
+                Log.i("onSuccess", response.toString())
+
+            }
+            .onFailure { response, exception ->
+                Log.e("onFailure", response?.message ?: exception.message ?: "STWR")
+
+            }
+            .initialize { errors ->
+                Log.e("onError", errors.toString())
+
+            }
+
+    }
+
     val sale3dsRedirectLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
@@ -167,6 +195,8 @@ class EdfaPgMainAcitivty : BaseActivity() {
 //            transactionCompleted(result, error)
             }
         }
+
+
 
 
 }

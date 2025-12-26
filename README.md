@@ -166,7 +166,28 @@ easily integrate the EdfaPay API Payment Platform for a specific merchant.
 >>  			Toast.makeText(this, "onError $it", Toast.LENGTH_LONG).show()  
 >>        	},  
 >>        		onPresent = {  
->>  			} )
+>>  			} )>
+> **Payment with Sadad Number**
+> >  ```kotlin
+>> 
+>> 
+>> 
+>> 
+>> 
+>> 
+>> 
+>> 
+>> 
+>> 
+>> 
+>> 
+>> 
+>> 
+>> 
+>> 
+>> 
+>> 
+>> 
 > ### Addon's
 > > **Create [EdfaPgSaleOrder](https://github.com/edfapay/edfa-pg-android-sdk/blob/master/edfa-pg-sdk/src/main/java/com/edfapg/sdk/model/request/order/EdfaPgSaleOrder.kt) ` & ` [EdfaPgPayer](https://github.com/edfapay/edfa-pg-android-sdk/blob/master/edfa-pg-sdk/src/main/java/com/edfapg/sdk/model/request/payer/EdfaPgPayer.kt)
 > > 

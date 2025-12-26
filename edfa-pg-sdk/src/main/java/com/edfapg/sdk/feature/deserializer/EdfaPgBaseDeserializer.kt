@@ -43,7 +43,7 @@ abstract class EdfaPgBaseDeserializer<Result, Response : EdfaPgResponse<Result>>
      * Parse the generic response to the [EdfaPgResponse.Error].
      * @see com.edfapg.sdk.model.response.base.error.EdfaPgError
      */
-    private fun parseErrorResponse(
+    fun parseErrorResponse(
         context: JsonDeserializationContext,
         jsonObject: JsonObject
     ): EdfaPgResponse.Error<Result> {

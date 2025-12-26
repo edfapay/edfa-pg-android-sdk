@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import com.edfapg.sdk.feature.adapter.EdfaPgCaptureAdapter
 import com.edfapg.sdk.feature.adapter.EdfaPgCreditvoidAdapter
+import com.edfapg.sdk.feature.adapter.EdfaPgSadadAdapter
 import com.edfapg.sdk.feature.adapter.EdfaPgGetTransactionDetailsAdapter
 import com.edfapg.sdk.feature.adapter.EdfaPgGetTransactionStatusAdapter
 import com.edfapg.sdk.feature.adapter.EdfaPgRecurringSaleAdapter
@@ -166,6 +167,16 @@ object EdfaPgSdk {
          * @throws EdfaPgSdkIsNotInitializedException
          */
         val GET_TRANSACTION_DETAILS: EdfaPgGetTransactionDetailsAdapter = EdfaPgGetTransactionDetailsAdapter
+            get() {
+                EdfaPgCredential.requireInit()
+                return field
+            }
+
+        /**
+         * Adapter for the [com.edfapg.sdk.model.api.EdfaPgAction.GET_TRANS_DETAILS] request.
+         * @throws EdfaPgSdkIsNotInitializedException
+         */
+        val SADAD: EdfaPgSadadAdapter = EdfaPgSadadAdapter
             get() {
                 EdfaPgCredential.requireInit()
                 return field

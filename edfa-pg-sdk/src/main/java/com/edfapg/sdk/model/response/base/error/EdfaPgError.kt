@@ -7,7 +7,9 @@ package com.edfapg.sdk.model.response.base.error
 import androidx.annotation.NonNull
 import com.edfapg.sdk.model.api.EdfaPgResult
 import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Transient
 import java.io.Serializable
+import java.util.HashMap
 
 /**
  * The error response data holder.
@@ -32,10 +34,16 @@ data class EdfaPgError(
     val code: Int,
     @NonNull
     @SerializedName("error_message")
-    val message: String,
+    val message: String?,
     @SerializedName("errors")
-    val exactErrors: List<EdfaPgExactError>
-) : Serializable
+    val exactErrors: List<EdfaPgExactError>,
+
+    @Transient
+    var raw: Map<*,*>? = null
+) : Serializable{
+
+    fun getSafeMessage() = message ?: raw?.get("message") as? String  ?: "STWR"
+}
 
 /* Response example:
 {

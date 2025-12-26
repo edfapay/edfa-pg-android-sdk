@@ -6,18 +6,18 @@ package com.edfapg.sdk.feature.adapter
 
 import com.edfapg.sdk.BuildConfig
 import com.edfapg.sdk.core.ENABLE_DEBUG
-import com.edfapg.sdk.core.EdfaPgCredential
 import com.edfapg.sdk.model.response.base.EdfaPgResponse
 import com.edfapg.sdk.model.response.base.error.EdfaPgError
-import com.edfapg.sdk.toolbox.EdfaPgUtil
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Callback
-import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -68,13 +68,12 @@ abstract class EdfaPgBaseAdapter<Service> {
         configureOkHttpClient(okHttpClientBuilder)
 
         val gsonBuilder = GsonBuilder()
-        gsonBuilder.setPrettyPrinting()
         gsonBuilder.setDateFormat(DATE_FORMAT)
         configureGson(gsonBuilder)
         gson = gsonBuilder.create()
 
         val retrofitBuilder: Retrofit.Builder = Retrofit.Builder()
-            .baseUrl(EdfaPgUtil.validateBaseUrl(EdfaPgCredential.paymentUrl()))
+            .baseUrl("https://google.com/") // dummy baseUrl to build retrofit
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(okHttpClientBuilder.build())
         configureRetrofit(retrofitBuilder)
@@ -135,7 +134,8 @@ abstract class EdfaPgBaseAdapter<Service> {
         return enqueue(object : Callback<Response> {
             override fun onResponse(call: Call<Response>, response: retrofit2.Response<Response>) {
                 val body = response.body()
-                val errorBody = response.errorBody()
+                val errorBody = response.errorBody()?.string()
+
 
                 when {
                     body != null -> {
@@ -149,16 +149,24 @@ abstract class EdfaPgBaseAdapter<Service> {
 
                     errorBody != null -> {
                         try {
-                            val json = gson.toJsonTree(errorBody.charStream())
-                            val error = gson.fromJson(errorBody.charStream(), EdfaPgError::class.java)
+                            val json: JsonObject? = try {
+                                JsonParser.parseString(errorBody).asJsonObject
+                            } catch (e: Exception) {
+                                null
+                            }
+
+
+                            val error = gson.fromJson(errorBody, EdfaPgError::class.java)
+                            error.raw = gson.fromJson(errorBody, Map::class.java)
                             if(error == null){
                                 onFailure(call, Exception(response.code().toString()))
                                 return
                             }
-                            edfapayCallback.onResponse(EdfaPgResponse.Error<Result>(error, json.asJsonObject) as Response)
+
+                            edfapayCallback.onResponse(EdfaPgResponse.Error<Result>(error, json) as Response)
                             edfapayCallback.onError(error)
                         } catch (e:Exception){
-                            onFailure(call, Exception(response.code().toString()))
+                            onFailure(call, e)
                         }
                     }
 

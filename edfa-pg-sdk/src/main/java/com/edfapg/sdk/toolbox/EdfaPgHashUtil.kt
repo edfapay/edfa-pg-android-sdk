@@ -66,4 +66,8 @@ object EdfaPgHashUtil {
     private fun md5(text: String) = MessageDigest.getInstance("MD5").let { md5 ->
         BigInteger(1, md5.digest(text.toByteArray())).toString(16).padStart(32, '0')
     }
+
+    fun sha256(text: String) = MessageDigest.getInstance("SHA-256").let { sha256 ->
+        BigInteger(1, sha256.digest(text.toByteArray())).toString(16).padStart(32, '0')
+    }
 }

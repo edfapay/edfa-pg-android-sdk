@@ -53,6 +53,12 @@
             android:layout_height="wrap_content"
             android:text="SALE_WITH_CARD_UI" />
 
+        <Button
+            android:id="@+id/btn_sadad_pay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="GENERATE_SADAD_BILL" />
+
 
     </LinearLayout>
 

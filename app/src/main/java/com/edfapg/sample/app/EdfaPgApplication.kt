@@ -15,6 +15,7 @@ import java.util.Locale
 
 class EdfaPgApplication : Application() {
     private val PAYMENT_URL = "https://api.edfapay.com/payment/post" // edfapay
+    private val PAYMENT_URL_DEV = "https://apidev.edfapay.com/payment/post" // edfapay
 
     override fun onCreate() {
         super.onCreate()
@@ -22,9 +23,9 @@ class EdfaPgApplication : Application() {
 
         EdfaPgSdk.init(
             this,
-            clientKey = "MERCHANT_KEY",
-            clientPass = "MERCHANT_PASSWORD",
-            paymentUrl = PAYMENT_URL,
+            clientKey = MERCHANT_KEY,
+            clientPass = MERCHANT_PASSWORD,
+            paymentUrl = PAYMENT_URL_DEV,
         )
 
 
