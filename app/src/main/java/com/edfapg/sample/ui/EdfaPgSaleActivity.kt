@@ -11,7 +11,6 @@ import android.widget.Toast
 import androidx.core.view.children
 import com.edfapg.sample.R
 import com.edfapg.sample.app.EdfaPgTransactionStorage
-import com.edfapg.sample.app.LIVE_CARD2
 import com.edfapg.sample.app.preattyPrint
 import com.edfapg.sample.databinding.ActivitySaleBinding
 import com.edfapg.sdk.core.EdfaPgSdk
@@ -195,7 +194,7 @@ class EdfaPgSaleActivity : BaseActivity(R.layout.activity_sale) {
         onRequestStart()
         EdfaPgSdk.Adapter.SALE.execute(
             order = order,
-            card = LIVE_CARD2,
+            card = card,
             payer = payer,
             termUrl3ds = termUrl3ds,
             options = saleOptions,
