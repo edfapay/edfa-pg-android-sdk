@@ -166,28 +166,29 @@ easily integrate the EdfaPay API Payment Platform for a specific merchant.
 >>  			Toast.makeText(this, "onError $it", Toast.LENGTH_LONG).show()  
 >>        	},  
 >>        		onPresent = {  
->>  			} )>
+>>  			} )
+>
 > **Payment with Sadad Number**
-> >  ```kotlin
->> 
->> 
->> 
->> 
->> 
->> 
->> 
->> 
->> 
->> 
->> 
->> 
->> 
->> 
->> 
->> 
->> 
->> 
->> 
+>>  ```kotlin
+>> EdfaSadadPay()
+>>     .setOrderId("Unique order_id as string")
+>>     .setOrderDescription("Description of the order")
+>>     .setOrderAmount(25.0)
+>>     .setCustomerName("Merchant customer name here")
+>>     .setMobileNumber("Merchant customer mobile number here in format: 966500409598")
+>>     .onSuccess { response ->
+>>         Log.i("Transaction Success:", response.toString())
+>>         Toast.makeText(this, "Transaction Success", Toast.LENGTH_LONG).show()  
+>>     }
+>>     .onFailure { response, exception ->
+>>         Log.e("Transaction Failed:", response?.message ?: exception.message ?: "STWR")
+>>         Toast.makeText(this, "Transaction Failure", Toast.LENGTH_LONG).show()
+>>     }
+>>     .initialize { errors ->
+>>         // if errors is empty then transaction begins successful else error while initialize
+>>         Log.e("Initialize errors", errors.toString())
+>>     }
+>>
 > ### Addon's
 > > **Create [EdfaPgSaleOrder](https://github.com/edfapay/edfa-pg-android-sdk/blob/master/edfa-pg-sdk/src/main/java/com/edfapg/sdk/model/request/order/EdfaPgSaleOrder.kt) ` & ` [EdfaPgPayer](https://github.com/edfapay/edfa-pg-android-sdk/blob/master/edfa-pg-sdk/src/main/java/com/edfapg/sdk/model/request/payer/EdfaPgPayer.kt)
 > > 
