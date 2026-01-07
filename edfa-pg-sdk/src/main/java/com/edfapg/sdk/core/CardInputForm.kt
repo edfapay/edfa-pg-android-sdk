@@ -2,13 +2,8 @@ package com.edfapg.sdk.core
 
 import Footer
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.os.Handler
-import android.os.Looper
-import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.ActivityResultLauncher
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -24,10 +19,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.relocation.BringIntoViewRequester
-import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -46,39 +38,32 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import com.edfapg.sdk.PaymentActivity
 import com.edfapg.sdk.R
 import com.edfapg.sdk.model.request.card.EdfaPgCard
 import com.edfapg.sdk.toolbox.EdfaPgUtil
 import com.edfapg.sdk.toolbox.EdfaPgValidation.Card
+import com.edfapg.sdk.utils.CreditCardNumberVisualTransformation
 import com.edfapg.sdk.views.edfacardpay.CardTransactionData
 import com.edfapg.sdk.views.edfacardpay.EdfaCardPay
 import com.edfapg.sdk.views.edfacardpay.EdfaPgSaleWebRedirectActivity
-import kotlinx.coroutines.delay
 import java.util.Calendar
 
 
@@ -163,6 +148,7 @@ fun CardInputForm(
         )
 
         CardInputField(
+            visualTransformation = CreditCardNumberVisualTransformation(),
             title = stringResource(id = R.string.card_number),
             placeholder = "**** **** **** ****",
             newValue = cardNumber,
@@ -170,40 +156,10 @@ fun CardInputForm(
             action = ImeAction.Next,
             focusRequester = cardNumberFocus,
             onValueChange = { newValue ->
-                val rawDigits = newValue.text.replace("\\D".toRegex(), "") // Extract only digits
-
-                if (rawDigits.length <= 16) { // Allow only 16 digits
-                    val formattedValue = rawDigits.chunked(4).joinToString(" ") // Format as "**** **** **** ****"
-
-                    unformattedNumber = rawDigits
-                    isCardNumberValid = rawDigits.length in 12..16
-
-                    println("inCardInputForm::isCardNumberValid: ${rawDigits.length} :: $isCardNumberValid")
-
-                    val originalCursorPosition = newValue.selection.start
-                    val spacesBeforeCursor = newValue.text.take(originalCursorPosition).count { it == ' ' }
-                    val newCursorPosition =
-                        originalCursorPosition + formattedValue.take(originalCursorPosition)
-                            .count { it == ' ' } - spacesBeforeCursor
-
-                    val adjustedCursorPosition = newCursorPosition.coerceIn(0, formattedValue.length)
-
-                    // Handle clearing the input properly
-                    onCardNumberChange(
-                        if (rawDigits.isEmpty()) {
-                            TextFieldValue("") // Ensures the field is properly cleared
-                        } else {
-                            TextFieldValue(
-                                text = formattedValue,
-                                selection = TextRange(adjustedCursorPosition)
-                            )
-                        }
-                    )
-
-                    // Recalculate form validity
-                    isFormValid = isCardNumberValid && isCvvValid && isMonthValid
-                    println("inCardInputForm: isFormValid : $isFormValid")
-                }
+                unformattedNumber = newValue.text.replace("\\D".toRegex(), "") // Extract only digits
+                isCardNumberValid = unformattedNumber.length in 12..16
+                isFormValid = isCardNumberValid && isCvvValid && isMonthValid
+                onCardNumberChange(newValue)
             }
 
         )
@@ -395,6 +351,7 @@ fun CardInputForm(
 
 @Composable
 fun CardInputField(
+    visualTransformation:VisualTransformation = VisualTransformation.None,
     modifier: Modifier = Modifier,
     title: String = stringResource(id = R.string.card_holder),
     placeholder: String = "Name",
@@ -429,6 +386,7 @@ fun CardInputField(
 
             // Input area
             TextField(
+                visualTransformation = visualTransformation,
                 value = newValue,
                 onValueChange = { newTextValue ->
                     onValueChange(newTextValue)

@@ -57,7 +57,7 @@
             android:id="@+id/btn_sadad_pay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="GENERATE_SADAD_BILL" />
+            android:text="PAY_WITH_SADAD" />
 
 
     </LinearLayout>
