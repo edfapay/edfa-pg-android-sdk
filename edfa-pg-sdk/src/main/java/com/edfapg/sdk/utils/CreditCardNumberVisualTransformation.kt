@@ -9,15 +9,21 @@ import java.util.Locale
 import androidx.core.text.layoutDirection
 
 class CreditCardNumberVisualTransformation() : VisualTransformation {
-    override fun filter(text: AnnotatedString): TransformedText {
+
+    fun transform(text: String) : String{
         val isRtl = Locale.getDefault().layoutDirection == View.LAYOUT_DIRECTION_RTL
-        val digits = text.text.filter { it.isDigit() }
+        val digits = text.filter { it.isDigit() }
 
         val chunks = digits.chunked(4)
-        val transformed = when {
+        return when {
             isRtl -> chunks.reversed().joinToString(" ")
             else -> chunks.joinToString(" ")
         }
+    }
+
+    override fun filter(text: AnnotatedString): TransformedText {
+        val original = text.text
+        val transformed = transform(original)
 
         return TransformedText(
             AnnotatedString(transformed),
@@ -30,7 +36,7 @@ class CreditCardNumberVisualTransformation() : VisualTransformation {
 
                 override fun transformedToOriginal(offset: Int): Int {
                     val spacesBefore = offset / 5
-                    return (offset - spacesBefore).coerceAtMost(digits.length)
+                    return (offset - spacesBefore).coerceAtMost(original.length)
                 }
             }
         )

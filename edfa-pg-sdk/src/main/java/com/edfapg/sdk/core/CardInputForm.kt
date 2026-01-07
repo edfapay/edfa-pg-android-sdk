@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +23,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
@@ -156,10 +158,12 @@ fun CardInputForm(
             action = ImeAction.Next,
             focusRequester = cardNumberFocus,
             onValueChange = { newValue ->
-                unformattedNumber = newValue.text.replace("\\D".toRegex(), "") // Extract only digits
+                unformattedNumber =
+                    newValue.text.replace("\\D".toRegex(), "") // Extract only digits
                 isCardNumberValid = unformattedNumber.length in 12..16
                 isFormValid = isCardNumberValid && isCvvValid && isMonthValid
-                onCardNumberChange(newValue)
+                if (unformattedNumber.length <= 16)
+                    onCardNumberChange(newValue)
             }
 
         )
@@ -212,8 +216,10 @@ fun CardInputForm(
                     year = digitsOnly.drop(2)
 
                     // Get current month and year
-                    val currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1 // Calendar.MONTH is 0-based
-                    val currentYear = Calendar.getInstance().get(Calendar.YEAR) % 100 // Last two digits of year
+                    val currentMonth =
+                        Calendar.getInstance().get(Calendar.MONTH) + 1 // Calendar.MONTH is 0-based
+                    val currentYear =
+                        Calendar.getInstance().get(Calendar.YEAR) % 100 // Last two digits of year
 
                     // Validate month input
                     val isMonthInputValid = month.toIntOrNull()?.let { enteredMonth ->
@@ -351,7 +357,7 @@ fun CardInputForm(
 
 @Composable
 fun CardInputField(
-    visualTransformation:VisualTransformation = VisualTransformation.None,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     modifier: Modifier = Modifier,
     title: String = stringResource(id = R.string.card_holder),
     placeholder: String = "Name",
@@ -363,6 +369,7 @@ fun CardInputField(
 ) {
 
     val focusManager = LocalFocusManager.current
+    var isFocused by remember { mutableStateOf(false) }
 
     Box(
         modifier = modifier
@@ -373,6 +380,14 @@ fun CardInputField(
                 Color(0xFFF1F4F8),
                 shape = RoundedCornerShape(12.dp)
             )
+            .border(
+                width = if (isFocused) 1.dp else 0.dp,
+                color = if (isFocused) Color(0xFF8F9BB3) else Color.Transparent,
+                shape = RoundedCornerShape(12.dp)
+            )
+            .onFocusChanged {
+                isFocused = it.isFocused
+            }
     ) {
         Column(verticalArrangement = Arrangement.spacedBy((-15).dp)) {
             // Title
@@ -384,69 +399,84 @@ fun CardInputField(
                 modifier = Modifier.padding(start = 16.dp),
             )
 
-            // Input area
-            TextField(
-                visualTransformation = visualTransformation,
-                value = newValue,
-                onValueChange = { newTextValue ->
-                    onValueChange(newTextValue)
-                },
-                textStyle = LocalTextStyle.current.copy(
-                    color = Color.Black,
-                    fontSize = 16.sp
-                ),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = inputType,
-                    imeAction = action
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = { focusManager.moveFocus(FocusDirection.Next) }
-                ),
-                singleLine = true,
-                colors = TextFieldDefaults.colors(
-                    focusedTextColor = Color.Black,
-                    unfocusedTextColor = Color.Black,
-                    cursorColor = Color.Black,
-                    focusedPlaceholderColor = Color(0xFF8F9BB3),
-                    unfocusedPlaceholderColor = Color(0xFF8F9BB3),
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(focusRequester)
-                    .onFocusChanged { focusState ->
-                        if (focusState.isFocused) {
-                            onValueChange(newValue.copy(
-                                selection = TextRange(newValue.text.length)
-                            ))
-                        }
-                    }
-                    .pointerInput(Unit) {
-                        detectTapGestures {
-                            onValueChange(newValue.copy(
-                                selection = TextRange(newValue.text.length)
-                            ))
-                        }
-                    },
-                trailingIcon = {
-                    if (newValue.text.isNotEmpty()) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = "Clear",
-                            modifier = Modifier
-                                .clickable {
-                                    onValueChange(TextFieldValue("", TextRange.Zero))
-                                }
-                                .padding(end = 2.dp)
-                                .size(20.dp),
-                            tint = Color.Black
+            DisableSelection {
+                TextField(
+                    visualTransformation = visualTransformation,
+                    value = newValue,
+                    onValueChange = { updated ->
+                        onValueChange(
+                            updated.copy(
+                                selection = TextRange(updated.text.length)
+                            )
                         )
+                    },
+                    textStyle = LocalTextStyle.current.copy(
+                        color = Color.Black,
+                        fontSize = 16.sp
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = inputType,
+                        imeAction = action
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = { focusManager.moveFocus(FocusDirection.Next) }
+                    ),
+                    singleLine = true,
+                    colors = TextFieldDefaults.colors(
+                        focusedTextColor = Color.Black,
+                        unfocusedTextColor = Color.Black,
+                        cursorColor = Color.Transparent,
+                        focusedPlaceholderColor = Color(0xFF8F9BB3),
+                        unfocusedPlaceholderColor = Color(0xFF8F9BB3),
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .focusRequester(focusRequester)
+                        .onFocusChanged { focusState ->
+                            if (focusState.isFocused) {
+                                onValueChange(
+                                    newValue.copy(
+                                        selection = TextRange(newValue.text.length)
+                                    )
+                                )
+                            }
+                        }
+                        .pointerInput(Unit) {
+                            detectTapGestures(
+                                onTap = {
+                                    onValueChange(
+                                        newValue.copy(
+                                            selection = TextRange(newValue.text.length)
+                                        )
+                                    )
+                                },
+                                onLongPress = {
+
+                                }
+                            )
+                        },
+                    trailingIcon = {
+                        if (newValue.text.isNotEmpty()) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Clear",
+                                modifier = Modifier
+                                    .clickable {
+                                        onValueChange(TextFieldValue("", TextRange.Zero))
+                                    }
+                                    .padding(end = 2.dp)
+                                    .size(20.dp),
+                                tint = Color.Black
+                            )
+                        }
                     }
-                }
-            )
+                )
+            }
+
         }
     }
 }

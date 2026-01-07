@@ -96,7 +96,7 @@ class EdfaPgMainAcitivty : BaseActivity() {
             .setExtras(listOf())
             .setRecurring(true)
             .setDesignType(EdfaPayDesignType.one)
-            .setLanguage(EdfaPayLanguage.ar)
+            .setLanguage(EdfaPayLanguage.en)
             .onTransactionFailure { res, data ->
                 print("$res $data")
                 Toast.makeText(this, "Transaction Failure", Toast.LENGTH_LONG).show()

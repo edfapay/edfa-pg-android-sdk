@@ -28,6 +28,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import com.edfapg.sdk.utils.safePainterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -39,6 +40,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.edfapg.sdk.R
+import com.edfapg.sdk.utils.CreditCardNumberVisualTransformation
 
 @Composable
 fun Card1UI(
@@ -111,7 +113,8 @@ fun Card1UI(
                     }
                 }
                 Text(
-                    text = cardNumber,
+
+                    text = CreditCardNumberVisualTransformation().transform(cardNumber),
                     color = Color.White
                 )
                 Row(
