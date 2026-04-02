@@ -65,7 +65,10 @@ class EdfaPgMainAcitivty : BaseActivity() {
 
         binding.btnSaleWithCardUi.setOnClickListener {
             payWithCard()
-//            payWithCardDetails()
+        }
+
+        binding.btnSaleWithCardDetail.setOnClickListener {
+            payWithCardDetails()
         }
 
         binding.btnSadadPay.setOnClickListener {
@@ -137,8 +140,8 @@ class EdfaPgMainAcitivty : BaseActivity() {
             "171.100.100.123"
         )
 
-//        val card = com.edfapg.sample.app.LIVE_CARD3 // This from com.edfapg.sample.app.Credential.kt (.gitignore)
-        val card = EdfaPgCard("4458xxxxxxxx8293", 1, 2090, "123")
+        val card = com.edfapg.sample.app.LIVE_CARD3 // This from com.edfapg.sample.app.Credential.kt (.gitignore)
+//        val card = EdfaPgCard("4458xxxxxxxx8293", 1, 2090, "123")
         EdfaPayWithCardDetails(this)
             .setOrder(order)
             .setPayer(payer)

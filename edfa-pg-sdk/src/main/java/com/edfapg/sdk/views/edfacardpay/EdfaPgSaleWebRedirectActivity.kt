@@ -27,7 +27,7 @@ import java.net.URLEncoder
 private var onEdfaPgSaleWebRedirectActivityResult:((result: EdfaPgGetTransactionDetailsSuccess?, error:EdfaPgError?) ->Unit)? = null
 class EdfaPgSaleWebRedirectActivity : AppCompatActivity(R.layout.activity_edfapay_web) {
 
-    private lateinit var binding: ActivityEdfapayWebBinding
+    internal lateinit var binding: ActivityEdfapayWebBinding
     private var transactionData:CardTransactionData? = null
     private var processCompleted:Boolean = false
 
@@ -57,7 +57,7 @@ class EdfaPgSaleWebRedirectActivity : AppCompatActivity(R.layout.activity_edfapa
                 ): Boolean {
                     Log.d("xpWebRedirect", ">> >> Redirect URL: ${request?.url?.toString().orEmpty()}")
                     if (handleTermUrl3ds(request?.url?.toString().orEmpty())) {
-                        return false
+                        return true
                     }
 
                     return super.shouldOverrideUrlLoading(view, request)
@@ -77,7 +77,7 @@ class EdfaPgSaleWebRedirectActivity : AppCompatActivity(R.layout.activity_edfapa
                     if (!processCompleted && url.startsWith(EdfaPgUtil.ProcessCompleteCallbackUrl)) {
                         processCompleted = true
                         checkTransactionStatus(transactionData!!)
-                        return true
+                        return false
                     }
 
                     return false

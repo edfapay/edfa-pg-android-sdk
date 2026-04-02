@@ -4,16 +4,20 @@
 
 package com.edfapg.sdk.feature.adapter
 
+import android.os.Handler
+import android.os.Looper
 import androidx.annotation.NonNull
 import androidx.annotation.Size
 import com.edfapg.sdk.core.EdfaPgCredential
 import com.edfapg.sdk.feature.deserializer.EdfaPgGetTransactionDetailsDeserializer
 import com.edfapg.sdk.feature.service.EdfaPgGetTransactionDetailsService
 import com.edfapg.sdk.model.api.EdfaPgAction
-import com.edfapg.sdk.toolbox.EdfaPgValidation
+import com.edfapg.sdk.model.response.base.error.EdfaPgError
 import com.edfapg.sdk.model.response.gettransactiondetails.EdfaPgGetTransactionDetailsCallback
 import com.edfapg.sdk.model.response.gettransactiondetails.EdfaPgGetTransactionDetailsResponse
+import com.edfapg.sdk.model.response.gettransactiondetails.EdfaPgGetTransactionDetailsResult
 import com.edfapg.sdk.toolbox.EdfaPgHashUtil
+import com.edfapg.sdk.toolbox.EdfaPgValidation
 import com.google.gson.GsonBuilder
 
 /**
@@ -73,14 +77,25 @@ object EdfaPgGetTransactionDetailsAdapter : EdfaPgBaseAdapter<EdfaPgGetTransacti
      * @param hash special signature to validate your request to payment platform.
      * @param callback the [EdfaPgGetTransactionDetailsCallback].
      */
+    private const val MAX_RETRY = 3
+    private const val RETRY_DELAY = 500L
+
     fun execute(
         @NonNull
-        @Size(EdfaPgValidation.Text.UUID)
         transactionId: String,
         @NonNull
         hash: String,
         @NonNull
         callback: EdfaPgGetTransactionDetailsCallback
+    ) {
+        executeWithRetry(transactionId, hash, callback, retriesLeft = MAX_RETRY)
+    }
+
+    private fun executeWithRetry(
+        transactionId: String,
+        hash: String,
+        callback: EdfaPgGetTransactionDetailsCallback,
+        retriesLeft: Int
     ) {
         service.getTransactionDetails(
             url = EdfaPgCredential.paymentUrl(),
@@ -88,6 +103,20 @@ object EdfaPgGetTransactionDetailsAdapter : EdfaPgBaseAdapter<EdfaPgGetTransacti
             clientKey = EdfaPgCredential.clientKey(),
             transactionId = transactionId,
             hash = hash
-        ).edfapayEnqueue(callback)
+        ).edfapayEnqueue(object : EdfaPgGetTransactionDetailsCallback {
+            override fun onResult(result: EdfaPgGetTransactionDetailsResult) {
+                callback.onResult(result)
+            }
+
+            override fun onError(error: EdfaPgError) {
+                if (error.code == 100000 && retriesLeft > 0) {
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        executeWithRetry(transactionId, hash, callback, retriesLeft - 1)
+                    }, RETRY_DELAY)
+                } else {
+                    callback.onError(error)
+                }
+            }
+        })
     }
 }

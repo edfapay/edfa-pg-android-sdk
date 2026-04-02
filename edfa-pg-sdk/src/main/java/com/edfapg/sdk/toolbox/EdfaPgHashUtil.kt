@@ -41,7 +41,6 @@ object EdfaPgHashUtil {
         @Size(min = Card.CARD_NUMBER_MIN, max = Card.CARD_NUMBER_MAX)
         cardNumber: String,
         @Nullable
-        @Size(EdfaPgValidation.Text.UUID)
         transactionId: String? = null,
         @Nullable
         extras: String? = null

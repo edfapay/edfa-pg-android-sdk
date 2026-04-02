@@ -1,5 +1,6 @@
 package com.edfapg.sdk.views.edfacardpay
 
+import android.view.View
 import com.edfapg.sdk.core.EdfaPgSdk
 import com.edfapg.sdk.model.api.EdfaPgResult
 import com.edfapg.sdk.model.response.base.error.EdfaPgError
@@ -11,6 +12,8 @@ import com.edfapg.sdk.views.edfacardpay.creditcardview.extensions.isNumeric
 
 
 internal fun EdfaPgSaleWebRedirectActivity.checkTransactionStatus(transactionData:CardTransactionData){
+    binding.progressBar.show()
+    binding.webView.visibility = View.INVISIBLE
     EdfaPgSdk.Adapter.GET_TRANSACTION_DETAILS.execute(
         transactionData.response!!.transactionId,
         transactionData.payer.email,
