@@ -3,6 +3,12 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+def credentialsFile = rootProject.file("credentials.properties")
+def credentials = new Properties()
+if (credentialsFile.exists()) {
+    credentials.load(new FileInputStream(credentialsFile))
+}
+
 android {
     namespace 'com.edfapg.sample'
     compileSdk 36
@@ -18,6 +24,15 @@ android {
 
         // Enabling multidex support.
         multiDexEnabled true
+
+        buildConfigField "String", "PAYMENT_URL", "\"${credentials.getProperty('PAYMENT_URL', '')}\""
+        buildConfigField "String", "MERCHANT_KEY", "\"${credentials.getProperty('MERCHANT_KEY', '')}\""
+        buildConfigField "String", "MERCHANT_PASSWORD", "\"${credentials.getProperty('MERCHANT_PASSWORD', '')}\""
+
+        buildConfigField "String", "CARD_NUMBER", "\"${credentials.getProperty('CARD_NUMBER', '')}\""
+        buildConfigField "int", "CARD_EXPIRY_MONTH", "${credentials.getProperty('CARD_EXPIRY_MONTH', '12')}"
+        buildConfigField "int", "CARD_EXPIRY_YEAR", "${credentials.getProperty('CARD_EXPIRY_YEAR', '2030')}"
+        buildConfigField "String", "CARD1_CVV", "\"${credentials.getProperty('CARD_CVV', '')}\""
     }
 
     buildTypes {
@@ -39,6 +54,7 @@ android {
     }
     buildFeatures {
         viewBinding true
+        buildConfig true
     }
 //    composeOptions {
 //        kotlinCompilerExtensionVersion = "1.5.1"

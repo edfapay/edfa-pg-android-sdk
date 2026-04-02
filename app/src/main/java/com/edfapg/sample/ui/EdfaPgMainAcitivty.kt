@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import com.edfapg.sample.BuildConfig
 import com.edfapg.sample.app.EdfaPgTransactionStorage
 import com.edfapg.sample.databinding.ActivityMainBinding
 import com.edfapg.sdk.EdfaSadadPay
@@ -140,8 +141,13 @@ class EdfaPgMainAcitivty : BaseActivity() {
             "171.100.100.123"
         )
 
-        val card = com.edfapg.sample.app.LIVE_CARD3 // This from com.edfapg.sample.app.Credential.kt (.gitignore)
-//        val card = EdfaPgCard("4458xxxxxxxx8293", 1, 2090, "123")
+
+        val card = EdfaPgCard(
+            BuildConfig.CARD_NUMBER,
+            BuildConfig.CARD_EXPIRY_MONTH,
+            BuildConfig.CARD_EXPIRY_YEAR,
+            BuildConfig.CARD1_CVV
+        )
         EdfaPayWithCardDetails(this)
             .setOrder(order)
             .setPayer(payer)
