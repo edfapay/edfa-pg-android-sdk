@@ -8,11 +8,12 @@ import android.content.Context
 import android.content.pm.PackageManager
 import com.edfapg.sdk.feature.adapter.EdfaPgCaptureAdapter
 import com.edfapg.sdk.feature.adapter.EdfaPgCreditvoidAdapter
-import com.edfapg.sdk.feature.adapter.EdfaPgSadadAdapter
 import com.edfapg.sdk.feature.adapter.EdfaPgGetTransactionDetailsAdapter
 import com.edfapg.sdk.feature.adapter.EdfaPgGetTransactionStatusAdapter
 import com.edfapg.sdk.feature.adapter.EdfaPgRecurringSaleAdapter
+import com.edfapg.sdk.feature.adapter.EdfaPgSadadAdapter
 import com.edfapg.sdk.feature.adapter.EdfaPgSaleAdapter
+import com.edfapg.sdk.feature.adapter.Get3dsHtmlAdapter
 
 /**
  * The initial point of the [EdfaPgSdk].
@@ -177,6 +178,16 @@ object EdfaPgSdk {
          * @throws EdfaPgSdkIsNotInitializedException
          */
         val SADAD: EdfaPgSadadAdapter = EdfaPgSadadAdapter
+            get() {
+                EdfaPgCredential.requireInit()
+                return field
+            }
+
+        /**
+         * Adapter to collect 3ds Html for redirection
+         * @throws EdfaPgSdkIsNotInitializedException
+         */
+        val GET_3DS_HTML: Get3dsHtmlAdapter = Get3dsHtmlAdapter
             get() {
                 EdfaPgCredential.requireInit()
                 return field

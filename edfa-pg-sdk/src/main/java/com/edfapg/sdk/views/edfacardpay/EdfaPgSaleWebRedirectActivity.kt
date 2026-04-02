@@ -13,16 +13,28 @@ import android.net.http.SslError
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.webkit.*
+import android.webkit.SafeBrowsingResponse
+import android.webkit.SslErrorHandler
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.edfapg.sdk.R
 import com.edfapg.sdk.databinding.ActivityEdfapayWebBinding
 import com.edfapg.sdk.model.response.base.error.EdfaPgError
 import com.edfapg.sdk.model.response.gettransactiondetails.EdfaPgGetTransactionDetailsSuccess
+import com.edfapg.sdk.model.response.sale.EdfaPgSaleRedirect
 import com.edfapg.sdk.toolbox.EdfaPgUtil
 import com.edfapg.sdk.toolbox.userConfirmation
-import java.net.URLEncoder
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
+import java.util.concurrent.TimeUnit
 
 private var onEdfaPgSaleWebRedirectActivityResult:((result: EdfaPgGetTransactionDetailsSuccess?, error:EdfaPgError?) ->Unit)? = null
 class EdfaPgSaleWebRedirectActivity : AppCompatActivity(R.layout.activity_edfapay_web) {
@@ -30,6 +42,15 @@ class EdfaPgSaleWebRedirectActivity : AppCompatActivity(R.layout.activity_edfapa
     internal lateinit var binding: ActivityEdfapayWebBinding
     private var transactionData:CardTransactionData? = null
     private var processCompleted:Boolean = false
+    private var currentRedirect: EdfaPgSaleRedirect? = null
+
+    private val okHttpClient: OkHttpClient by lazy {
+        OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .build()
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     @Suppress("DEPRECATION")
@@ -47,39 +68,69 @@ class EdfaPgSaleWebRedirectActivity : AppCompatActivity(R.layout.activity_edfapa
 
         binding.webView.apply {
             settings.defaultTextEncodingName = "utf-8"
+            settings.javaScriptEnabled = true
+            settings.domStorageEnabled = true
 
             webViewClient = object : WebViewClient() {
-                @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 
+                override fun shouldInterceptRequest(
+                    view: WebView?,
+                    request: WebResourceRequest?
+                ): WebResourceResponse? {
+                    val redirect = currentRedirect
+                    if (redirect != null && request?.url?.toString() == redirect.redirectUrl) {
+                        return try {
+                            val json = JSONObject().apply {
+                                put("body", redirect.redirectParams.body)
+                            }.toString()
+                            val body = json.toRequestBody("application/json; charset=utf-8".toMediaType())
+                            val okRequest = Request.Builder()
+                                .url(redirect.redirectUrl)
+                                .post(body)
+                                .build()
+                            val response = okHttpClient.newCall(okRequest).execute()
+                            val html = response.body?.string()
+                            if (html != null) {
+                                WebResourceResponse("text/html", "UTF-8", html.byteInputStream())
+                            } else {
+                                null
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            null
+                        }
+                    }
+                    return super.shouldInterceptRequest(view, request)
+                }
+
+                @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
                 override fun shouldOverrideUrlLoading(
                     view: WebView?,
                     request: WebResourceRequest?,
                 ): Boolean {
-                    Log.d("xpWebRedirect", ">> >> Redirect URL: ${request?.url?.toString().orEmpty()}")
-                    if (handleTermUrl3ds(request?.url?.toString().orEmpty())) {
+                    val url = request?.url?.toString().orEmpty()
+                    Log.d("xpWebRedirect", ">> >> Redirect URL: $url")
+                    if (handleTermUrl3ds(url)) {
                         return true
                     }
-
-                    return super.shouldOverrideUrlLoading(view, request)
+                    return false
                 }
 
                 @Deprecated("Deprecated in Java")
                 override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                     Log.d("xpWebRedirect", ">> >> Redirect URL: ${url.orEmpty()}")
                     if (handleTermUrl3ds(url.orEmpty())) {
-                        return false
+                        return true
                     }
-
-                    return super.shouldOverrideUrlLoading(view, url)
+                    return false
                 }
 
                 private fun handleTermUrl3ds(url: String): Boolean {
                     if (!processCompleted && url.startsWith(EdfaPgUtil.ProcessCompleteCallbackUrl)) {
                         processCompleted = true
                         checkTransactionStatus(transactionData!!)
-                        return false
+                        return true
                     }
-
                     return false
                 }
 
@@ -144,17 +195,15 @@ class EdfaPgSaleWebRedirectActivity : AppCompatActivity(R.layout.activity_edfapa
 
             binding.progressBar.show()
 
-            /* Enable Javascript in WebView */
-            settings.javaScriptEnabled = true
             transactionData?.response?.let {
-                val postData = "body=" + URLEncoder.encode(it.redirectParams.body, "UTF-8")
-                if(it.redirectMethod == "POST"){
-                    postUrl(it.redirectUrl, postData.toByteArray())
-                }else{
-                    loadUrl("${it.redirectUrl}?$postData")
-                }
+                getAndLoadHtml(it)
             }
         }
+    }
+
+    fun getAndLoadHtml(redirect: EdfaPgSaleRedirect) {
+        currentRedirect = redirect
+        binding.webView.loadUrl(redirect.redirectUrl)
     }
 
     fun operationCompleted(result: EdfaPgGetTransactionDetailsSuccess?, error:EdfaPgError?){
