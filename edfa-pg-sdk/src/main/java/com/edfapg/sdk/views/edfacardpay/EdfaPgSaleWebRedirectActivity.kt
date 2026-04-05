@@ -12,7 +12,10 @@ import android.graphics.Bitmap
 import android.net.http.SslError
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.View
 import android.webkit.SafeBrowsingResponse
 import android.webkit.SslErrorHandler
 import android.webkit.WebResourceError
@@ -23,7 +26,9 @@ import android.webkit.WebViewClient
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.edfapg.sdk.R
+import com.edfapg.sdk.core.EdfaPgSdk
 import com.edfapg.sdk.databinding.ActivityEdfapayWebBinding
+import com.edfapg.sdk.model.api.EdfaPgStatus
 import com.edfapg.sdk.model.response.base.error.EdfaPgError
 import com.edfapg.sdk.model.response.gettransactiondetails.EdfaPgGetTransactionDetailsSuccess
 import com.edfapg.sdk.model.response.sale.EdfaPgSaleRedirect
@@ -207,10 +212,38 @@ class EdfaPgSaleWebRedirectActivity : AppCompatActivity(R.layout.activity_edfapa
     }
 
     fun operationCompleted(result: EdfaPgGetTransactionDetailsSuccess?, error:EdfaPgError?){
-        val intent = Intent().putExtra("result", result).putExtra("error", error)
-        setResult(Activity.RESULT_OK, intent)
-        onEdfaPgSaleWebRedirectActivityResult?.let { it(result,error) }
-        finish()
+        result?.let {
+           if(it.status == EdfaPgStatus.SETTLED)
+               showSuccessStatus()
+           else if (it.status == EdfaPgStatus.PENDING && EdfaCardPay.shared()!!.isAuth())
+               showSuccessStatus()
+           else
+               showFailureStatus()
+        }
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            val intent = Intent().putExtra("result", result).putExtra("error", error)
+            setResult(Activity.RESULT_OK, intent)
+            onEdfaPgSaleWebRedirectActivityResult?.let { it(result,error) }
+            finish()
+        }, when(EdfaPgSdk.successAnimationUrl){
+            null -> 100
+            else -> EdfaPgSdk.animationDelay
+        })
+    }
+
+    internal fun showSuccessStatus(){
+        EdfaPgSdk.successAnimationUrl?.let {
+            binding.webView.visibility = View.VISIBLE
+            binding.webView.loadUrl(it)
+        }
+    }
+
+    internal fun showFailureStatus(){
+        EdfaPgSdk.failureAnimationUrl?.let {
+            binding.webView.visibility = View.VISIBLE
+            binding.webView.loadUrl(it)
+        }
     }
 
     companion object {

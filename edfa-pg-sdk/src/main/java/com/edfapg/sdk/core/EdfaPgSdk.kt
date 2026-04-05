@@ -103,6 +103,23 @@ object EdfaPgSdk {
         ENABLE_DEBUG = false
     }
 
+
+    internal var successAnimationUrl: String? = null
+    fun setSuccessAnimation(url:String?){
+        successAnimationUrl = url
+    }
+
+    internal  var failureAnimationUrl: String? = null
+    fun setFailureAnimation(url:String?){
+        failureAnimationUrl = url
+    }
+
+    internal  var animationDelay: Long = 3000
+    fun setAnimationDelay(delay:Long){
+        animationDelay = delay
+    }
+
+
     /**
      * Indicating of the [EdfaPgSdk] initialize status.
      */
