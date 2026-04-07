@@ -29,6 +29,10 @@ class EdfaPgApplication : Application() {
             paymentUrl = PAYMENT_URL,
         )
 
+        EdfaPgSdk.setAnimationDelay(2000)
+        EdfaPgSdk.setFailureAnimation("https://lottie.host/embed/6391d446-ad05-4ec8-bbc3-6e4b995b80c1/MRQIViE7eS.lottie")
+        EdfaPgSdk.setSuccessAnimation("https://lottie.host/embed/6d93db21-e1e4-4ac3-9474-aa8182cadba7/vWVmKBU70n.lottie")
+
 
         EdfaPgSdk.enableDebug()
 
